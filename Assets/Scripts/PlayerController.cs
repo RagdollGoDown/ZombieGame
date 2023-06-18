@@ -1,0 +1,314 @@
+using TMPro;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.Events;
+using System.Collections.Generic;
+
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(DamageableObject))]
+[RequireComponent(typeof(ZombieTarget))]
+public class PlayerController : MonoBehaviour
+{
+    private enum PlayerState
+    {
+        Normal,
+        Dead
+    }
+
+    private PlayerState _playerState;
+
+    private CharacterController _characterController;
+    private PlayerInput _playerInput;
+    [Header("Camera mouvement")]
+    private Transform _cameraTransform;
+    private Transform _cameraHolderTransform;
+    [SerializeField] private float maximumHeadSway = 0.07f;
+    [SerializeField] private float headSwaySpeed = 5;
+    [SerializeField] private float maximumHeadBob = 0.1f;
+    [SerializeField] private float headBobSpeed = 1;
+    private float _headBobTime;
+    private Vector3 _tempHeadBobDirection;
+
+    private SphereCollider _zombieDetectorCollider;
+    [SerializeField] private float distanceForZombieTooSee;
+
+    //--------------------movement
+    [Header("Mouvement")]
+    private Vector2 _movementDirection;
+    private Vector3 _movementVector;
+    private Vector3 _movementSpeedAffectedByAcceleration;
+    private float _currentMovementSpeed;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float movementSpeedWhenAiming;
+    
+    private Vector2 _mouseDelta;
+    private Vector2 _headRotation;
+    [SerializeField] float mouseSensitivity;
+
+    //----------------------------ui
+    //TODO unserialize
+    [SerializeField]private Slider _healthBarSlider;
+    private DamageableObject _damageablePlayer;
+
+    private GameObject _playScreen;
+    private GameObject _deathScreen;
+    
+    //----------------------------shooting
+    //temporarily a serialize field to check the guns
+    private int _currentWeaponIndex;
+    [SerializeField] private WeaponBehaviour[] _weaponsHeld;
+    public InfoForGunSetup playerInfoForGunSetup;
+    private static readonly int shootableLayerMaskValue = 65;
+
+    //---------------------------interaction
+    private Interaction _currentInteract;
+    private TextMeshProUGUI _interactText;
+    private List<Interaction> _interactions;
+
+    private void Awake()
+    {
+        _playerState = PlayerState.Normal;
+
+        _characterController = GetComponent<CharacterController>();
+        _playerInput = GetComponent<PlayerInput>();
+        PlayerScore.ResetScore();
+
+        _cameraHolderTransform = transform.Find("CameraAndGunHolder").transform;
+
+        _cameraTransform = _cameraHolderTransform.Find("PlayerCamera").transform;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        _zombieDetectorCollider = GetComponent<SphereCollider>();
+        _zombieDetectorCollider.radius = distanceForZombieTooSee;
+
+        _movementDirection = new Vector2();
+        _currentMovementSpeed = movementSpeed;
+
+        _damageablePlayer = GetComponent<DamageableObject>();
+        _damageablePlayer.getHit.AddListener(UpdateHealthBar);
+        ZombieSpawnerManager.BecomeTarget(GetComponent<ZombieTarget>());
+
+        _playScreen = _cameraTransform.Find("UI/PlayScreen").gameObject;
+        _deathScreen = _cameraTransform.Find("UI/DeathScreen").gameObject;
+        _deathScreen.SetActive(false);
+
+        GunSetup();
+
+        _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
+        _interactText.text = "";
+        _interactions = new List<Interaction>();
+    }
+
+    private void GunSetup()
+    {
+        playerInfoForGunSetup = new InfoForGunSetup(
+           _cameraTransform.Find("UI/PlayScreen/AmmoTextHolder").GetComponent<TextMeshProUGUI>(),
+           _cameraTransform.Find("UI/PlayScreen/Crosshair").GetComponent<RectTransform>(),
+           _cameraTransform.Find("UI").GetComponent<CanvasScaler>(),
+           _cameraTransform.Find("UI").GetComponent<Canvas>(),
+           _cameraTransform.GetComponent<Camera>()
+           );
+
+        _currentWeaponIndex = 0;
+        Invoke("EquipNextWeapon", Time.fixedDeltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        if (_playerState == PlayerState.Normal)
+        {
+            PlayerMovement(Time.fixedDeltaTime);
+            PlayerScore.AddDeltaTimeToTimeSurvived(Time.fixedDeltaTime);
+        }
+    }
+
+    private void PlayerMovement(float deltaTime)
+    {
+        MovePlayer(deltaTime);
+        PlayerCameraMouvement(deltaTime);
+        CalculateSway(_movementDirection,deltaTime);
+    }
+
+    private void MovePlayer(float deltaTime)
+    {
+        //-----------------acceleration
+        if (!_characterController.isGrounded)
+        {
+            //add gravity
+            _movementSpeedAffectedByAcceleration.y -= deltaTime * 9.81f;
+        }
+        else if (_movementSpeedAffectedByAcceleration.y < 0)
+        {
+            _movementSpeedAffectedByAcceleration.y = 0;
+        }
+
+        //---------------normal movement
+        _movementVector = transform.right * _movementDirection.x + transform.forward * _movementDirection.y;
+        _movementVector *= deltaTime * _currentMovementSpeed;
+
+        _movementVector += _movementSpeedAffectedByAcceleration * deltaTime;
+
+        _characterController.Move(_movementVector);
+    }
+
+    private void PlayerCameraMouvement(float deltaTime)
+    {
+        //--------------head turning
+        _mouseDelta *= Time.deltaTime * mouseSensitivity;
+        _headRotation += _mouseDelta;
+        _headRotation.y = Mathf.Clamp(_headRotation.y, -90f, 90f);
+
+        _cameraHolderTransform.localEulerAngles = Vector3.right * -_headRotation.y;
+        transform.localEulerAngles = Vector3.up * _headRotation.x;
+
+        CalculateSway(new Vector3(_movementDirection.x, 0, _movementDirection.y), deltaTime);
+        CalculateBob(deltaTime);
+    }
+
+    //---------------------------------------------------------------------ui
+    private void CalculateSway(Vector3 direction, float deltaTime)
+    {
+        direction = direction.normalized;
+
+        float distance = Vector3.Distance(direction * maximumHeadSway, _cameraTransform.localPosition);
+        _cameraTransform.localPosition += (direction * maximumHeadSway - _cameraTransform.localPosition) * headSwaySpeed * deltaTime;
+    }
+
+    private void CalculateBob(float deltaTime)
+    {
+        _headBobTime += deltaTime * headBobSpeed * _characterController.velocity.magnitude;
+        if (_headBobTime >= 2*Mathf.PI) { _headBobTime = 0; }
+
+        _tempHeadBobDirection.x = Mathf.Cos(_headBobTime);
+        _tempHeadBobDirection.y = Mathf.Sin(2 * _headBobTime);
+
+        _cameraTransform.localPosition += maximumHeadBob*_tempHeadBobDirection;
+    }
+
+    private void UpdateHealthBar(Damage t)
+    {
+        _healthBarSlider.value = _damageablePlayer.GetHealthRatio();
+
+        if (_healthBarSlider.value == 0) { Die(); }
+    }
+    
+    //------------------------------------------------------------------weapons
+    public RaycastHit GetRaycastHitInFrontOfCamera(float spread)
+    {
+        RaycastHit hit;
+
+        float randomAngle = UnityEngine.Random.Range(0,2*Mathf.PI);
+
+        Vector3 spreadDiff = _cameraTransform.up * Mathf.Cos(randomAngle) + _cameraTransform.right * Mathf.Sin(randomAngle);
+        spreadDiff *= spread * UnityEngine.Random.value;
+
+        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out hit, 1000,shootableLayerMaskValue);
+        return hit;
+    }
+
+    public void EquipNextWeapon()
+    {
+        _weaponsHeld[_currentWeaponIndex].EquipOrUnequip();
+    }
+
+    //---------------------------------------------------------------interactions
+    public void AddInteractListener(Interaction interaction)
+    {
+        if (!_interactions.Contains(interaction))
+        {
+            _interactions.Add(interaction);
+        }
+
+        UpdateCurrentInteraction();
+    }
+
+    public void RemoveInteractListener(Interaction interaction)
+    {
+        _interactions.Remove(interaction);
+
+        UpdateCurrentInteraction();
+    }
+
+    private void UpdateCurrentInteraction()
+    {
+        if (_interactions.Count == 0) 
+        {
+            _interactText.text = "";
+            _currentInteract = null;
+        }
+        else
+        {
+            _interactText.text = "Press [E] to " + _interactions[0].GetInteractionText();
+            _currentInteract = _interactions[0];
+        }
+    }
+
+    //-----------------------------------------player state
+    private void Die()
+    {
+        _deathScreen.SetActive(true);
+        _playScreen.SetActive(false);
+
+        _playerState = PlayerState.Dead;
+
+        _deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetTime().ToString("N2");
+        _deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetKills().ToString();
+    }
+
+    //----------------------------input events
+    public void SetMovementDirection(InputAction.CallbackContext context)
+    {
+        _movementDirection = context.ReadValue<Vector2>();
+    }
+    
+    public void SetMouseDelta(InputAction.CallbackContext context)
+    {
+        _mouseDelta = context.ReadValue<Vector2>();
+    }
+
+    public void ShootCurrentGun(InputAction.CallbackContext context)
+    {
+        if (_playerState != PlayerState.Dead)_weaponsHeld[_currentWeaponIndex].ShootInputAction(context);
+    }
+    
+    public void ReloadCurrentGun(InputAction.CallbackContext context)
+    {
+        _weaponsHeld[_currentWeaponIndex].ReloadInputAction(context);
+    }
+    public void AimCurrentGun(InputAction.CallbackContext context)
+    {
+        _weaponsHeld[_currentWeaponIndex].AimInputAction(context);
+
+        if (context.started) { _currentMovementSpeed = movementSpeedWhenAiming; }
+        if (context.canceled) { _currentMovementSpeed = movementSpeed; }
+    }
+
+    public void SwitchWeapons(InputAction.CallbackContext context)
+    {
+        if (_weaponsHeld[0].IsReadyForSwitch() && _weaponsHeld[1].IsReadyForSwitch() && context.started)
+        {
+            _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
+
+            if (_currentWeaponIndex == 0)
+            {
+                _currentWeaponIndex = 1;
+            }
+            else
+            {
+                _currentWeaponIndex = 0;
+            }
+        }
+    }
+
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if (context.started && _currentInteract != null) { 
+            _currentInteract.GetAction().Invoke();
+            RemoveInteractListener(_currentInteract);
+        }
+    }
+}

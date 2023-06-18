@@ -1,0 +1,265 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TopIKZombieMask
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 0
+  - m_Path: Armature/Root
+    m_Weight: 0
+  - m_Path: Armature/Root/ArmsIKTarget_L
+    m_Weight: 1
+  - m_Path: Armature/Root/ArmsIKTarget_L/ArmsIKPole_L
+    m_Weight: 1
+  - m_Path: Armature/Root/ArmsIKTarget_L/ArmsIKPole_L/ArmsIKPole_L_end
+    m_Weight: 0
+  - m_Path: Armature/Root/ArmsIKTarget_R
+    m_Weight: 1
+  - m_Path: Armature/Root/ArmsIKTarget_R/ArmsIKPole_R
+    m_Weight: 1
+  - m_Path: Armature/Root/ArmsIKTarget_R/ArmsIKPole_R/ArmsIKPole_R_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01/Finger_02
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01/Finger_02/Finger_03
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01/Finger_02/Finger_03/Finger_04
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Finger_01/Finger_02/Finger_03/Finger_04/Finger_04_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/IndexFinger_01
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/IndexFinger_01/IndexFinger_02
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/IndexFinger_01/IndexFinger_02/IndexFinger_03
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/IndexFinger_01/IndexFinger_02/IndexFinger_03/IndexFinger_04
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/IndexFinger_01/IndexFinger_02/IndexFinger_03/IndexFinger_04/IndexFinger_04_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Thumb_01
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Thumb_01/Thumb_02
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Thumb_01/Thumb_02/Thumb_03
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L/Thumb_01/Thumb_02/Thumb_03/Thumb_03_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Finger_01.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Finger_01.001/Finger_02.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Finger_01.001/Finger_02.001/Finger_03.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Finger_01.001/Finger_02.001/Finger_03.001/Finger_04.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Finger_01.001/Finger_02.001/Finger_03.001/Finger_04.001/Finger_04.001_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/IndexFinger_01.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/IndexFinger_01.001/IndexFinger_02.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/IndexFinger_01.001/IndexFinger_02.001/IndexFinger_03.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/IndexFinger_01.001/IndexFinger_02.001/IndexFinger_03.001/IndexFinger_04.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/IndexFinger_01.001/IndexFinger_02.001/IndexFinger_03.001/IndexFinger_04.001/IndexFinger_04.001_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Thumb_01.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Thumb_01.001/Thumb_02.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Thumb_01.001/Thumb_02.001/Thumb_03.001
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R/Thumb_01.001/Thumb_02.001/Thumb_03.001/Thumb_03.001_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head/Eyebrows
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head/Eyebrows/Eyebrows_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head/Eyes
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head/Eyes/Eyes_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head/Jaw
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head/Jaw/Jaw_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_L/LowerLeg_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_L/LowerLeg_L/Ankle_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_L/LowerLeg_L/Ankle_L/Ball_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_L/LowerLeg_L/Ankle_L/Ball_L/Toes_L
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_L/LowerLeg_L/Ankle_L/Ball_L/Toes_L/Toes_L_end
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_R/LowerLeg_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_R/LowerLeg_R/Ankle_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_R/LowerLeg_R/Ankle_R/Ball_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_R/LowerLeg_R/Ankle_R/Ball_R/Toes_R
+    m_Weight: 0
+  - m_Path: Armature/Root/Hips/UpperLeg_R/LowerLeg_R/Ankle_R/Ball_R/Toes_R/Toes_R_end
+    m_Weight: 0
+  - m_Path: Armature/Root/LegIKPole_R
+    m_Weight: 0
+  - m_Path: Armature/Root/LegIKPole_R/LegIKPole_R_end
+    m_Weight: 0
+  - m_Path: Armature/Root/LegsIKPole_L
+    m_Weight: 0
+  - m_Path: Armature/Root/LegsIKPole_L/LegsIKPole_L_end
+    m_Weight: 0
+  - m_Path: Armature/Root/LegsIKTarget_L
+    m_Weight: 0
+  - m_Path: Armature/Root/LegsIKTarget_L/LegsIKTarget_L_end
+    m_Weight: 0
+  - m_Path: Armature/Root/LegsIKTarget_R
+    m_Weight: 0
+  - m_Path: Armature/Root/LegsIKTarget_R/LegsIKTarget_R_end
+    m_Weight: 0
+  - m_Path: Zombie_Bellboy_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Biker_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_BioHazardSuit_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Bride_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Business_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Businessman_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_BusinessShirt_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Cheerleader_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Clown_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Coat_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Daughter_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Diver_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_FastfoodWorker_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Father_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Father_Male_02
+    m_Weight: 0
+  - m_Path: Zombie_Firefighter_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Footballer_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_GamerGirl_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Gangster_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Grandma_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Grandpa_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Hipster_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Hipster_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Hobo_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Hoodie_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_HotDogSuit_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Jacket_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Jacket_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Jock_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Military_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Mother_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Mother_Female_02
+    m_Weight: 0
+  - m_Path: Zombie_Paramedic_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Patient_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Police_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Police_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Prisinor_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Punk_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Punk_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_RiotCop_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Roadworker_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_SchoolBoy_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_SchoolGirl_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_ShopKeeper_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_ShopKeeper_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Son_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_SummerGirl_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Tourist_Male_01
+    m_Weight: 0
+  - m_Path: Zombie_Underwear_Female_01
+    m_Weight: 0
+  - m_Path: Zombie_Underwear_Male_01
+    m_Weight: 0
