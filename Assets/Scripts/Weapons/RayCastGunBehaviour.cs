@@ -54,6 +54,8 @@ public class RayCastGunBehaviour : WeaponBehaviour
 
         _spread = _restingSpread;
         UpdateUIScale();
+
+        _trailRenderer = GetComponent<TrailRenderer>();
     }
 
     protected override void ReadyAnimationLengths(Animator animator)
@@ -115,30 +117,7 @@ public class RayCastGunBehaviour : WeaponBehaviour
         {
             RaycastHit pointShot = GetPlayerController().GetRaycastHitInFrontOfCamera(_spread);
 
-            if (pointShot.transform && pointShot.distance <= range)
-            {
-                if (pointShot.transform.TryGetComponent(out DamageableObject DO))
-                {
-                    DO.getHit.Invoke(new Damage(damage, pointShot.point - transform.position, this));
-
-                    //--------------------------hitmarker
-                    Transform HM = Instantiate(HitMarker, pointShot.point, Quaternion.identity).transform;
-                    HM.transform.LookAt(cameraPosition);
-                    HM.localScale *= pointShot.distance / 10;
-                    Destroy(HM.gameObject, HITMARKER_LIFETIME);
-                }
-
-                //-----------------------------------------------bullet hole
-                if (pointShot.transform.gameObject.layer == 0)
-                {
-                    Transform BHD = Instantiate(bulletHoleOnDefault, pointShot.point, Quaternion.identity).transform;
-                    BHD.rotation = Quaternion.FromToRotation(BHD.forward, pointShot.normal);
-                    BHD.position -= BHD.forward * 0.03f;
-                    BHD.parent = pointShot.transform;
-
-                    Destroy(BHD.gameObject, BULLETHOLE_LIFETIME);
-                }
-            }
+            HandleRayCastShot(pointShot, cameraPosition);
         }
         if (muzzleFlash) muzzleFlash.Play();
 
@@ -148,6 +127,34 @@ public class RayCastGunBehaviour : WeaponBehaviour
         _ammoRemainingInMag--;
         _remainingShots--;
         UpdateAmmoText();
+    }
+
+    private void HandleRayCastShot(RaycastHit pointShot, Vector3 cameraPosition)
+    {
+        if (pointShot.transform && pointShot.distance <= range)
+        {
+            if (pointShot.transform.TryGetComponent(out DamageableObject DO))
+            {
+                DO.getHit.Invoke(new Damage(damage, pointShot.point - transform.position, this));
+
+                //--------------------------hitmarker
+                Transform HM = Instantiate(HitMarker, pointShot.point, Quaternion.identity).transform;
+                HM.transform.LookAt(cameraPosition);
+                HM.localScale *= pointShot.distance / 10;
+                Destroy(HM.gameObject, HITMARKER_LIFETIME);
+            }
+
+            //-----------------------------------------------bullet hole
+            if (pointShot.transform.gameObject.layer == 0)
+            {
+                Transform BHD = Instantiate(bulletHoleOnDefault, pointShot.point, Quaternion.identity).transform;
+                BHD.rotation = Quaternion.FromToRotation(BHD.forward, pointShot.normal);
+                BHD.position -= BHD.forward * 0.03f;
+                BHD.parent = pointShot.transform;
+
+                Destroy(BHD.gameObject, BULLETHOLE_LIFETIME);
+            }
+        }
     }
 
     protected override void StartShooting()
