@@ -13,6 +13,8 @@ public class RayCastGunBehaviour : WeaponBehaviour
     [Header("General Stats")]
     [SerializeField] private float fireRateForShots;
     private float _lastTimeShot;
+    private int _currentEnemiesKilledByPellets;
+    private int _currentEnemiesKilledByFireStream;
     [SerializeField] private float damage;
     [SerializeField] private int pelletsPerShot = 1;
     [SerializeField] private float range = 100;
@@ -28,7 +30,6 @@ public class RayCastGunBehaviour : WeaponBehaviour
 
     [Header("Visual Effects")]
     [SerializeField] private VisualEffect muzzleFlash;
-    private TrailRenderer _trailRenderer;
     [SerializeField] private GameObject HitMarker;
     [SerializeField] private GameObject bulletHoleOnDefault;
 
@@ -54,8 +55,6 @@ public class RayCastGunBehaviour : WeaponBehaviour
 
         _spread = _restingSpread;
         UpdateUIScale();
-
-        _trailRenderer = GetComponent<TrailRenderer>();
     }
 
     protected override void ReadyAnimationLengths(Animator animator)
@@ -133,6 +132,7 @@ public class RayCastGunBehaviour : WeaponBehaviour
     {
         if (pointShot.transform && pointShot.distance <= range)
         {
+            
             if (pointShot.transform.TryGetComponent(out DamageableObject DO))
             {
                 DO.getHit.Invoke(new Damage(damage, pointShot.point - transform.position, this));

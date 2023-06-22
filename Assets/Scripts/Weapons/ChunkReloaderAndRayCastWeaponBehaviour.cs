@@ -69,18 +69,6 @@ namespace Assets.Scripts.Weapons
 
             int nextChunk = Mathf.Min(chunk, maxBulletsInMag - _ammoRemainingInMag);
 
-            /*for(int i = maxBulletsInMag - _ammoRemainingInMag; i > 0 && bulletsOnPlayer != nextChunk; i--, nextChunk = Mathf.Min(chunk, maxBulletsInMag - _ammoRemainingInMag))
-            {
-                yield return _reloadChunkWait;
-                Debug.Log(i);
-
-                _ammoRemainingInMag += Mathf.Min(chunk, maxBulletsInMag - _ammoRemainingInMag);
-
-                bulletsOnPlayer -= Mathf.Min(chunk, maxBulletsInMag - _ammoRemainingInMag);
-
-                UpdateAmmoText();
-            }*/
-
             do
             {
                 yield return _reloadChunkWait;

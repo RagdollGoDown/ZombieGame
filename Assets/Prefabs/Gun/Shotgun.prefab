@@ -402,6 +402,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7828530684144329590}
+  - {fileID: 661866200493340501}
   m_Father: {fileID: 2052900506874410639}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -17.84829, y: 179.99998, z: 53.28003}
@@ -732,6 +733,37 @@ Transform:
   m_Father: {fileID: 8779492253643821019}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 2.9876547, y: 0.62338275, z: -6.521604}
+--- !u!1 &3611196904038445857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 661866200493340501}
+  m_Layer: 3
+  m_Name: BarrelEnd
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &661866200493340501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3611196904038445857}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0661, y: 0.5433, z: -0.0673}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5941473849496385562}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3626548365518617391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1591,7 +1623,7 @@ MonoBehaviour:
   reloadAnimationTime: 1
   switchAnimationLength: 0.792
   fireRateForShots: 2.1
-  damage: 8
+  damage: 10
   pelletsPerShot: 20
   range: 100
   _maxSpread: 0.2

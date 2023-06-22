@@ -16,7 +16,10 @@ public abstract class WeaponBehaviour : MonoBehaviour
     private Camera _playerCamera;
 
     private Animator _gunAnimator;
- 
+
+    private BoostCondition _boostCondition;
+
+    //---------------------------------state bools
     private bool _isReloading;
 
     private bool _isShooting;
@@ -24,6 +27,7 @@ public abstract class WeaponBehaviour : MonoBehaviour
 
     private bool _isHolstered = true;
     private bool _isSwitching;
+
     [SerializeField] private float reloadDuration = 1;
     [SerializeField] private float timeToEquip = 1;
 
@@ -113,6 +117,8 @@ public abstract class WeaponBehaviour : MonoBehaviour
         _isShooting = false;
        if(_gunAnimator)_gunAnimator.SetBool("IsShooting", false);
     }
+
+    protected virtual void ValidateKill(){}
 
     //----------------------------------------reloading
     protected abstract bool ReloadConditions();
@@ -243,6 +249,11 @@ public abstract class WeaponBehaviour : MonoBehaviour
     protected bool GetIsAiming()
     {
         return _isAiming;
+    }
+
+    public BoostCondition GetBoostCondition()
+    {
+        return _boostCondition;
     }
 
     //---------------------------------------getters_ui

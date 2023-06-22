@@ -15097,8 +15097,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ce41d6500f9864f838a1fbe1d61052, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMaxZombiesPerRound: 0
-  escalationPerRound: 0
+  baseMaxZombiesPerRound: 5
+  escalationPerRound: 1
   timeBetweenRounds: 10
   spawner: {fileID: 712549422}
 --- !u!1001 &821725194
