@@ -7,6 +7,12 @@ public class PlayerScore
     private static float _timeSurvived;
     private static int _killCount;
 
+    private static int _multiKillsCurrent;
+    private static int _multiKillsTotal;
+    private static int _headShotsCurrent;
+    private static int _headShotsTotal;
+    
+
     private PlayerScore(){}
 
     public static void ResetScore()

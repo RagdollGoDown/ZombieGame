@@ -32,6 +32,9 @@ public class RayCastGunBehaviour : WeaponBehaviour
     [SerializeField] private VisualEffect muzzleFlash;
     [SerializeField] private GameObject HitMarker;
     [SerializeField] private GameObject bulletHoleOnDefault;
+    [SerializeField] private GameObject bulletObject;
+    [SerializeField] private float bulletLerpSpeed = 100;
+    [SerializeField] private Transform barrelExit;
 
     [Header("Ammo and Reloading")]
     protected int _ammoRemainingInMag;
@@ -55,6 +58,9 @@ public class RayCastGunBehaviour : WeaponBehaviour
 
         _spread = _restingSpread;
         UpdateUIScale();
+
+        if (!barrelExit) throw new System.ArgumentNullException("Gun barrel is null");
+        if (bulletObject && bulletLerpSpeed <= 0) throw new System.ArgumentException("Speed isn't strictly positiv");
     }
 
     protected override void ReadyAnimationLengths(Animator animator)
@@ -132,6 +138,7 @@ public class RayCastGunBehaviour : WeaponBehaviour
     {
         if (pointShot.transform && pointShot.distance <= range)
         {
+            StartCoroutine(nameof(BulletTrailHandler), pointShot.point);
             
             if (pointShot.transform.TryGetComponent(out DamageableObject DO))
             {
@@ -155,6 +162,28 @@ public class RayCastGunBehaviour : WeaponBehaviour
                 Destroy(BHD.gameObject, BULLETHOLE_LIFETIME);
             }
         }
+    }
+
+    protected IEnumerator BulletTrailHandler(Vector3 target)
+    {
+        Vector3 barrelPosition = barrelExit.position;
+
+        Transform bullet = Instantiate(bulletObject, barrelPosition, barrelExit.rotation).transform;
+
+        float adaptedSpeed = bulletLerpSpeed / Vector3.Distance(barrelPosition, target);
+
+        float lerpPosition = 0;
+
+        while(lerpPosition < 1)
+        {
+            bullet.position = Vector3.Lerp(barrelPosition, target, lerpPosition);
+
+            lerpPosition += Time.deltaTime * adaptedSpeed;
+
+            yield return null;
+        }
+
+        Destroy(bullet.gameObject);
     }
 
     protected override void StartShooting()

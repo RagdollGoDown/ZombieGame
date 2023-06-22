@@ -1636,6 +1636,10 @@ MonoBehaviour:
     type: 3}
   bulletHoleOnDefault: {fileID: 7324937899285111298, guid: e08ed50810fa5a7428a8974a3e68a9de,
     type: 3}
+  bulletObject: {fileID: 4766820750362595819, guid: 3a084999302ccd5479f30c9f8bf2bf79,
+    type: 3}
+  bulletLerpSpeed: 100
+  barrelExit: {fileID: 661866200493340501}
   maxBulletsInMag: 8
   bulletsOnPlayer: 80
   shotsPerTriggerPress: 100
