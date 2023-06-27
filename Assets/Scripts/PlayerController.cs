@@ -62,6 +62,8 @@ public class PlayerController : MonoBehaviour
     public InfoForGunSetup playerInfoForGunSetup;
     private static readonly int shootableLayerMaskValue = 65;
 
+    private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
+
     //---------------------------interaction
     private Interaction _currentInteract;
     private TextMeshProUGUI _interactText;
@@ -113,7 +115,19 @@ public class PlayerController : MonoBehaviour
            _cameraTransform.GetComponent<Camera>()
            );
 
-        _currentWeaponIndex = 0;
+        _onPlayerWeaponsToName = new Dictionary<string,WeaponBehaviour>();
+
+        foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
+        {
+            if (t.TryGetComponent(out WeaponBehaviour wpb))
+            {
+                _onPlayerWeaponsToName.Add(t.name, wpb);
+
+                t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
+            }
+        }
+
+            _currentWeaponIndex = 0;
         Invoke("EquipNextWeapon", Time.fixedDeltaTime);
     }
 
@@ -244,6 +258,16 @@ public class PlayerController : MonoBehaviour
         {
             _interactText.text = "Press [E] to " + _interactions[0].GetInteractionText();
             _currentInteract = _interactions[0];
+        }
+    }
+
+    public void PickUpWeapon(string weaponName)
+    {
+        if (_onPlayerWeaponsToName.TryGetValue(name, out WeaponBehaviour newWeapon))
+        {
+            _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
+
+            _weaponsHeld[_currentWeaponIndex] = newWeapon;
         }
     }
 

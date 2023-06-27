@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\UI\DissolveAnimationForImage.cs" />
     <Compile Include="Assets\Scripts\Objectives\Objective.cs" />
     <Compile Include="Assets\Scripts\Zombies\ZombieTarget.cs" />
+    <Compile Include="Assets\Scripts\GunCrate.cs" />
     <Compile Include="Assets\Scripts\Weapons\BloodSpillOnCollide.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\HighlightBoosts.cs" />
     <Compile Include="Assets\Scripts\PlayerScore.cs" />

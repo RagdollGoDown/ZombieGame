@@ -207,7 +207,7 @@ public class RayCastGunBehaviour : WeaponBehaviour
     {
         base.StopAndAccomplishReload();
 
-        int bulletsInNextMag = bulletsOnPlayer >= maxBulletsInMag ? maxBulletsInMag : bulletsOnPlayer % maxBulletsInMag;
+        int bulletsInNextMag = bulletsOnPlayer >= maxBulletsInMag ? maxBulletsInMag : bulletsOnPlayer;
         //here we subtract only what needs to be added to fill the mag from the player's bullets
         bulletsOnPlayer -= bulletsInNextMag - _ammoRemainingInMag;
         _ammoRemainingInMag = bulletsInNextMag;

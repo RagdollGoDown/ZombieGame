@@ -47,7 +47,6 @@ public class Interaction
 
     public UnityEvent GetAction()
     {
-        Debug.Log("action");
         return interactionAction;
     }
 
