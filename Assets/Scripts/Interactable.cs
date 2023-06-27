@@ -46,7 +46,8 @@ public class Interactable : MonoBehaviour
             
         if (_playerInArea)_playerInArea.RemoveInteractListener(_interaction);
 
-        _interaction = new Interaction(interactEvent, newText);
+        interactionText = newText;
+        //_interaction = new Interaction(interactEvent, interactionText);
 
         if (_playerInArea) _playerInArea.AddInteractListener(_interaction);
     }

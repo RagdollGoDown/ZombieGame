@@ -12,7 +12,7 @@ public class WeaponnCrate : MonoBehaviour
     private void Awake()
     {
         _inter = GetComponent<Interactable>();
-        _inter.SetInteractionText(" pickup " + weaponName);
+        _inter.SetInteractionText("pick up " + weaponName);
     }
 
     /*
