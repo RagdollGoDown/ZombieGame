@@ -182,7 +182,6 @@ public abstract class WeaponBehaviour : MonoBehaviour
     private IEnumerator EquipWeapon()
     {
         _isSwitching = true;
-        Debug.Log(_gunAnimator == null);
         _gunAnimator.SetBool("IsSwitching", true);
 
         //the param change needs to be done earlier or it will cycle to the unequip animation

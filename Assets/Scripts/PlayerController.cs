@@ -261,13 +261,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /*
+     * replaces the weapon currently equipped with the weapon given, identified by it's name
+     * if the weapon isn't identified then it throws illegal argument Exception
+     */
     public void PickUpWeapon(string weaponName)
     {
-        if (_onPlayerWeaponsToName.TryGetValue(name, out WeaponBehaviour newWeapon))
+        if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
         {
             _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
 
+            newWeapon.gameObject.SetActive(true);
             _weaponsHeld[_currentWeaponIndex] = newWeapon;
+        }
+        else
+        {
+            throw new System.ArgumentException("No such weapon");
         }
     }
 

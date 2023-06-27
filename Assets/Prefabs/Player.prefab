@@ -1491,7 +1491,7 @@ MonoBehaviour:
   _healthBarSlider: {fileID: 1211804396481788791}
   _weaponsHeld:
   - {fileID: 9040535435785125949}
-  - {fileID: 5847717264853021304}
+  - {fileID: 493891096793207888}
 --- !u!54 &3113631219840723393
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2717,6 +2717,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f1b91762f2c04f428107259dfbcfb6e, type: 3}
+--- !u!114 &493891096793207888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9166101835580948745, guid: 3f1b91762f2c04f428107259dfbcfb6e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8786010895094224217}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4595251459825247778 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5056331273752490875, guid: 3f1b91762f2c04f428107259dfbcfb6e,
@@ -2812,15 +2824,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8805151709175910296}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5847717264853021304 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3104507421895245280, guid: 00a647f83c496a74a9e3385544584e66,
-    type: 3}
-  m_PrefabInstance: {fileID: 8805151709175910296}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

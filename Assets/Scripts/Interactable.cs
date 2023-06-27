@@ -11,26 +11,52 @@ public class Interactable : MonoBehaviour
 
     [SerializeField] private string interactionText;
 
-    private Interaction interaction;
+    private Interaction _interaction;
+
+    private PlayerController _playerInArea;
 
     private void Awake()
     {
-        interaction = new Interaction(interactEvent, interactionText);
+        _interaction = new Interaction(interactEvent, interactionText);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player" && other.TryGetComponent(out PlayerController pc))
         {
-            pc.AddInteractListener(interaction);
+            pc.AddInteractListener(_interaction);
+            _playerInArea = pc;
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player" && other.TryGetComponent(out PlayerController pc))
         {
-            pc.RemoveInteractListener(interaction);
+            pc.RemoveInteractListener(_interaction);
+            _playerInArea = pc;
         }
+    }
+
+    /*
+    Changes the interation to have the new text
+    if the player is in the zone the it changes it for him too
+     */
+    public void SetInteractionText(string newText)
+    {
+            
+        if (_playerInArea)_playerInArea.RemoveInteractListener(_interaction);
+
+        _interaction = new Interaction(interactEvent, newText);
+
+        if (_playerInArea) _playerInArea.AddInteractListener(_interaction);
+    }
+
+    /*
+     * returns the player in the area where it can interact with this or null
+     */
+    public PlayerController GetPlayerInArea()
+    {
+        return _playerInArea;
     }
 }
 
