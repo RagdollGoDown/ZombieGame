@@ -272,7 +272,22 @@ public class PlayerController : MonoBehaviour
             _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
 
             newWeapon.gameObject.SetActive(true);
-            _weaponsHeld[_currentWeaponIndex] = newWeapon;
+
+            //if he already has the weapon just refill it and switch to it
+            if (_weaponsHeld[0] == newWeapon)
+            {
+                _currentWeaponIndex = 0;
+            }
+            else if (_weaponsHeld[1] == newWeapon)
+            {
+                _currentWeaponIndex = 1;
+            }
+            else
+            {
+                _weaponsHeld[_currentWeaponIndex] = newWeapon;
+            }
+
+            _weaponsHeld[_currentWeaponIndex].RefillWeaponAmmo();
         }
         else
         {

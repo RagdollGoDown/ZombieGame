@@ -6,15 +6,16 @@ public class ZombieSpawnerManager : MonoBehaviour
 {
     private static ZombieTarget PLAYER_TARGET;
     private static int ZOMBIESINWORLD;
+    private static ZombieSpawnerManager CURRENT_SPAWNER;
 
     private int _maxZombiesInWorld;
     [SerializeField] private int baseMaxZombiesPerRound;
     [SerializeField] private int escalationPerRound;
     [SerializeField] private int timeBetweenRounds = 10;
+    [SerializeField] private int timeBeforeFirstRound = 2;
 
     private enum SpawnerState
     {
-        SPAWNING,
         MIDROUND,
         BREAK
     }
@@ -24,6 +25,7 @@ public class ZombieSpawnerManager : MonoBehaviour
     [SerializeField]private ZombieSpawner spawner;
     private int _indexInSpawners;
 
+    private int _currentRound;
 
     //-------------------------------events
 
@@ -31,33 +33,45 @@ public class ZombieSpawnerManager : MonoBehaviour
     {
         _maxZombiesInWorld = baseMaxZombiesPerRound;
 
+        if (timeBetweenRounds <= 0) throw new System.ArgumentException("Time between rounds not strictly positiv");
+        if (timeBeforeFirstRound <= 0) throw new System.ArgumentException("Time before first round not strictly positiv");
+
         if (timeBetweenRounds < 1) { timeBetweenRounds = 1; }
 
         _spawners = GetComponentsInChildren<ZombieSpawner>();
+
+        CURRENT_SPAWNER = this;
     }
 
     private void OnDisable()
     {
+        if (CURRENT_SPAWNER == this) CURRENT_SPAWNER = null;
         ZOMBIESINWORLD = 0;
     }
 
     private void EnterBreakTime()
     {
+        Debug.Log("Break");
+        _spawnerState = SpawnerState.BREAK;
         Invoke("EnterRound", timeBetweenRounds);
     }
 
     private void EnterRound()
     {
-        _spawnerState = SpawnerState.SPAWNING;
-
-        BeginToSpawn();
+        Debug.Log("Round");
+        _currentRound++;
+        _spawnerState = SpawnerState.MIDROUND;
+        SpawnZombies();
     }
 
     public void BeginToSpawn()
     {
+        Debug.Log((CURRENT_SPAWNER == this));
+        if (CURRENT_SPAWNER != this) return;
+
         if (_spawners.Length > 0 && CanSpawn())
         {
-            InvokeRepeating("SpawnZombies", timeBetweenRounds, timeBetweenRounds);
+            Invoke(nameof(EnterRound), timeBeforeFirstRound);
         }
         else
         {
@@ -101,6 +115,18 @@ public class ZombieSpawnerManager : MonoBehaviour
         return hasActiveSpawner;
     }
 
+    private bool IsSpawning()
+    {
+        bool b = false;
+
+        foreach(ZombieSpawner zs in _spawners)
+        {
+            b = zs.IsSpawning() || b;
+        }
+
+        return b;
+    }
+
     //---------------------------------setters
 
     //the zombie spawners add the zombies to the count but the zombies remove themselves from it
@@ -111,6 +137,10 @@ public class ZombieSpawnerManager : MonoBehaviour
     public static void RemoveZombie()
     {
         if (ZOMBIESINWORLD > 0) ZOMBIESINWORLD--;
+
+        if (ZOMBIESINWORLD == 0 && 
+            CURRENT_SPAWNER && !CURRENT_SPAWNER.IsSpawning()) 
+            CURRENT_SPAWNER.EnterBreakTime();
     }
 
     public static void BecomeTarget(ZombieTarget newTarget)

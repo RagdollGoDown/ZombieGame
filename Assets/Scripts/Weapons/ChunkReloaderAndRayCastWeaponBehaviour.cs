@@ -62,8 +62,6 @@ namespace Assets.Scripts.Weapons
             SetIsReloading(true);
 
             GetAnimator().SetBool("IsReloading", true);
-            Debug.Log(_ammoRemainingInMag+ " rem");
-            Debug.Log((maxBulletsInMag - _ammoRemainingInMag)+ " to load");
 
             yield return _reloadEnterWait;
 
@@ -77,7 +75,7 @@ namespace Assets.Scripts.Weapons
 
                 _ammoRemainingInMag += nextChunk;
 
-                bulletsOnPlayer -= nextChunk;
+                _bulletsOnPlayer -= nextChunk;
 
                 UpdateAmmoText();
             } while (ReloadConditions());

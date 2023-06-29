@@ -39,7 +39,8 @@ public class RayCastGunBehaviour : WeaponBehaviour
     [Header("Ammo and Reloading")]
     protected int _ammoRemainingInMag;
     [SerializeField] protected int maxBulletsInMag;
-    [SerializeField] protected int bulletsOnPlayer;
+    [SerializeField] protected int maxBulletsOnPlayer;
+    protected int _bulletsOnPlayer;
     [SerializeField] private int shotsPerTriggerPress = 100;
     private int _remainingShots;
 
@@ -52,6 +53,8 @@ public class RayCastGunBehaviour : WeaponBehaviour
     protected override void AwakeWeapon()
     {
         base.AwakeWeapon();
+
+        _bulletsOnPlayer = maxBulletsOnPlayer;
 
         _ammoRemainingInMag = maxBulletsInMag;
         UpdateAmmoText();
@@ -200,25 +203,30 @@ public class RayCastGunBehaviour : WeaponBehaviour
     protected override bool ReloadConditions()
     {
         //we also check if the gun past it's shot so that it doesn't reload while shooting
-        return _ammoRemainingInMag != maxBulletsInMag && bulletsOnPlayer > 0 && _lastTimeShot + fireRateForShots <= Time.time;
+        return _ammoRemainingInMag != maxBulletsInMag && _bulletsOnPlayer > 0 && _lastTimeShot + fireRateForShots <= Time.time;
     }
 
     protected override void StopAndAccomplishReload()
     {
         base.StopAndAccomplishReload();
 
-        int bulletsInNextMag = bulletsOnPlayer >= maxBulletsInMag ? maxBulletsInMag : bulletsOnPlayer;
+        int bulletsInNextMag = _bulletsOnPlayer >= maxBulletsInMag ? maxBulletsInMag : _bulletsOnPlayer;
         //here we subtract only what needs to be added to fill the mag from the player's bullets
-        bulletsOnPlayer -= bulletsInNextMag - _ammoRemainingInMag;
+        _bulletsOnPlayer -= bulletsInNextMag - _ammoRemainingInMag;
         _ammoRemainingInMag = bulletsInNextMag;
 
         UpdateAmmoText();
     }
 
+    public override void RefillWeaponAmmo()
+    {
+        _bulletsOnPlayer = maxBulletsOnPlayer;
+    }
+
     //-------------------------------------------ui
     protected override void UpdateAmmoText()
     {
-        GetAmmoTextHolder().text = _ammoRemainingInMag + " / " + bulletsOnPlayer;
+        GetAmmoTextHolder().text = _ammoRemainingInMag + " / " + _bulletsOnPlayer;
     }
 
     protected override void UpdateCrosshair()

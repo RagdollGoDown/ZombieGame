@@ -195,6 +195,8 @@ public abstract class WeaponBehaviour : MonoBehaviour
         UpdateAmmoText();
     }
 
+    public abstract void RefillWeaponAmmo();
+
     //----------------------------------------------ui
     protected virtual void UpdateAmmoText() { }
 

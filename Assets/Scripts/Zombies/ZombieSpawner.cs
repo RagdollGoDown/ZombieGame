@@ -75,4 +75,6 @@ public class ZombieSpawner : MonoBehaviour
     //-----------------------------------------------getters
 
     public bool CanSpawn() { return _canSpawn; }
+
+    public bool IsSpawning() { return _zombiesToSpawn > 0; }
 }

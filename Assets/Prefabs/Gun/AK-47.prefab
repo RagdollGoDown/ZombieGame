@@ -123,7 +123,7 @@ MonoBehaviour:
   bulletLerpSpeed: 300
   barrelExit: {fileID: 4062378062954414808}
   maxBulletsInMag: 30
-  bulletsOnPlayer: 300
+  maxBulletsOnPlayer: 300
   shotsPerTriggerPress: 100
 --- !u!1 &690483701603200859
 GameObject:

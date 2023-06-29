@@ -76,8 +76,8 @@ MonoBehaviour:
   damage: 20
   pelletsPerShot: 1
   range: 100
-  _maxSpread: 0.4
-  _restingSpread: 0.1
+  _maxSpread: 0.05
+  _restingSpread: 0.01
   _spreadDecreaseSpeed: 1
   _spreadDecreaseSpeedWhenAiming: 2
   _spreadIncreasePerShot: 0.2
@@ -91,7 +91,7 @@ MonoBehaviour:
   bulletLerpSpeed: 100
   barrelExit: {fileID: 4062378062954414808}
   maxBulletsInMag: 25
-  bulletsOnPlayer: 250
+  maxBulletsOnPlayer: 250
   shotsPerTriggerPress: 5
 --- !u!1 &694665245767129001
 GameObject:

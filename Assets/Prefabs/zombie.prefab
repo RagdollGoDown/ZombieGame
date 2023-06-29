@@ -8000,7 +8000,7 @@ MonoBehaviour:
   _headTransform: {fileID: 9033788945885389925}
   minRunningSpeed: 6
   maxRunningSpeed: 10
-  crawlingSpeed: 5
+  crawlingSpeed: 3
   attackDamage: 5
   attackDamageWithHeads: 0
   timeBetweenAttacks: 1
