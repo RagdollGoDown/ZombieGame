@@ -8,11 +8,11 @@ namespace Assets.Scripts.Objectives
     public class ObjectivesManager : MonoBehaviour
     {
         private UnityEvent onObjectiveComplete;
+        private List<PlayerController> players;
 
         [SerializeField] private AreaObjectiveObject test;
         [SerializeField] private AreaObjectiveObject test2;
         [SerializeField] private ButtonsObjectiveObject test3;
-        [SerializeField] private float timeBetweenObjectives;
 
         private Objective objective1;
         private Objective objective2;
@@ -20,6 +20,10 @@ namespace Assets.Scripts.Objectives
 
         private Objective currentObjective;
         private List<Objective> objs;
+
+        [Header("Time")]
+        [SerializeField] private float timeBetweenObjectives;
+        [SerializeField] private float timeBetweenChecks;
 
         private void Awake()
         {
@@ -41,13 +45,22 @@ namespace Assets.Scripts.Objectives
         private void CompleteObjective()
         {
             Debug.Log("complete");
-            Invoke("BeginObjective", timeBetweenObjectives);
+            Invoke(nameof(CheckIfShouldStartObjective), timeBetweenObjectives);
         }
         private void BeginObjective()
         {
             Debug.Log("begin");
             currentObjective = objective3;
             currentObjective.Begin();
+        }
+
+        private void CheckIfShouldStartObjective()
+        {
+            if (ZombieSpawnerManager.GetCurrentSpawnerState() == ZombieSpawnerManager.SpawnerState.BREAK) return;
+
+            
+
+            Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
     }
 }

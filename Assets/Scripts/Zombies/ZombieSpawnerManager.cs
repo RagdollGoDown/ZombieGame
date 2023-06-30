@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 public class ZombieSpawnerManager : MonoBehaviour
 {
-    private static ZombieTarget PLAYER_TARGET;
     private static int ZOMBIESINWORLD;
     private static ZombieSpawnerManager CURRENT_SPAWNER;
 
@@ -14,16 +14,20 @@ public class ZombieSpawnerManager : MonoBehaviour
     [SerializeField] private int timeBetweenRounds = 10;
     [SerializeField] private int timeBeforeFirstRound = 2;
 
-    private enum SpawnerState
+    public enum SpawnerState
     {
         MIDROUND,
-        BREAK
+        BREAK,
+        UNKNOWN
     }
     private SpawnerState _spawnerState;
 
     private ZombieSpawner[] _spawners;
     [SerializeField]private ZombieSpawner spawner;
     private int _indexInSpawners;
+
+    private ZombieTarget[] _targets;
+    private ReadOnlyCollection<PlayerController> oldListOfPLayers;
 
     private int _currentRound;
 
@@ -92,14 +96,36 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         _maxZombiesInWorld += escalationPerRound;
 
-        if (zombiesToSpawn < 1) { return; }
+        ReloadTargetsArrayIfNecessary();
+
+        if (zombiesToSpawn < 1 && _targets.Length > 0) { return; }
+
+        int targetIndex = 0;
 
         while (zombiesToSpawn > 0)
         {
-            int a = _spawners[_indexInSpawners].AddZombiesToSpawn(Random.Range(1, zombiesToSpawn + 1), PLAYER_TARGET);
+            int a = _spawners[_indexInSpawners].
+                AddZombiesToSpawn(Random.Range(1, zombiesToSpawn + 1), _targets[targetIndex]);
             zombiesToSpawn -= a;
 
+            targetIndex = (targetIndex + 1) % _targets.Length;
+
             _indexInSpawners = (_indexInSpawners+1) % _spawners.Length;
+        }
+    }
+
+    private void ReloadTargetsArrayIfNecessary()
+    {
+        if (_targets != null && PlayerController.GetPlayers().Equals(oldListOfPLayers)) return;
+
+        oldListOfPLayers = PlayerController.GetPlayers();
+
+        _targets = new ZombieTarget[oldListOfPLayers.Count];
+
+        int i = 0;
+        foreach (PlayerController p in oldListOfPLayers)
+        {
+            _targets[i++] = p.GetPlayerTargetComponent();
         }
     }
 
@@ -143,9 +169,10 @@ public class ZombieSpawnerManager : MonoBehaviour
             CURRENT_SPAWNER.EnterBreakTime();
     }
 
-    public static void BecomeTarget(ZombieTarget newTarget)
-    {
-        PLAYER_TARGET = newTarget;
-    } 
+    //-------------------------------getters
 
+    public static SpawnerState GetCurrentSpawnerState() {
+        if (CURRENT_SPAWNER) return CURRENT_SPAWNER._spawnerState;
+        else return SpawnerState.UNKNOWN;
+    }
 }

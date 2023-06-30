@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(DamageableObject))]
 [RequireComponent(typeof(ZombieTarget))]
 public class PlayerController : MonoBehaviour
 {
+    private static List<PlayerController> PLAYERS;
+
     private enum PlayerState
     {
         Normal,
@@ -51,6 +54,7 @@ public class PlayerController : MonoBehaviour
     //TODO unserialize
     [SerializeField]private Slider _healthBarSlider;
     private DamageableObject _damageablePlayer;
+    private ZombieTarget _playerTarget;
 
     private GameObject _playScreen;
     private GameObject _deathScreen;
@@ -69,42 +73,7 @@ public class PlayerController : MonoBehaviour
     private TextMeshProUGUI _interactText;
     private List<Interaction> _interactions;
 
-    private void Awake()
-    {
-        _playerState = PlayerState.Normal;
-
-        _characterController = GetComponent<CharacterController>();
-        _playerInput = GetComponent<PlayerInput>();
-        PlayerScore.ResetScore();
-
-        _cameraHolderTransform = transform.Find("CameraAndGunHolder").transform;
-
-        _cameraTransform = _cameraHolderTransform.Find("PlayerCamera").transform;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        _zombieDetectorCollider = GetComponent<SphereCollider>();
-        _zombieDetectorCollider.radius = distanceForZombieTooSee;
-
-        _movementDirection = new Vector2();
-        _currentMovementSpeed = movementSpeed;
-
-        _damageablePlayer = GetComponent<DamageableObject>();
-        _damageablePlayer.getHit.AddListener(UpdateHealthBar);
-        ZombieSpawnerManager.BecomeTarget(GetComponent<ZombieTarget>());
-
-        _playScreen = _cameraTransform.Find("UI/PlayScreen").gameObject;
-        _deathScreen = _cameraTransform.Find("UI/DeathScreen").gameObject;
-        _deathScreen.SetActive(false);
-
-        GunSetup();
-
-        _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
-        _interactText.text = "";
-        _interactions = new List<Interaction>();
-    }
-
+    //--------------------------------------------------general
     private void GunSetup()
     {
         playerInfoForGunSetup = new InfoForGunSetup(
@@ -115,7 +84,7 @@ public class PlayerController : MonoBehaviour
            _cameraTransform.GetComponent<Camera>()
            );
 
-        _onPlayerWeaponsToName = new Dictionary<string,WeaponBehaviour>();
+        _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
 
         foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
         {
@@ -127,24 +96,15 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-            _currentWeaponIndex = 0;
+        _currentWeaponIndex = 0;
         Invoke("EquipNextWeapon", Time.fixedDeltaTime);
-    }
-
-    private void FixedUpdate()
-    {
-        if (_playerState == PlayerState.Normal)
-        {
-            PlayerMovement(Time.fixedDeltaTime);
-            PlayerScore.AddDeltaTimeToTimeSurvived(Time.fixedDeltaTime);
-        }
     }
 
     private void PlayerMovement(float deltaTime)
     {
         MovePlayer(deltaTime);
         PlayerCameraMouvement(deltaTime);
-        CalculateSway(_movementDirection,deltaTime);
+        CalculateSway(_movementDirection, deltaTime);
     }
 
     private void MovePlayer(float deltaTime)
@@ -181,6 +141,62 @@ public class PlayerController : MonoBehaviour
 
         CalculateSway(new Vector3(_movementDirection.x, 0, _movementDirection.y), deltaTime);
         CalculateBob(deltaTime);
+    }
+
+
+    //--------------------------------------------------unity events
+    private void Awake()
+    {
+        if (PLAYERS == null) PLAYERS = new List<PlayerController>();
+
+        PLAYERS.Add(this);
+
+        _playerState = PlayerState.Normal;
+
+        _characterController = GetComponent<CharacterController>();
+        _playerInput = GetComponent<PlayerInput>();
+        PlayerScore.ResetScore();
+
+        _cameraHolderTransform = transform.Find("CameraAndGunHolder").transform;
+
+        _cameraTransform = _cameraHolderTransform.Find("PlayerCamera").transform;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        _zombieDetectorCollider = GetComponent<SphereCollider>();
+        _zombieDetectorCollider.radius = distanceForZombieTooSee;
+
+        _movementDirection = new Vector2();
+        _currentMovementSpeed = movementSpeed;
+
+        _damageablePlayer = GetComponent<DamageableObject>();
+        _damageablePlayer.getHit.AddListener(UpdateHealthBar);
+        _playerTarget = GetComponent<ZombieTarget>();
+
+        _playScreen = _cameraTransform.Find("UI/PlayScreen").gameObject;
+        _deathScreen = _cameraTransform.Find("UI/DeathScreen").gameObject;
+        _deathScreen.SetActive(false);
+
+        GunSetup();
+
+        _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
+        _interactText.text = "";
+        _interactions = new List<Interaction>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (_playerState == PlayerState.Normal)
+        {
+            PlayerMovement(Time.fixedDeltaTime);
+            PlayerScore.AddDeltaTimeToTimeSurvived(Time.fixedDeltaTime);
+        }
+    }
+
+    private void OnDisable()
+    {
+        PLAYERS.Remove(this);
     }
 
     //---------------------------------------------------------------------ui
@@ -358,5 +374,14 @@ public class PlayerController : MonoBehaviour
             _currentInteract.GetAction().Invoke();
             RemoveInteractListener(_currentInteract);
         }
+    }
+
+    //--------------------------------------------------------getters
+
+    public ZombieTarget GetPlayerTargetComponent() { return _playerTarget; }
+
+    public static ReadOnlyCollection<PlayerController> GetPlayers()
+    {
+        return PLAYERS.AsReadOnly();
     }
 }
