@@ -37,12 +37,12 @@ public class ZombieSpawnerManager : MonoBehaviour
     {
         _maxZombiesInWorld = baseMaxZombiesPerRound;
 
-        if (timeBetweenRounds <= 0) throw new System.ArgumentException("Time between rounds not strictly positiv");
+        if (timeBetweenRounds < 1) throw new System.ArgumentException("Time between rounds not bigger or equal to 1");
         if (timeBeforeFirstRound <= 0) throw new System.ArgumentException("Time before first round not strictly positiv");
 
-        if (timeBetweenRounds < 1) { timeBetweenRounds = 1; }
-
         _spawners = GetComponentsInChildren<ZombieSpawner>();
+
+        _currentRound = 1;
 
         CURRENT_SPAWNER = this;
     }
@@ -57,6 +57,9 @@ public class ZombieSpawnerManager : MonoBehaviour
     {
         Debug.Log("Break");
         _spawnerState = SpawnerState.BREAK;
+
+        SetPlayerRoundCounters();
+
         Invoke("EnterRound", timeBetweenRounds);
     }
 
@@ -65,6 +68,7 @@ public class ZombieSpawnerManager : MonoBehaviour
         Debug.Log("Round");
         _currentRound++;
         _spawnerState = SpawnerState.MIDROUND;
+
         SpawnZombies();
     }
 
@@ -126,6 +130,14 @@ public class ZombieSpawnerManager : MonoBehaviour
         foreach (PlayerController p in oldListOfPLayers)
         {
             _targets[i++] = p.GetPlayerTargetComponent();
+        }
+    }
+
+    private void SetPlayerRoundCounters()
+    {
+        foreach(PlayerController p in PlayerController.GetPlayers())
+        {
+            p.SetRoundText(_currentRound);
         }
     }
 

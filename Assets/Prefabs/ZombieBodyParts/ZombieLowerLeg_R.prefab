@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23800629477850004}
   - component: {fileID: -6155052404928421870}
   - component: {fileID: -2210693738559840960}
+  - component: {fileID: -9049804725047723174}
   m_Layer: 8
   m_Name: ZombieLowerLeg_R
   m_TagString: Untagged
@@ -136,6 +137,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-9049804725047723174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581538933006698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8783243ccc87a314b909ab81b3cc747d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bloodSpillPrefab: {fileID: 0}
+  destroyOnCollide: 1
 --- !u!1001 &4704420971038279216
 PrefabInstance:
   m_ObjectHideFlags: 0

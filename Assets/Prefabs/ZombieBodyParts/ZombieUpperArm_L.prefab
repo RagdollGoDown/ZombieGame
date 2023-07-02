@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23699069222486396}
   - component: {fileID: 4049912996404874822}
   - component: {fileID: 194670143501452564}
+  - component: {fileID: 4967211520521794226}
   m_Layer: 8
   m_Name: ZombieUpperArm_L
   m_TagString: Untagged
@@ -136,6 +137,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &4967211520521794226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123163710934634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8783243ccc87a314b909ab81b3cc747d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bloodSpillPrefab: {fileID: 0}
+  destroyOnCollide: 1
 --- !u!1001 &7964475907755473476
 PrefabInstance:
   m_ObjectHideFlags: 0

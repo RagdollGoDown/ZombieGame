@@ -25,21 +25,17 @@ namespace Assets.Scripts.Objectives
         [SerializeField] private float timeBetweenObjectives;
         [SerializeField] private float timeBetweenChecks;
 
+        [Header("Objective Triggers")]
+        //ammo fill ratio = current ammo on player / base ammo
+        [SerializeField] private float playerAmmoFillRatioForTrigger;
+
         private void Awake()
         {
             onObjectiveComplete = new UnityEvent();
 
-            objective1 = new AreaObjective(onObjectiveComplete, 5, test);
-            objective2 = new AreaObjective(onObjectiveComplete, 5, test2);
-            objective3 = new ButtonsObjective(onObjectiveComplete, new ButtonsObjectiveObject[] { test3 });
-
-            objs = new List<Objective>();
-            objs.Add(objective1);
-            objs.Add(objective2);
-
-            //BeginObjective();
-
             onObjectiveComplete.AddListener(CompleteObjective);
+
+            Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
 
         private void CompleteObjective()
@@ -56,11 +52,24 @@ namespace Assets.Scripts.Objectives
 
         private void CheckIfShouldStartObjective()
         {
-            if (ZombieSpawnerManager.GetCurrentSpawnerState() == ZombieSpawnerManager.SpawnerState.BREAK) return;
 
-            
+            Debug.Log("check");
+            if (CheckIfPlayerNeedsGun() && 
+                ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK) BeginObjective();
+            //else Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
+        }
 
-            Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
+        private bool CheckIfPlayerNeedsGun()
+        {
+            bool needsNewWeapon = false;
+
+            foreach (PlayerController p in PlayerController.GetPlayers())
+            {
+                Debug.Log(p.GetPlayerAmmoFillRatio() * 100);
+                needsNewWeapon = p.GetPlayerAmmoFillRatio() < playerAmmoFillRatioForTrigger || needsNewWeapon;
+            }
+
+            return needsNewWeapon;
         }
     }
 }

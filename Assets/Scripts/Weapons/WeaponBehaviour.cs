@@ -17,8 +17,6 @@ public abstract class WeaponBehaviour : MonoBehaviour
 
     private Animator _gunAnimator;
 
-    private BoostCondition _boostCondition;
-
     //---------------------------------state bools
     private bool _isReloading;
 
@@ -252,10 +250,16 @@ public abstract class WeaponBehaviour : MonoBehaviour
         return _isAiming;
     }
 
-    public BoostCondition GetBoostCondition()
+    //tells us if the gun is being switched or not
+    public bool GetIsSwitching()
     {
-        return _boostCondition;
+        return _isSwitching;
     }
+
+    /*
+     * Give the current bullets left on player divided by the max bullets on player
+     */
+    public abstract float GetAmmoFillRatio();
 
     //---------------------------------------getters_ui
     protected Camera GetPLayerCamera()

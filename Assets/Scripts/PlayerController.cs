@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
     private SphereCollider _zombieDetectorCollider;
     [SerializeField] private float distanceForZombieTooSee;
 
+    private DamageableObject _damageablePlayer;
+    private ZombieTarget _playerTarget;
+
     //--------------------movement
     [Header("Mouvement")]
     private Vector2 _movementDirection;
@@ -53,8 +56,7 @@ public class PlayerController : MonoBehaviour
     //----------------------------ui
     //TODO unserialize
     [SerializeField]private Slider _healthBarSlider;
-    private DamageableObject _damageablePlayer;
-    private ZombieTarget _playerTarget;
+    private TextMeshProUGUI _currentRoundText;
 
     private GameObject _playScreen;
     private GameObject _deathScreen;
@@ -178,6 +180,8 @@ public class PlayerController : MonoBehaviour
         _deathScreen = _cameraTransform.Find("UI/DeathScreen").gameObject;
         _deathScreen.SetActive(false);
 
+        _currentRoundText = _cameraTransform.Find("UI/PlayScreen/RoundText").GetComponent<TextMeshProUGUI>();
+
         GunSetup();
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
@@ -283,6 +287,8 @@ public class PlayerController : MonoBehaviour
      */
     public void PickUpWeapon(string weaponName)
     {
+        if (!_weaponsHeld[0].GetIsSwitching() && !_weaponsHeld[1].GetIsSwitching()) return;
+
         if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
         {
             _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
@@ -309,6 +315,14 @@ public class PlayerController : MonoBehaviour
         {
             throw new System.ArgumentException("No such weapon");
         }
+    }
+
+    /*
+     * used to see if the player needs more ammo or a new weapon
+     */
+    public float GetPlayerAmmoFillRatio()
+    {
+        return (_weaponsHeld[0].GetAmmoFillRatio() + _weaponsHeld[1].GetAmmoFillRatio()) / 2;
     }
 
     //-----------------------------------------player state
@@ -383,5 +397,15 @@ public class PlayerController : MonoBehaviour
     public static ReadOnlyCollection<PlayerController> GetPlayers()
     {
         return PLAYERS.AsReadOnly();
+    }
+
+    //--------------------------------------------------------setters
+
+    /*
+     * makes the round text show which is the current one
+     */
+    public void SetRoundText(int round)
+    {
+        _currentRoundText.text = round.ToString();
     }
 }

@@ -149,6 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bloodSpillPrefab: {fileID: 643517796497277911, guid: 1ffb05dc191acf24d81fe559ac649a05,
     type: 3}
+  destroyOnCollide: 1
 --- !u!1001 &2139294291133011032
 PrefabInstance:
   m_ObjectHideFlags: 0

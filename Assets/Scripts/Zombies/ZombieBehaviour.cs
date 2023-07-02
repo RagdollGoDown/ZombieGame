@@ -317,6 +317,11 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    public void ScoreHeadShot()
+    {
+
+    }
+
     public void Die()
     {
         if (_currentState == ZombieState.Dead) { return; }

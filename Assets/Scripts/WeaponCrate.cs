@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Interactable))]
-public class WeaponnCrate : MonoBehaviour
+public class WeaponCrate : MonoBehaviour
 {
     [SerializeField] private string weaponName;
 

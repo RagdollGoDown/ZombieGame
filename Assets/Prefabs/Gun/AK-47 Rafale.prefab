@@ -88,7 +88,7 @@ MonoBehaviour:
     type: 3}
   bulletObject: {fileID: 4766820750362595819, guid: 3a084999302ccd5479f30c9f8bf2bf79,
     type: 3}
-  bulletLerpSpeed: 100
+  bulletLerpSpeed: 500
   barrelExit: {fileID: 4062378062954414808}
   maxBulletsInMag: 25
   maxBulletsOnPlayer: 250

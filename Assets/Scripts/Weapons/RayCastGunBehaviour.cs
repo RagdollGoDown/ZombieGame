@@ -13,8 +13,6 @@ public class RayCastGunBehaviour : WeaponBehaviour
     [Header("General Stats")]
     [SerializeField] private float fireRateForShots;
     private float _lastTimeShot;
-    private int _currentEnemiesKilledByPellets;
-    private int _currentEnemiesKilledByFireStream;
     [SerializeField] private float damage;
     [SerializeField] private int pelletsPerShot = 1;
     [SerializeField] private float range = 100;
@@ -221,6 +219,11 @@ public class RayCastGunBehaviour : WeaponBehaviour
     public override void RefillWeaponAmmo()
     {
         _bulletsOnPlayer = maxBulletsOnPlayer;
+    }
+
+    public override float GetAmmoFillRatio()
+    {
+        return _bulletsOnPlayer / maxBulletsOnPlayer;
     }
 
     //-------------------------------------------ui
