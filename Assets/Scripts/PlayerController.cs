@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
     private void GunSetup()
     {
         playerInfoForGunSetup = new InfoForGunSetup(
-           _cameraTransform.Find("UI/PlayScreen/AmmoTextHolder").GetComponent<TextMeshProUGUI>(),
+           _cameraTransform.Find("UI/PlayScreen/Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>(),
            _cameraTransform.Find("UI/PlayScreen/Crosshair").GetComponent<RectTransform>(),
            _cameraTransform.Find("UI").GetComponent<CanvasScaler>(),
            _cameraTransform.Find("UI").GetComponent<Canvas>(),
@@ -180,7 +180,7 @@ public class PlayerController : MonoBehaviour
         _deathScreen = _cameraTransform.Find("UI/DeathScreen").gameObject;
         _deathScreen.SetActive(false);
 
-        _currentRoundText = _cameraTransform.Find("UI/PlayScreen/RoundText").GetComponent<TextMeshProUGUI>();
+        _currentRoundText = _cameraTransform.Find("UI/PlayScreen/RoundText/Text").GetComponent<TextMeshProUGUI>();
 
         GunSetup();
 
