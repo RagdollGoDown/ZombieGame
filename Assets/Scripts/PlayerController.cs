@@ -54,13 +54,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mouseSensitivity;
 
     //----------------------------ui
-    //TODO unserialize
+    private PlayerUI _playerUI;
     [SerializeField]private Slider _healthBarSlider;
-    private TextMeshProUGUI _currentRoundText;
 
-    private GameObject _playScreen;
-    private GameObject _deathScreen;
-    
     //----------------------------shooting
     //temporarily a serialize field to check the guns
     private int _currentWeaponIndex;
@@ -72,7 +68,6 @@ public class PlayerController : MonoBehaviour
 
     //---------------------------interaction
     private Interaction _currentInteract;
-    private TextMeshProUGUI _interactText;
     private List<Interaction> _interactions;
 
     //--------------------------------------------------general
@@ -172,20 +167,14 @@ public class PlayerController : MonoBehaviour
         _movementDirection = new Vector2();
         _currentMovementSpeed = movementSpeed;
 
+        _playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
+
         _damageablePlayer = GetComponent<DamageableObject>();
         _damageablePlayer.getHit.AddListener(UpdateHealthBar);
         _playerTarget = GetComponent<ZombieTarget>();
 
-        _playScreen = _cameraTransform.Find("UI/PlayScreen").gameObject;
-        _deathScreen = _cameraTransform.Find("UI/DeathScreen").gameObject;
-        _deathScreen.SetActive(false);
-
-        _currentRoundText = _cameraTransform.Find("UI/PlayScreen/RoundText/Text").GetComponent<TextMeshProUGUI>();
-
         GunSetup();
 
-        _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
-        _interactText.text = "";
         _interactions = new List<Interaction>();
     }
 
@@ -271,12 +260,12 @@ public class PlayerController : MonoBehaviour
     {
         if (_interactions.Count == 0) 
         {
-            _interactText.text = "";
+            _playerUI.SetInteractionText("");
             _currentInteract = null;
         }
         else
         {
-            _interactText.text = "Press [E] to " + _interactions[0].GetInteractionText();
+            _playerUI.SetInteractionText("Press [E] to " + _interactions[0].GetInteractionText());
             _currentInteract = _interactions[0];
         }
     }
@@ -328,13 +317,9 @@ public class PlayerController : MonoBehaviour
     //-----------------------------------------player state
     private void Die()
     {
-        _deathScreen.SetActive(true);
-        _playScreen.SetActive(false);
-
         _playerState = PlayerState.Dead;
 
-        _deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetTime().ToString("N2");
-        _deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetKills().ToString();
+        _playerUI.Die();
     }
 
     //----------------------------input events
@@ -406,6 +391,7 @@ public class PlayerController : MonoBehaviour
      */
     public void SetRoundText(int round)
     {
-        _currentRoundText.text = round.ToString();
+        _playerUI.SetRoundText(round);
     }
 }
+

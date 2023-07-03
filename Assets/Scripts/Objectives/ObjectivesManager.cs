@@ -65,7 +65,6 @@ namespace Assets.Scripts.Objectives
 
             foreach (PlayerController p in PlayerController.GetPlayers())
             {
-                Debug.Log(p.GetPlayerAmmoFillRatio() * 100);
                 needsNewWeapon = p.GetPlayerAmmoFillRatio() < playerAmmoFillRatioForTrigger || needsNewWeapon;
             }
 
