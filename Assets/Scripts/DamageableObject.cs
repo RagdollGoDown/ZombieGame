@@ -17,6 +17,7 @@ public class DamageableObject : MonoBehaviour
     [SerializeField]private float _health;
     [SerializeField]private float maxHealth = 10;
     public UnityEventRecieveDamage getHit;
+    public UnityEvent OnDamageTaken;
 
     private Collider[] _colliders;
 
@@ -49,6 +50,8 @@ public class DamageableObject : MonoBehaviour
     
     private void TakeDamage(Damage damage)
     {
+        OnDamageTaken.Invoke();
+
         _health -= damage.GetDamageDone();
 
         if (shrinkOnDeath && _health <= 0)

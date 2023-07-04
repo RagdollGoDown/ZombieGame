@@ -448,6 +448,7 @@ GameObject:
   - component: {fileID: 7115964568435510884}
   - component: {fileID: 4269313392564527577}
   - component: {fileID: 4856333349344440597}
+  - component: {fileID: 2544237999583134911}
   m_Layer: 5
   m_Name: RoundTextBackGround
   m_TagString: Untagged
@@ -513,6 +514,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2544237999583134911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2283739519612809494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f976679a78cbba54ca95aa944f9e1f12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2427500563890553646
 GameObject:
   m_ObjectHideFlags: 0
@@ -1018,6 +1031,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _healthBarSlider: {fileID: 0}
+  shakingLength: 1
+  shakingStrength: 50
 --- !u!1 &3996322371060808399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1539,6 +1554,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _health: 0
   maxHealth: 100
+  OnDamageTaken:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2963652757036293134}
+        m_TargetAssemblyTypeName: PlayerUI, Assembly-CSharp
+        m_MethodName: TakeDamage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticleGameObjectPrefabs: []
   destructionCalls:
     m_PersistentCalls:
@@ -2753,6 +2783,7 @@ GameObject:
   - component: {fileID: 4563616565161943866}
   - component: {fileID: 2985143674592937965}
   - component: {fileID: 3573280305426561978}
+  - component: {fileID: 5289192031298288379}
   m_Layer: 5
   m_Name: BackGround1
   m_TagString: Untagged
@@ -2818,6 +2849,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5289192031298288379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8737593443292653675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f976679a78cbba54ca95aa944f9e1f12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8821290896181013357
 GameObject:
   m_ObjectHideFlags: 0

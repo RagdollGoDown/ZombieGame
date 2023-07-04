@@ -14,6 +14,11 @@ public class PlayerUI : MonoBehaviour
 
     private TextMeshProUGUI _interactText;
 
+    [Header("Shaking on damage taken")]
+    private ShakableUIElement[] _shakableUIElements;
+    [SerializeField] private float shakingLength;
+    [SerializeField] private float shakingStrength;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -23,11 +28,22 @@ public class PlayerUI : MonoBehaviour
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
+
+        _shakableUIElements = _playScreen.GetComponentsInChildren<ShakableUIElement>();
+
+        foreach(ShakableUIElement shakable in _shakableUIElements)
+        {
+            shakable.SetLengthAndStrength(shakingLength, shakingStrength);
+        }
     }
 
-    public void SetInteractionText(string newText)
+    public void TakeDamage()
     {
-        _interactText.text = newText;
+        Debug.Log("taken");
+        foreach(ShakableUIElement shakable in _shakableUIElements)
+        {
+            shakable.Shake();
+        }
     }
 
     public void Die()
@@ -37,6 +53,12 @@ public class PlayerUI : MonoBehaviour
 
         _deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetTime().ToString("N2");
         _deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetKills().ToString();
+    }
+
+    //----------------------------------------Setters
+    public void SetInteractionText(string newText)
+    {
+        _interactText.text = newText;
     }
 
     public void SetRoundText(int round)
