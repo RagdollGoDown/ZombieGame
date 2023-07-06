@@ -74,7 +74,6 @@ public class ZombieSpawnerManager : MonoBehaviour
 
     public void BeginToSpawn()
     {
-        Debug.Log((CURRENT_SPAWNER == this));
         if (CURRENT_SPAWNER != this) return;
 
         if (_spawners.Length > 0 && CanSpawn())

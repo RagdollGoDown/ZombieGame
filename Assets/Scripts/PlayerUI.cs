@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
+    private static Vector3 POSITION_OF_HIDDEN_WEAPON_MODEL = new Vector3(0, -1000, 0);
+
     [SerializeField] private Slider _healthBarSlider;
     private TextMeshProUGUI _currentRoundText;
 
@@ -13,6 +15,9 @@ public class PlayerUI : MonoBehaviour
     private GameObject _deathScreen;
 
     private TextMeshProUGUI _interactText;
+
+    private MovePointToPoint _weaponModelHolder;
+    private Transform _weaponModelHolderTransform;
 
     [Header("Shaking on damage taken")]
     private ShakableUIElement[] _shakableUIElements;
@@ -29,6 +34,9 @@ public class PlayerUI : MonoBehaviour
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
 
+        _weaponModelHolder = _playScreen.transform.Find("Ammo/WeaponModelHolder").GetComponent<MovePointToPoint>();
+        _weaponModelHolderTransform = _weaponModelHolder.transform;
+
         _shakableUIElements = _playScreen.GetComponentsInChildren<ShakableUIElement>();
 
         foreach(ShakableUIElement shakable in _shakableUIElements)
@@ -39,7 +47,6 @@ public class PlayerUI : MonoBehaviour
 
     public void TakeDamage()
     {
-        Debug.Log("taken");
         foreach(ShakableUIElement shakable in _shakableUIElements)
         {
             shakable.Shake();
@@ -65,4 +72,19 @@ public class PlayerUI : MonoBehaviour
     {
         _currentRoundText.text = round.ToString();
     }
+
+    /*public void SetUIWeaponModel(Transform modelTransform)
+    {
+        if (_weaponModelHolder.transform.childCount == 1)
+        {
+            Transform currentModel = _weaponModelHolder.transform.GetChild(0);
+            currentModel.parent = null;
+            currentModel.position = POSITION_OF_HIDDEN_WEAPON_MODEL;
+        }
+
+        //_weaponModelHolder.Point1to2();
+        modelTransform.parent = _weaponModelHolder.transform;
+        modelTransform.localPosition = Vector3.zero;
+        Debug.Log(_weaponModelHolder.GetComponent<RectTransform>().localPosition);
+    }*/
 }

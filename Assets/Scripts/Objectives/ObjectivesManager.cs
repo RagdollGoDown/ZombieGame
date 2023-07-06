@@ -52,8 +52,6 @@ namespace Assets.Scripts.Objectives
 
         private void CheckIfShouldStartObjective()
         {
-
-            Debug.Log("check");
             if (CheckIfPlayerNeedsGun() && 
                 ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK) BeginObjective();
             //else Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);

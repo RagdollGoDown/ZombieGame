@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\Objectives\ButtonsObjectiveObject.cs" />
     <Compile Include="Assets\Scripts\Weapons\ChunkReloaderAndRayCastWeaponBehaviour.cs" />
     <Compile Include="Assets\Scripts\UI\DissolveAnimation.cs" />
+    <Compile Include="Assets\Scripts\UI\MovePointToPoint.cs" />
     <Compile Include="Assets\Scripts\DamageableObject.cs" />
     <Compile Include="Assets\Scripts\Interactable.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />

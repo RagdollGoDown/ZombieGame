@@ -17,6 +17,13 @@ public abstract class WeaponBehaviour : MonoBehaviour
 
     private Animator _gunAnimator;
 
+    [Header("General")]
+    [SerializeField] private float reloadDuration = 1;
+    [SerializeField] private float timeToEquip = 1;
+    //[SerializeField] private Transform UIModel;
+
+    private float _uiScale;
+
     //---------------------------------state bools
     private bool _isReloading;
 
@@ -26,11 +33,6 @@ public abstract class WeaponBehaviour : MonoBehaviour
     private bool _isHolstered = true;
     private bool _isSwitching;
 
-    [SerializeField] private float reloadDuration = 1;
-    [SerializeField] private float timeToEquip = 1;
-
-    private float _uiScale;
-
     [Header("Animations and effects")]
     [SerializeField] private int shotsPerShootingAnimation = 1;
     [SerializeField] private float shootingAnimationLength = 1;
@@ -39,6 +41,10 @@ public abstract class WeaponBehaviour : MonoBehaviour
 
     protected virtual void AwakeWeapon()
     {
+        if (reloadDuration <= 0) throw new ArgumentException("duration not strictly positiv");
+        if (timeToEquip <= 0) throw new ArgumentException("time to equip not strictly positiv");
+        //if (!UIModel) throw new ArgumentException("no UI model");
+
         _playerController = transform.GetComponentInParent<PlayerController>();
         InfoForGunSetup IFGS = _playerController.playerInfoForGunSetup;
         _ammoTextHolder = IFGS.GetAmmoTextHolder();
@@ -168,6 +174,7 @@ public abstract class WeaponBehaviour : MonoBehaviour
         StopReload();
 
         StopShooting();
+
         //the param change needs to be done earlier or it will cycle to the equip animation
         yield return new WaitForSeconds(timeToEquip/2);
         _gunAnimator.SetBool("IsSwitching", false);
@@ -281,6 +288,11 @@ public abstract class WeaponBehaviour : MonoBehaviour
     {
         return _uiScale;
     }
+
+    /*public Transform GetWeaponModelTransform()
+    {
+        return UIModel;
+    }*/
 }
 
 public class InfoForGunSetup

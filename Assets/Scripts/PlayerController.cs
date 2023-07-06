@@ -236,6 +236,8 @@ public class PlayerController : MonoBehaviour
     public void EquipNextWeapon()
     {
         _weaponsHeld[_currentWeaponIndex].EquipOrUnequip();
+
+        //_playerUI.SetUIWeaponModel(_weaponsHeld[_currentWeaponIndex].GetWeaponModelTransform());
     }
 
     //---------------------------------------------------------------interactions
