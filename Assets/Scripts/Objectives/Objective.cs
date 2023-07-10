@@ -5,14 +5,12 @@ using UnityEngine.Events;
 
 public abstract class Objective
 {
-    private readonly UnityEvent _onComplete;
-    private List<ObjectiveObject> objectiveObjects;
+    private UnityEvent _onComplete;
+    public List<ObjectiveObject> objectiveObjects;
 
     public Objective(UnityEvent completeEvent)
     {
         _onComplete = completeEvent;
-
-        objectiveObjects = new List<ObjectiveObject>();
     }
 
     public Objective(UnityEvent completeEvent, List<ObjectiveObject> objectiveObjects) : this(completeEvent)
@@ -45,6 +43,13 @@ public abstract class Objective
     }
 
     public abstract int GetScore();
+
+    public void SetCompleteEvent(UnityEvent completeEvent)
+    {
+        _onComplete = completeEvent;
+
+        objectiveObjects = new List<ObjectiveObject>();
+    }
 }
 
 public abstract class ObjectiveObject : MonoBehaviour
