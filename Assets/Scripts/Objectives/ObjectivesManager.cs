@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,19 +8,13 @@ namespace Assets.Scripts.Objectives
 {
     public class ObjectivesManager : MonoBehaviour
     {
-        private UnityEvent onObjectiveComplete;
-        private List<PlayerController> players;
+        private UnityEvent _onObjectiveComplete;
+        private List<PlayerController> _players;
 
-        [SerializeField] private AreaObjectiveObject test;
-        [SerializeField] private AreaObjectiveObject test2;
-        [SerializeField] private ButtonsObjectiveObject test3;
-
-        private Objective objective1;
-        private Objective objective2;
-        private Objective objective3;
-
-        private Objective currentObjective;
-        private List<Objective> objs;
+        private Objective _currentObjective;
+        private List<Objective> _objs;
+        private Queue<Objective> _lastFewObjs;
+        [SerializeField] private int _maxLastFewObjs;
 
         [Header("Time")]
         [SerializeField] private float timeBetweenObjectives;
@@ -31,9 +26,20 @@ namespace Assets.Scripts.Objectives
 
         private void Awake()
         {
-            onObjectiveComplete = new UnityEvent();
+            if (_maxLastFewObjs >= _lastFewObjs.Count) throw new System.ArgumentException("smaller max last few objs must be given"); 
 
-            onObjectiveComplete.AddListener(CompleteObjective);
+            _onObjectiveComplete = new UnityEvent();
+
+            _onObjectiveComplete.AddListener(CompleteObjective);
+
+            _objs = new();
+
+            foreach(ObjectiveHolder oh in transform.GetComponentsInChildren<ObjectiveHolder>())
+            {
+                _objs.Add(oh.Build(_onObjectiveComplete));
+            }
+
+            _lastFewObjs = new();
 
             Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
@@ -46,15 +52,13 @@ namespace Assets.Scripts.Objectives
         private void BeginObjective()
         {
             Debug.Log("begin");
-            currentObjective = objective3;
-            currentObjective.Begin();
+            _currentObjective.Begin();
         }
 
         private void CheckIfShouldStartObjective()
         {
             if (CheckIfPlayerNeedsGun() && 
                 ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK) BeginObjective();
-            //else Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
 
         private bool CheckIfPlayerNeedsGun()
@@ -67,6 +71,21 @@ namespace Assets.Scripts.Objectives
             }
 
             return needsNewWeapon;
+        }
+
+        private void FindNextRandomObjective()
+        {
+            int selectedObj = Random.Range(0, _objs.Count);
+
+            while (_lastFewObjs.Contains(_objs[selectedObj]))
+            {
+                selectedObj = Random.Range(0, _objs.Count);
+            }
+
+            _currentObjective = _objs[selectedObj];
+            _lastFewObjs.Append(_currentObjective);
+
+            if (_lastFewObjs.Count >= _maxLastFewObjs) { _lastFewObjs.Dequeue(); }
         }
     }
 }

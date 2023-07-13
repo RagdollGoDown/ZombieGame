@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,7 +20,6 @@ public class AreaObjective : Objective
 
     public AreaObjective(UnityEvent onComplete, float totalStayTime, AreaObjectiveObject areaObjective) : base(onComplete)
     {
-
         AddObjectiveObject(areaObjective);
         _totalStayTime = totalStayTime;
         areaObjective.GetObjectEvent().AddListener(stayInObjective);

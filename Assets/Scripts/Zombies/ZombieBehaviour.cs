@@ -62,6 +62,7 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField]private float timeBetweenAttacks;
     private float _timeBetweenAttackCounter;
     [SerializeField]private float distanceBeforeAttack;
+    [SerializeField]private float MaxNavMeshSpeedRequieredAttack= 0.2f;
 
     //--------------------mesh
     //we enable these transforms to choose which skinned skeleton is rendered 
@@ -201,8 +202,12 @@ public class ZombieBehaviour : MonoBehaviour
         _navMeshAgent.SetDestination(_zombieTarget.GetTargetPosition());
 
         //-------------------------------------attack
-        if (_navMeshAgent.remainingDistance <= distanceBeforeAttack && _navMeshAgent.velocity.magnitude <= 0.2f
-            && _timeBetweenAttackCounter <= 0 && CanSeeTarget(_zombieTarget)) { 
+        float distanceFromPLayer = Vector3.Distance(_zombieTarget.GetTargetPosition(),transform.position);
+
+        if (distanceFromPLayer <= distanceBeforeAttack 
+            && _navMeshAgent.velocity.magnitude <= MaxNavMeshSpeedRequieredAttack
+            && _timeBetweenAttackCounter <= 0 
+            && CanSeeTarget(_zombieTarget)) { 
             StartCoroutine(Attack());
         }
 

@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
 {
     private static List<PlayerController> PLAYERS;
 
-    private enum PlayerState
+    public enum PlayerState
     {
         Normal,
         Dead
@@ -380,6 +380,8 @@ public class PlayerController : MonoBehaviour
     //--------------------------------------------------------getters
 
     public ZombieTarget GetPlayerTargetComponent() { return _playerTarget; }
+
+    public PlayerState GetPlayerState() { return _playerState; }
 
     public static ReadOnlyCollection<PlayerController> GetPlayers()
     {

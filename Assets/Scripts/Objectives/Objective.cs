@@ -10,11 +10,12 @@ public abstract class Objective
 
     public Objective(UnityEvent completeEvent)
     {
+        objectiveObjects = new();
         _onComplete = completeEvent;
     }
 
     public Objective(UnityEvent completeEvent, List<ObjectiveObject> objectiveObjects) : this(completeEvent)
-    { 
+    {
         this.objectiveObjects = new List<ObjectiveObject>(objectiveObjects);
     }
 

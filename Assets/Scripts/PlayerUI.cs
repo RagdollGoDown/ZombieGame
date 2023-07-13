@@ -6,14 +6,16 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
-    private static Vector3 POSITION_OF_HIDDEN_WEAPON_MODEL = new Vector3(0, -1000, 0);
+    //private static Vector3 POSITION_OF_HIDDEN_WEAPON_MODEL = new Vector3(0, -1000, 0);
+
+    private PlayerController _playerController;
 
     [SerializeField] private Slider _healthBarSlider;
-    private TextMeshProUGUI _currentRoundText;
 
     private GameObject _playScreen;
     private GameObject _deathScreen;
 
+    private TextMeshProUGUI _currentRoundText;
     private TextMeshProUGUI _interactText;
 
     private MovePointToPoint _weaponModelHolder;
@@ -27,9 +29,13 @@ public class PlayerUI : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        _playerController = transform.parent.parent.parent.GetComponent<PlayerController>();
+
         _playScreen = transform.Find("PlayScreen").gameObject;
         _deathScreen = transform.Find("DeathScreen").gameObject;
         _deathScreen.SetActive(false);
+
+        _currentRoundText = _playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
@@ -47,6 +53,8 @@ public class PlayerUI : MonoBehaviour
 
     public void TakeDamage()
     {
+        if (_playerController.GetPlayerState() == PlayerController.PlayerState.Dead) return;
+
         foreach(ShakableUIElement shakable in _shakableUIElements)
         {
             shakable.Shake();
