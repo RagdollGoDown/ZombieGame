@@ -55,7 +55,6 @@ public class PlayerController : MonoBehaviour
 
     //----------------------------ui
     private PlayerUI _playerUI;
-    [SerializeField]private Slider _healthBarSlider;
 
     //----------------------------shooting
     //temporarily a serialize field to check the guns
@@ -170,7 +169,7 @@ public class PlayerController : MonoBehaviour
         _playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
 
         _damageablePlayer = GetComponent<DamageableObject>();
-        _damageablePlayer.getHit.AddListener(UpdateHealthBar);
+        _damageablePlayer.getHit.AddListener(_playerUI.UpdateHealthBar);
         _playerTarget = GetComponent<ZombieTarget>();
 
         GunSetup();
@@ -210,13 +209,6 @@ public class PlayerController : MonoBehaviour
         _tempHeadBobDirection.y = Mathf.Sin(2 * _headBobTime);
 
         _cameraTransform.localPosition += maximumHeadBob*_tempHeadBobDirection;
-    }
-
-    private void UpdateHealthBar(Damage t)
-    {
-        _healthBarSlider.value = _damageablePlayer.GetHealthRatio();
-
-        if (_healthBarSlider.value == 0) { Die(); }
     }
     
     //------------------------------------------------------------------weapons
@@ -273,12 +265,14 @@ public class PlayerController : MonoBehaviour
     }
 
     /*
+     * returns false if the player didn't pick up the weapon
+     * 
      * replaces the weapon currently equipped with the weapon given, identified by it's name
      * if the weapon isn't identified then it throws illegal argument Exception
      */
-    public void PickUpWeapon(string weaponName)
+    public bool PickUpWeapon(string weaponName)
     {
-        if (!_weaponsHeld[0].GetIsSwitching() && !_weaponsHeld[1].GetIsSwitching()) return;
+        if (_weaponsHeld[0].GetIsSwitching() || _weaponsHeld[1].GetIsSwitching()) return false;
 
         if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
         {
@@ -301,6 +295,8 @@ public class PlayerController : MonoBehaviour
             }
 
             _weaponsHeld[_currentWeaponIndex].RefillWeaponAmmo();
+
+            return true;
         }
         else
         {
@@ -380,6 +376,8 @@ public class PlayerController : MonoBehaviour
     //--------------------------------------------------------getters
 
     public ZombieTarget GetPlayerTargetComponent() { return _playerTarget; }
+
+    public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
 
     public PlayerState GetPlayerState() { return _playerState; }
 

@@ -7,13 +7,15 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     //private static Vector3 POSITION_OF_HIDDEN_WEAPON_MODEL = new Vector3(0, -1000, 0);
+    private static float HEALTH100 = 100f;
 
     private PlayerController _playerController;
 
-    [SerializeField] private Slider _healthBarSlider;
-
     private GameObject _playScreen;
     private GameObject _deathScreen;
+
+    private Slider _healthBarSlider;
+    private TextMeshProUGUI _healthText;
 
     private TextMeshProUGUI _currentRoundText;
     private TextMeshProUGUI _interactText;
@@ -35,13 +37,16 @@ public class PlayerUI : MonoBehaviour
         _deathScreen = transform.Find("DeathScreen").gameObject;
         _deathScreen.SetActive(false);
 
+        _healthBarSlider = _playScreen.transform.Find("HealthBar").GetComponent<Slider>();
+        _healthText = _healthBarSlider.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
+
         _currentRoundText = _playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
 
-        _weaponModelHolder = _playScreen.transform.Find("Ammo/WeaponModelHolder").GetComponent<MovePointToPoint>();
-        _weaponModelHolderTransform = _weaponModelHolder.transform;
+        //_weaponModelHolder = _playScreen.transform.Find("Ammo/WeaponModelHolder").GetComponent<MovePointToPoint>();
+        //_weaponModelHolderTransform = _weaponModelHolder.transform;
 
         _shakableUIElements = _playScreen.GetComponentsInChildren<ShakableUIElement>();
 
@@ -68,6 +73,17 @@ public class PlayerUI : MonoBehaviour
 
         _deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetTime().ToString("N2");
         _deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetKills().ToString();
+    }
+
+    public void UpdateHealthBar(Damage damage)
+    {
+        if (_playerController.GetPlayerState() != PlayerController.PlayerState.Normal) return;
+
+        float ratio = _playerController.GetPlayerHealthRatio();
+        _healthBarSlider.value = 1-ratio;
+        _healthText.text = (ratio * HEALTH100).ToString();
+
+        if (_healthBarSlider.value == 1) { Die(); }
     }
 
     //----------------------------------------Setters

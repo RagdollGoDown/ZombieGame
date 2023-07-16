@@ -20,6 +20,6 @@ public class WeaponCrate : MonoBehaviour
      */
     public void GiveGun()
     {
-        _inter.GetPlayerInArea().PickUpWeapon(weaponName);
+        if (_inter.GetPlayerInArea().PickUpWeapon(weaponName)) Destroy(gameObject);
     }
 }

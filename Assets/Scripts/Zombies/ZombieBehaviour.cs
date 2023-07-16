@@ -249,31 +249,6 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
-    //------------------------unity events
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Zombie") && other.TryGetComponent(out ZombieBehaviour zb) &&
-            _currentState == ZombieState.Chasing && zb.CheckZombieState(ZombieState.Idle))
-        {
-            zb.StartChase(_zombieTarget);
-        }
-
-        if ((other.CompareTag("Player") || other.CompareTag("ZombieTarget")) && other.TryGetComponent(out ZombieTarget newTarget)
-            && _currentState != ZombieState.Dead)
-        {
-            CheckChase(newTarget);
-        }
-    }
-    
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Zombie") && other.TryGetComponent(out ZombieBehaviour zb) &&
-            _currentState == ZombieState.Chasing && zb.CheckZombieState(ZombieState.Idle))
-        {
-            zb.StartChase(_zombieTarget);
-        }
-    }
-
     //--------------------------get setters
 
     private bool CheckZombieState(ZombieState zs)

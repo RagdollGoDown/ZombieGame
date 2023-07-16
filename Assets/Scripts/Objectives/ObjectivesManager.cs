@@ -26,8 +26,6 @@ namespace Assets.Scripts.Objectives
 
         private void Awake()
         {
-            if (_maxLastFewObjs >= _lastFewObjs.Count) throw new System.ArgumentException("smaller max last few objs must be given"); 
-
             _onObjectiveComplete = new UnityEvent();
 
             _onObjectiveComplete.AddListener(CompleteObjective);
@@ -38,6 +36,8 @@ namespace Assets.Scripts.Objectives
             {
                 _objs.Add(oh.Build(_onObjectiveComplete));
             }
+            
+            if (_maxLastFewObjs >= _objs.Count) throw new System.ArgumentException("smaller max last few objs must be given");
 
             _lastFewObjs = new();
 
@@ -52,6 +52,7 @@ namespace Assets.Scripts.Objectives
         private void BeginObjective()
         {
             Debug.Log("begin");
+            FindNextRandomObjective();
             _currentObjective.Begin();
         }
 
