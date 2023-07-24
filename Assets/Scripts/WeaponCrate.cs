@@ -15,6 +15,12 @@ public class WeaponCrate : MonoBehaviour
         _inter.SetInteractionText("pick up " + weaponName);
     }
 
+    public void SetWeaponName(string newName)
+    {
+        weaponName = newName;
+        _inter.SetInteractionText("pick up " + weaponName);
+    }
+
     /*
      * Gives the player the weapon in the crate identified by it's name
      */

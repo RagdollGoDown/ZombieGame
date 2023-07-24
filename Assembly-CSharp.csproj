@@ -58,15 +58,17 @@
     <Analyzer Include="D:\Unity\2022.2.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\PlayerUI.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerScore.cs" />
     <Compile Include="Assets\Scripts\Weapons\ChunkReloaderAndRayCastWeaponBehaviour.cs" />
     <Compile Include="Assets\Scripts\Objectives\ObjectiveHolder.cs" />
     <Compile Include="Assets\Scripts\UI\DissolveAnimation.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerUI.cs" />
+    <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\RewardsManager.cs" />
     <Compile Include="Assets\Scripts\Objectives\Area\AreaObjectiveHolder.cs" />
     <Compile Include="Assets\Scripts\UI\MovePointToPoint.cs" />
     <Compile Include="Assets\Scripts\DamageableObject.cs" />
     <Compile Include="Assets\Scripts\Interactable.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Zombies\ZombieBehaviour.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\MultiKillBoostCondition.cs" />
     <Compile Include="Assets\Scripts\Zombies\ZombieSpawnerManager.cs" />
@@ -76,7 +78,6 @@
     <Compile Include="Assets\Scripts\Zombies\ZombieTarget.cs" />
     <Compile Include="Assets\Scripts\Weapons\BloodSpillOnCollide.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\HighlightBoosts.cs" />
-    <Compile Include="Assets\Scripts\PlayerScore.cs" />
     <Compile Include="Assets\Scripts\Weapons\RayCastGunBehaviour.cs" />
     <Compile Include="Assets\Scripts\WeaponCrate.cs" />
     <Compile Include="Assets\Scripts\Objectives\Button\ButtonObjectiveHolder.cs" />

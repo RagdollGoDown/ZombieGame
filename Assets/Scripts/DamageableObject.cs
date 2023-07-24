@@ -8,7 +8,8 @@ public class UnityEventRecieveDamage : UnityEvent<Damage> {}
 
 public class DamageableObject : MonoBehaviour
 {
-    private static float _timeBeforeDestructionOfParticles = 10;
+    private static float TIME_BEFORE_PARTICLE_DESTRUCTION = 10;
+    private static float PARTICLE_FORCE_TO_FORCE_PROPORTION = 50;
 
     private bool _isDestroyed;
 
@@ -56,7 +57,7 @@ public class DamageableObject : MonoBehaviour
 
         if (shrinkOnDeath && _health <= 0)
         {
-            Destroy(damage);
+            Destroy(damage,false);
         }
     }
 
@@ -70,7 +71,7 @@ public class DamageableObject : MonoBehaviour
         return _lastDamageDealer;
     }
 
-    private void Destroy(Damage damage)
+    private void Destroy(Damage damage, bool asChild)
     {
         if (_isDestroyed){return;}
         
@@ -84,10 +85,11 @@ public class DamageableObject : MonoBehaviour
 
             if (dpg.TryGetComponent(out Rigidbody rigidbody))
             {
-                rigidbody.AddForce(damage.GetDamageDirection() * 10 * damage.GetDamageDone());
+                rigidbody.AddForce(
+                    damage.GetDamageDirection() * PARTICLE_FORCE_TO_FORCE_PROPORTION * damage.GetDamageDone());
             }
 
-            Destroy(dpg.gameObject, _timeBeforeDestructionOfParticles);
+            Destroy(dpg.gameObject, TIME_BEFORE_PARTICLE_DESTRUCTION);
         }
         
         destructionCalls.Invoke();
@@ -106,7 +108,7 @@ public class DamageableObject : MonoBehaviour
     {
         foreach (var dc in _damageableChildren)
         {
-            dc.Destroy(damage);
+            dc.Destroy(damage,true);
         }
     }
 }

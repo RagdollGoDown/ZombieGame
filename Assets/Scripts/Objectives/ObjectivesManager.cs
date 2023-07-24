@@ -17,8 +17,10 @@ namespace Assets.Scripts.Objectives
         [SerializeField] private int _maxLastFewObjs;
 
         [Header("Time")]
-        [SerializeField] private float timeBetweenObjectives;
+        [SerializeField] private float necessaryTimeBetweenObjectives;
+        [SerializeField] private float maximumTimeBetweenObjectives;
         [SerializeField] private float timeBetweenChecks;
+        private float _timeDifferenceSinceLastObjective;
 
         [Header("Objective Triggers")]
         //ammo fill ratio = current ammo on player / base ammo
@@ -26,6 +28,9 @@ namespace Assets.Scripts.Objectives
 
         private void Awake()
         {
+            if (necessaryTimeBetweenObjectives >= maximumTimeBetweenObjectives) 
+                throw new System.ArgumentException("Necessary time needs to be strictly smaller than the maximum time");
+
             _onObjectiveComplete = new UnityEvent();
 
             _onObjectiveComplete.AddListener(CompleteObjective);
@@ -47,7 +52,9 @@ namespace Assets.Scripts.Objectives
         private void CompleteObjective()
         {
             Debug.Log("complete");
-            Invoke(nameof(CheckIfShouldStartObjective), timeBetweenObjectives);
+            _timeDifferenceSinceLastObjective = 0;
+
+            Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
         private void BeginObjective()
         {
@@ -58,8 +65,13 @@ namespace Assets.Scripts.Objectives
 
         private void CheckIfShouldStartObjective()
         {
-            if (CheckIfPlayerNeedsGun() && 
-                ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK) BeginObjective();
+            Debug.Log("check");
+            _timeDifferenceSinceLastObjective += timeBetweenChecks;
+
+            if ((CheckIfPlayerNeedsGun() || maximumTimeBetweenObjectives <= _timeDifferenceSinceLastObjective) && 
+                ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK &&
+               _timeDifferenceSinceLastObjective > necessaryTimeBetweenObjectives) BeginObjective();
+            else Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
 
         private bool CheckIfPlayerNeedsGun()
@@ -70,12 +82,15 @@ namespace Assets.Scripts.Objectives
             {
                 needsNewWeapon = p.GetPlayerAmmoFillRatio() < playerAmmoFillRatioForTrigger || needsNewWeapon;
             }
+            Debug.Log("player needs ? " + needsNewWeapon);
 
             return needsNewWeapon;
         }
 
         private void FindNextRandomObjective()
         {
+            Debug.Log("finding next"); 
+
             int selectedObj = Random.Range(0, _objs.Count);
 
             while (_lastFewObjs.Contains(_objs[selectedObj]))
@@ -86,7 +101,7 @@ namespace Assets.Scripts.Objectives
             _currentObjective = _objs[selectedObj];
             _lastFewObjs.Append(_currentObjective);
 
-            if (_lastFewObjs.Count >= _maxLastFewObjs) { _lastFewObjs.Dequeue(); }
+            if (_lastFewObjs.Count > _maxLastFewObjs) { _lastFewObjs.Dequeue(); }
         }
     }
 }

@@ -187,7 +187,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reloadDuration: 2
   timeToEquip: 0.5
-  UIModel: {fileID: 3788211119249413286}
   shotsPerShootingAnimation: 5
   shootingAnimationLength: 1
   reloadAnimationTime: 3.3
@@ -211,7 +210,7 @@ MonoBehaviour:
   bulletLerpSpeed: 500
   barrelExit: {fileID: 4062378062954414808}
   maxBulletsInMag: 30
-  maxBulletsOnPlayer: 300
+  maxBulletsOnPlayer: 20
   shotsPerTriggerPress: 100
 --- !u!1 &690483701603200859
 GameObject:
