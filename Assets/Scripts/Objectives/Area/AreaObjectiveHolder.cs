@@ -7,7 +7,7 @@ public class AreaObjectiveHolder : ObjectiveHolder
 {
     [SerializeField] private float totalStayTime;
 
-    public override Objective Build(UnityEvent onComplete)
+    protected override Objective BuildPureObjective(UnityEvent onComplete)
     {
         List<ObjectiveObject> objects = GetObjects();
 

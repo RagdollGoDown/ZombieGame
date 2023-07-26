@@ -15,6 +15,9 @@ public class WeaponCrate : MonoBehaviour
         _inter.SetInteractionText("pick up " + weaponName);
     }
 
+    /*
+     * used by the rewardmanager to make the crate actual have an existing gun name
+     */
     public void SetWeaponName(string newName)
     {
         weaponName = newName;

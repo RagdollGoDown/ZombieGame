@@ -7,7 +7,7 @@ public class ButtonsObjectiveHolder : ObjectiveHolder
 {
     [SerializeField] private float totalStayTime;
 
-    public override Objective Build(UnityEvent onComplete)
+    protected override Objective BuildPureObjective(UnityEvent onComplete)
     {
         List<ButtonsObjectiveObject> objects = new();
 

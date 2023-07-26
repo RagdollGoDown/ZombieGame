@@ -9,16 +9,15 @@ namespace Assets.Scripts.Objectives
     public class ObjectivesManager : MonoBehaviour
     {
         private UnityEvent _onObjectiveComplete;
-        private List<PlayerController> _players;
+        private RewardManager _rewardManager;
 
         private Objective _currentObjective;
-        private List<Objective> _objs;
-        private Queue<Objective> _lastFewObjs;
-        [SerializeField] private int _maxLastFewObjs;
+        private Objective[] _objs;
+        private List<Objective> _lastObjs;
 
-        [Header("Time")]
-        [SerializeField] private float necessaryTimeBetweenObjectives;
-        [SerializeField] private float maximumTimeBetweenObjectives;
+        [Header("Objective Times")]
+        [SerializeField] private float _necessaryTimeBetweenObjectives;
+        [SerializeField] private float _maximumTimeBetweenObjectives;
         [SerializeField] private float timeBetweenChecks;
         private float _timeDifferenceSinceLastObjective;
 
@@ -26,25 +25,33 @@ namespace Assets.Scripts.Objectives
         //ammo fill ratio = current ammo on player / base ammo
         [SerializeField] private float playerAmmoFillRatioForTrigger;
 
+        public ObjectivesManager(Objective[] _objs, UnityEvent _onObjectiveComplete)
+        {
+            this._objs = _objs;
+        }
+
         private void Awake()
         {
-            if (necessaryTimeBetweenObjectives >= maximumTimeBetweenObjectives) 
+            if (_necessaryTimeBetweenObjectives >= _maximumTimeBetweenObjectives) 
                 throw new System.ArgumentException("Necessary time needs to be strictly smaller than the maximum time");
+
+            _rewardManager = transform.Find("/RewardManager").GetComponent<RewardManager>();
+            if (_rewardManager == null) throw new System.Exception("reward manager not found");
 
             _onObjectiveComplete = new UnityEvent();
 
             _onObjectiveComplete.AddListener(CompleteObjective);
 
-            _objs = new();
+            List<Objective> _objsList = new();
 
             foreach(ObjectiveHolder oh in transform.GetComponentsInChildren<ObjectiveHolder>())
             {
-                _objs.Add(oh.Build(_onObjectiveComplete));
+                _objsList.Add(oh.Build(_onObjectiveComplete));
             }
-            
-            if (_maxLastFewObjs >= _objs.Count) throw new System.ArgumentException("smaller max last few objs must be given");
 
-            _lastFewObjs = new();
+            _objs = _objsList.ToArray();
+            
+            _lastObjs = new();
 
             Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
@@ -53,6 +60,8 @@ namespace Assets.Scripts.Objectives
         {
             Debug.Log("complete");
             _timeDifferenceSinceLastObjective = 0;
+
+            _rewardManager.GiveReward();
 
             Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
@@ -68,9 +77,9 @@ namespace Assets.Scripts.Objectives
             Debug.Log("check");
             _timeDifferenceSinceLastObjective += timeBetweenChecks;
 
-            if ((CheckIfPlayerNeedsGun() || maximumTimeBetweenObjectives <= _timeDifferenceSinceLastObjective) && 
+            if ((CheckIfPlayerNeedsGun() || _maximumTimeBetweenObjectives <= _timeDifferenceSinceLastObjective) && 
                 ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK &&
-               _timeDifferenceSinceLastObjective > necessaryTimeBetweenObjectives) BeginObjective();
+               _timeDifferenceSinceLastObjective > _necessaryTimeBetweenObjectives) BeginObjective();
             else Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
 
@@ -91,17 +100,17 @@ namespace Assets.Scripts.Objectives
         {
             Debug.Log("finding next"); 
 
-            int selectedObj = Random.Range(0, _objs.Count);
+            int selectedObj = Random.Range(0, _objs.Length);
 
-            while (_lastFewObjs.Contains(_objs[selectedObj]))
+            while (_lastObjs.Contains(_objs[selectedObj]))
             {
-                selectedObj = Random.Range(0, _objs.Count);
+                selectedObj = Random.Range(0, _objs.Length);
             }
 
             _currentObjective = _objs[selectedObj];
-            _lastFewObjs.Append(_currentObjective);
+            _lastObjs.Append(_currentObjective);
 
-            if (_lastFewObjs.Count > _maxLastFewObjs) { _lastFewObjs.Dequeue(); }
+            if (_lastObjs.Count == _objs.Length) { _lastObjs = new(); }
         }
     }
 }
