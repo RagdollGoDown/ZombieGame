@@ -17,7 +17,7 @@ namespace Assets.Scripts.Weapons
 
         [SerializeField] private float reloadSpeed = 1;
         [SerializeField] private int chunk = 1;
-        private bool _isHoldingReloadButton;
+        private bool _wantsToReload;
 
         private Animator animator;
 
@@ -42,10 +42,16 @@ namespace Assets.Scripts.Weapons
             animator.SetFloat("reloadSpeed", reloadSpeed);
         }
 
+        public override void ShootInputAction(InputAction.CallbackContext context)
+        {
+            _wantsToReload = false;
+
+            base.ShootInputAction(context);
+        }
+
         public override void ReloadInputAction(InputAction.CallbackContext context)
         {
-            if (context.started) _isHoldingReloadButton = true;
-            if (context.canceled) _isHoldingReloadButton = false;
+            if (context.started) _wantsToReload = true;
 
             base.ReloadInputAction(context);
         }
@@ -89,7 +95,7 @@ namespace Assets.Scripts.Weapons
 
         protected override bool ReloadConditions()
         {
-            return base.ReloadConditions() && _isHoldingReloadButton;
+            return base.ReloadConditions() && _wantsToReload;
         }
     }
 }
