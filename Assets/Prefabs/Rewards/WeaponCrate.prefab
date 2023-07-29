@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 30527925383908521}
   - component: {fileID: 30527925383908520}
   - component: {fileID: 30527925383908523}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WeaponCrate
   m_TagString: Untagged
   m_Icon: {fileID: 0}

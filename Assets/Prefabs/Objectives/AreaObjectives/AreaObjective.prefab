@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8623755530153118564}
   - component: {fileID: 8623755530153118567}
   - component: {fileID: 7606544934705305873}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: AreaObjective
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf0532907bf3174ca2eb0f79b504816, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _anim: {fileID: 7606544934705305873}
 --- !u!95 &7606544934705305873
 Animator:
   serializedVersion: 5
@@ -170,6 +169,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Aura
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ab5091ec442d00142957fdeebc18f7ae,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

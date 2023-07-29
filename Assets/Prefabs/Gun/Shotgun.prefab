@@ -2195,7 +2195,7 @@ MonoBehaviour:
   barrelExit: {fileID: 661866200493340501}
   maxBulletsInMag: 8
   maxBulletsOnPlayer: 8
-  shotsPerTriggerPress: 100
+  shotsPerTriggerPress: 1
   reloadEnterAnimationTime: 0.583
   reloadChunkAnimationTime: 0.583
   reloadExitAnimationTime: 0.583

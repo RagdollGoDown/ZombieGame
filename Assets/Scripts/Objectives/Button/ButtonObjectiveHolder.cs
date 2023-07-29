@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 public class ButtonsObjectiveHolder : ObjectiveHolder
 {
-    [SerializeField] private float totalStayTime;
 
     protected override Objective BuildPureObjective(UnityEvent onComplete)
     {

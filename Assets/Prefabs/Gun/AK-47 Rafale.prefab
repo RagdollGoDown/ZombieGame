@@ -93,7 +93,7 @@ MonoBehaviour:
   barrelExit: {fileID: 4062378062954414808}
   maxBulletsInMag: 25
   maxBulletsOnPlayer: 25
-  shotsPerTriggerPress: 5
+  shotsPerTriggerPress: 100
 --- !u!1 &694665245767129001
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,6 +15,7 @@ public enum ZombieState
 {
     Chasing,
     Idle,
+    Jump,
     Dead
 }
 
@@ -23,9 +24,11 @@ public enum ZombieState
 [RequireComponent(typeof(BoxCollider))]
 public class ZombieBehaviour : MonoBehaviour
 {
-    private static readonly int detectionLayerMaskValue = 9;
+    private static readonly int DETECTION_LAYERMASK = 9;
 
-    private static readonly float timeBeforBodyDisentegrates = 20;
+    private static readonly float TIME_BEFORE_BODY_DISINTEGRATES = 20;
+
+    private static readonly float ATTACK_ANIMATION_STUNT_TIME = 0.1f;
 
     private ZombieState _currentState;
     
@@ -148,7 +151,7 @@ public class ZombieBehaviour : MonoBehaviour
         {
             RaycastHit hit;
             //only sees default layer
-            Physics.Raycast(position, direction, out hit, 50,detectionLayerMaskValue);
+            Physics.Raycast(position, direction, out hit, 50,DETECTION_LAYERMASK);
             Debug.DrawRay(position,direction);
             return !hit.transform.IsUnityNull() && hit.transform.name.Equals(target.name);
         }
@@ -232,7 +235,7 @@ public class ZombieBehaviour : MonoBehaviour
         _zombieTarget.HitTarget(new Damage(attackDamage,transform.position - _zombieTarget.GetTargetPosition(), this));
         _timeBetweenAttackCounter = timeBetweenAttacks;
         
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(TIME_BEFORE_BODY_DISINTEGRATES);
         
         //when the attack type is 0 then it isn't attacking
         _zombieAnimator.SetInteger("AttackType", 0);
@@ -250,11 +253,6 @@ public class ZombieBehaviour : MonoBehaviour
     }
 
     //--------------------------get setters
-
-    private bool CheckZombieState(ZombieState zs)
-    {
-        return _currentState == zs;
-    }
 
     public void BreakLeftArm()
     {
@@ -314,6 +312,6 @@ public class ZombieBehaviour : MonoBehaviour
         ReadyRagdoll();
 
         ZombieSpawnerManager.RemoveZombie();
-        Destroy(gameObject, timeBeforBodyDisentegrates);
+        Destroy(gameObject, TIME_BEFORE_BODY_DISINTEGRATES);
     }
 }

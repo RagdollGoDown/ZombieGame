@@ -31,6 +31,8 @@ public abstract class Objective
 
     public virtual void Begin()
     {
+        _onStarted.Invoke();
+
         foreach (ObjectiveObject o in objectiveObjects) {
             o.turnOn();
         }
@@ -67,28 +69,48 @@ public abstract class ObjectiveObject : MonoBehaviour
 
     private UnityEvent _objectEvent = new UnityEvent();
 
+    private UnityEvent _onTurnedOn = new UnityEvent();
+    private UnityEvent _onTurnedOff = new UnityEvent();
+
     private void Awake()
     {
         _anim = GetComponent<Animator>();
+
+        ReadyOnAwake();
     }
+    protected virtual void ReadyOnAwake(){}
 
     public UnityEvent GetObjectEvent() 
     {
         return _objectEvent;
     }
 
+    protected UnityEvent GetOnTurnedOnEvent()
+    {
+        return _onTurnedOn;
+    }
+
+    protected UnityEvent GetOnTurnedOffEvent()
+    {
+        return _onTurnedOff;
+    }
+
     public void turnOn() {
         isOn = true;
 
         if (_anim != null) 
-        { _anim.SetBool("isOn", isOn); } 
+        { _anim.SetBool("isOn", isOn); }
+
+        _onTurnedOn.Invoke();
     }
 
     public void turnOff() {
         isOn = false;
 
         if (_anim != null) 
-        { _anim.SetBool("isOn", isOn); } 
+        { _anim.SetBool("isOn", isOn); }
+
+        _onTurnedOff.Invoke();
     }
 
     public bool getIsOn() { return isOn; }

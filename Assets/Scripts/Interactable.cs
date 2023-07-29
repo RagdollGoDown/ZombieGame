@@ -24,7 +24,8 @@ public class Interactable : MonoBehaviour
     {
         if (other.tag == "Player" && other.TryGetComponent(out PlayerController pc))
         {
-            pc.AddInteractListener(_interaction);
+            if (enabled) pc.AddInteractListener(_interaction);
+
             _playerInArea = pc;
         }
     }
@@ -32,8 +33,9 @@ public class Interactable : MonoBehaviour
     {
         if (other.tag == "Player" && other.TryGetComponent(out PlayerController pc))
         {
-            pc.RemoveInteractListener(_interaction);
-            _playerInArea = pc;
+            if (enabled) pc.RemoveInteractListener(_interaction);
+
+            _playerInArea = null;
         }
     }
 
@@ -43,7 +45,6 @@ public class Interactable : MonoBehaviour
      */
     public void SetInteractionText(string newText)
     {
-            
         if (_playerInArea)_playerInArea.RemoveInteractListener(_interaction);
 
         interactionText = newText;
@@ -58,6 +59,16 @@ public class Interactable : MonoBehaviour
     public PlayerController GetPlayerInArea()
     {
         return _playerInArea;
+    }
+
+    private void OnEnable()
+    {
+        if (_playerInArea) _playerInArea.AddInteractListener(_interaction);
+    }
+
+    private void OnDisable()
+    {
+        if (_playerInArea) _playerInArea.RemoveInteractListener(_interaction);
     }
 }
 
