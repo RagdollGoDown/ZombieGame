@@ -34,9 +34,6 @@ public class PlayerController : MonoBehaviour
     private float _headBobTime;
     private Vector3 _tempHeadBobDirection;
 
-    private SphereCollider _zombieDetectorCollider;
-    [SerializeField] private float distanceForZombieTooSee;
-
     private DamageableObject _damageablePlayer;
     private ZombieTarget _playerTarget;
 
@@ -159,9 +156,6 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        _zombieDetectorCollider = GetComponent<SphereCollider>();
-        _zombieDetectorCollider.radius = distanceForZombieTooSee;
 
         _movementDirection = new Vector2();
         _currentMovementSpeed = movementSpeed;

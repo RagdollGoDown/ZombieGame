@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 class RewardManager : MonoBehaviour
 {
-    private readonly static string[] WEAPON_NAMES = { "AK-47", "Shotgun", "AK-47 Rafale" };
+    private readonly static string[] WEAPON_NAMES = { "AK-47", "Shotgun", "AK-47 Rafale","SubMachineGun" };
     
     [SerializeField] private GameObject weaponCratePrefab;
 

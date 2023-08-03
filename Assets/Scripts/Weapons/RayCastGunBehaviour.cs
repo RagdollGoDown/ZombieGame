@@ -195,6 +195,11 @@ public class RayCastGunBehaviour : WeaponBehaviour
 
             _remainingShots = shotsPerTriggerPress;
         }
+        //reload if you don't have ammo
+        else if (_lastTimeShot + fireRateForShots <= Time.time && _ammoRemainingInMag == 0)
+        {
+            StartReload();
+        }
     }
 
     //--------------------------------reload

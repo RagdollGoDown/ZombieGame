@@ -8010,7 +8010,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.6
   m_Speed: 8
-  m_Acceleration: 13
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 300
   m_StoppingDistance: 0

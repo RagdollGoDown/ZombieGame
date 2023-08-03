@@ -30,6 +30,9 @@ public class ZombieBehaviour : MonoBehaviour
 
     private static readonly float ATTACK_ANIMATION_STUNT_TIME = 0.1f;
 
+    private static readonly int SPEED_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Speed");
+    private static readonly int JUMP_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Jump");
+
     private ZombieState _currentState;
     
     //TODO unserialize
@@ -96,7 +99,9 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _zombieAnimator.SetFloat("Speed", _navMeshAgent.velocity.magnitude);
+        _zombieAnimator.SetFloat(SPEED_ANIMATOR_PARAMETER_ID, _navMeshAgent.velocity.magnitude);
+
+        _zombieAnimator.SetBool(JUMP_ANIMATOR_PARAMETER_ID, _navMeshAgent.isOnOffMeshLink);
         
         switch (_currentState)
         {
