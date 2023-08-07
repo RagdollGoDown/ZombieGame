@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\Objectives\Area\AreaObjectiveObject.cs" />
     <Compile Include="Assets\Scripts\Objectives\Button\ButtonsObjectiveObject.cs" />
     <Compile Include="Assets\Scripts\Objectives\ObjectivesManager.cs" />
+    <Compile Include="Assets\Scripts\UI\MovePointToPointNonUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

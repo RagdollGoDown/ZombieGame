@@ -63,6 +63,8 @@ namespace Assets.Scripts.Objectives
 
             _rewardManager.GiveReward();
 
+            ChangePlayerObjectiveText(null);
+
             Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
         private void BeginObjective()
@@ -70,6 +72,8 @@ namespace Assets.Scripts.Objectives
             Debug.Log("begin");
             FindNextRandomObjective();
             _currentObjective.Begin();
+
+            ChangePlayerObjectiveText(_currentObjective);
         }
 
         private void CheckIfShouldStartObjective()
@@ -91,15 +95,12 @@ namespace Assets.Scripts.Objectives
             {
                 needsNewWeapon = p.GetPlayerAmmoFillRatio() < playerAmmoFillRatioForTrigger || needsNewWeapon;
             }
-            Debug.Log("player needs ? " + needsNewWeapon);
 
             return needsNewWeapon;
         }
 
         private void FindNextRandomObjective()
         {
-            Debug.Log("finding next"); 
-
             int selectedObj = Random.Range(0, _objs.Length);
 
             while (_lastObjs.Contains(_objs[selectedObj]))
@@ -108,9 +109,17 @@ namespace Assets.Scripts.Objectives
             }
 
             _currentObjective = _objs[selectedObj];
-            _lastObjs.Append(_currentObjective);
+            _lastObjs.Add(_currentObjective);
 
             if (_lastObjs.Count == _objs.Length) { _lastObjs = new(); }
+        }
+
+        private void ChangePlayerObjectiveText(Objective objective)
+        {
+            foreach(PlayerController p in PlayerController.GetPlayers())
+            {
+                p.SetObjectiveText(objective);
+            }
         }
     }
 }

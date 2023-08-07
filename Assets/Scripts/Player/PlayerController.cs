@@ -71,6 +71,7 @@ public class PlayerController : MonoBehaviour
     {
         playerInfoForGunSetup = new InfoForGunSetup(
            _cameraTransform.Find("UI/PlayScreen/Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>(),
+           _cameraTransform.Find("UI/PlayScreen/Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>(),
            _cameraTransform.Find("UI/PlayScreen/Crosshair").GetComponent<RectTransform>(),
            _cameraTransform.Find("UI").GetComponent<CanvasScaler>(),
            _cameraTransform.Find("UI").GetComponent<Canvas>(),
@@ -388,6 +389,11 @@ public class PlayerController : MonoBehaviour
     public void SetRoundText(int round)
     {
         _playerUI.SetRoundText(round);
+    }
+
+    public void SetObjectiveText(Objective objective)
+    {
+        _playerUI.SetObjectiveText(objective);
     }
 }
 

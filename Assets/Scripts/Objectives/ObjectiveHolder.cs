@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public abstract class ObjectiveHolder : MonoBehaviour
 {
+    [SerializeField] private string objectiveText;
     [SerializeField] private List<ObjectiveObject> objects;
     [SerializeField] private UnityEvent onObjectiveStart;
     [SerializeField] private UnityEvent onObjectiveComplete;

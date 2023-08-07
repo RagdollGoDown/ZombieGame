@@ -10,6 +10,7 @@ public abstract class WeaponBehaviour : MonoBehaviour
 {
     private PlayerController _playerController;
     private TextMeshProUGUI _ammoTextHolder;
+    private TextMeshProUGUI _weaponNameTextHolder;
     private RectTransform _crosshairTransform;
     private Canvas _playerCanvas;
     private CanvasScaler _canvasScaler;
@@ -48,6 +49,7 @@ public abstract class WeaponBehaviour : MonoBehaviour
         _playerController = transform.GetComponentInParent<PlayerController>();
         InfoForGunSetup IFGS = _playerController.playerInfoForGunSetup;
         _ammoTextHolder = IFGS.GetAmmoTextHolder();
+        _weaponNameTextHolder = IFGS.GetWeaponNameTextHolder();
         _crosshairTransform = IFGS.GetCrosshairTransform();
         _canvasScaler = IFGS.GetCanvasScaler();
         _playerCanvas = IFGS.GetCanvas();
@@ -198,12 +200,18 @@ public abstract class WeaponBehaviour : MonoBehaviour
         _isSwitching = false;
 
         UpdateAmmoText();
+        UpdateWeaponNameText();
     }
 
     public abstract void RefillWeaponAmmo();
 
     //----------------------------------------------ui
     protected virtual void UpdateAmmoText() { }
+
+    private void UpdateWeaponNameText() 
+    {
+        _weaponNameTextHolder.text = name;
+    }
 
     protected virtual void UpdateCrosshair() { }
 
@@ -298,15 +306,17 @@ public abstract class WeaponBehaviour : MonoBehaviour
 public class InfoForGunSetup
 {
     private readonly TextMeshProUGUI _ammoTextHolder;
+    private readonly TextMeshProUGUI _weaponNameTextHolder;
     private readonly RectTransform _crosshairTransform;
     private readonly CanvasScaler _canvasScaler;
     private readonly Canvas _canvas;
     private readonly Camera _playerCamera;
 
-    public InfoForGunSetup(TextMeshProUGUI ammoTextHolder, RectTransform crosshairTransform,
-        CanvasScaler canvasScaler, Canvas canvas, Camera playerCamera)
+    public InfoForGunSetup(TextMeshProUGUI ammoTextHolder, TextMeshProUGUI weaponNameTextHolder
+        , RectTransform crosshairTransform, CanvasScaler canvasScaler, Canvas canvas, Camera playerCamera)
     {
         _ammoTextHolder = ammoTextHolder;
+        _weaponNameTextHolder = weaponNameTextHolder;
         _crosshairTransform = crosshairTransform;
         _canvasScaler = canvasScaler;
         _canvas = canvas;
@@ -316,6 +326,10 @@ public class InfoForGunSetup
     public TextMeshProUGUI GetAmmoTextHolder()
     {
         return _ammoTextHolder;
+    }
+    public TextMeshProUGUI GetWeaponNameTextHolder()
+    {
+        return _weaponNameTextHolder;
     }
     public RectTransform GetCrosshairTransform()
     {

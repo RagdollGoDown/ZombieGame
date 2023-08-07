@@ -10,6 +10,8 @@ public abstract class Objective
 
     public List<ObjectiveObject> objectiveObjects;
 
+    private string _objectiveText;
+
     public Objective(UnityEvent completeEvent)
     {
         objectiveObjects = new();
@@ -29,6 +31,9 @@ public abstract class Objective
         objectiveObjects.Add(objObj);
     }
 
+    /// <summary>
+    /// Begins the objective, making it possible to complete and activating it's objectiveObjects
+    /// </summary>
     public virtual void Begin()
     {
         _onStarted.Invoke();
@@ -38,6 +43,9 @@ public abstract class Objective
         }
     }
 
+    /// <summary>
+    /// Completes the objective and turns off the objectiveObjects
+    /// </summary>
     public virtual void Complete()
     {
         _onComplete.Invoke();
@@ -48,13 +56,19 @@ public abstract class Objective
         }
     }
 
-    public abstract int GetScore();
-
+    /// <summary>
+    /// Used to modify the listeners of the onComplete event by the holder
+    /// </summary>
+    /// <returns>the event</returns>
     public UnityEvent GetOnObjectiveCompleteEvent()
     {
         return _onComplete;
     }
 
+    /// <summary>
+    /// Used to modify the listeners of the onStarted event by the holder
+    /// </summary>
+    /// <returns>the event</returns>
     public UnityEvent GetOnObjectiveStartedEvent()
     {
         return _onStarted;

@@ -33,7 +33,7 @@ Transform:
   - {fileID: 8228990213574467938}
   - {fileID: 2811063813658310846}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7304357630652276217
 Animator:
@@ -82,7 +82,7 @@ MonoBehaviour:
   _spreadDecreaseSpeed: 0.35
   _spreadDecreaseSpeedWhenAiming: 2
   _spreadIncreasePerShot: 0.1
-  muzzleFlash: {fileID: 0}
+  muzzleFlash: {fileID: 8209857084900117677}
   HitMarker: {fileID: 7249987246175168379, guid: baef443c24e40eb4db99e666b6a29abc,
     type: 3}
   bulletHoleOnDefault: {fileID: 7324937899285111298, guid: e08ed50810fa5a7428a8974a3e68a9de,

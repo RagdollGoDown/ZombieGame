@@ -20,6 +20,8 @@ public class PlayerUI : MonoBehaviour
     private TextMeshProUGUI _currentRoundText;
     private TextMeshProUGUI _interactText;
 
+    private MovePointToPointNonUI _talkieWalkieMove;
+
     private MovePointToPoint _weaponModelHolder;
     private Transform _weaponModelHolderTransform;
 
@@ -41,6 +43,8 @@ public class PlayerUI : MonoBehaviour
         _healthText = _healthBarSlider.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
 
         _currentRoundText = _playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
+
+        _talkieWalkieMove = transform.parent.Find("GunCamera/WalkieTalkie").GetComponent<MovePointToPointNonUI>();
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
@@ -95,6 +99,18 @@ public class PlayerUI : MonoBehaviour
     public void SetRoundText(int round)
     {
         _currentRoundText.text = round.ToString();
+    }
+
+    public void SetObjectiveText(Objective objective)
+    {
+        if (objective == null)
+        {
+            _talkieWalkieMove.Point1to2();
+        }
+        else
+        {
+            _talkieWalkieMove.Point2to1();
+        }
     }
 
     /*public void SetUIWeaponModel(Transform modelTransform)

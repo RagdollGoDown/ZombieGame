@@ -35,7 +35,6 @@ public class AreaObjective : Objective
     private void stayInObjective()
     {
         _currentStayTime += Time.fixedDeltaTime;
-        Debug.Log(_currentStayTime);
         if (_currentStayTime >= _totalStayTime) Complete();
     }
 
