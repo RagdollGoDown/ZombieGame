@@ -18,7 +18,9 @@ public class AreaObjective : Objective
     private float _currentStayTime;
     private readonly float _totalStayTime;
 
-    public AreaObjective(UnityEvent onComplete, float totalStayTime, AreaObjectiveObject areaObjective) : base(onComplete)
+    public AreaObjective(UnityEvent onComplete, string objectiveText, 
+        float totalStayTime, AreaObjectiveObject areaObjective) : 
+        base(onComplete,objectiveText)
     {
         AddObjectiveObject(areaObjective);
         _totalStayTime = totalStayTime;
@@ -36,11 +38,6 @@ public class AreaObjective : Objective
     {
         _currentStayTime += Time.fixedDeltaTime;
         if (_currentStayTime >= _totalStayTime) Complete();
-    }
-
-    public override int GetScore()
-    {
-        throw new System.NotImplementedException();
     }
 
     public override float getCompletenessRatio()

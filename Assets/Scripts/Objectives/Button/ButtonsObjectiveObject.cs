@@ -57,7 +57,9 @@ public class ButtonsObjective : Objective
     private readonly int _totalButtonsToPress;
     private int _buttonsToPress;
 
-    public ButtonsObjective(UnityEvent onComplete, ButtonsObjectiveObject[] buttons) : base(onComplete)
+    public ButtonsObjective(UnityEvent onComplete, string objectiveText,
+        ButtonsObjectiveObject[] buttons) : 
+        base(onComplete,objectiveText)
     {
         _totalButtonsToPress = buttons.Length;
 
@@ -80,11 +82,6 @@ public class ButtonsObjective : Objective
         _buttonsToPress -= 1;
 
         if (_buttonsToPress <= 0) { Complete(); }
-    }
-
-    public override int GetScore()
-    {
-        throw new System.NotImplementedException();
     }
 
     public override float getCompletenessRatio()

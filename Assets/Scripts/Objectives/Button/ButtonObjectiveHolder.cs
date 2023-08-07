@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class ButtonsObjectiveHolder : ObjectiveHolder
 {
 
-    protected override Objective BuildPureObjective(UnityEvent onComplete)
+    protected override Objective BuildPureObjective(UnityEvent onComplete,string objectiveText)
     {
         List<ButtonsObjectiveObject> objects = new();
 
@@ -22,6 +22,6 @@ public class ButtonsObjectiveHolder : ObjectiveHolder
         if (objects.Count == 0)
             throw new System.ArgumentException("No objective objects in : " + name);
 
-        return new ButtonsObjective(onComplete, objects.ToArray());
+        return new ButtonsObjective(onComplete, objectiveText, objects.ToArray());
     }
 }

@@ -12,20 +12,30 @@ public abstract class Objective
 
     private string _objectiveText;
 
-    public Objective(UnityEvent completeEvent)
+    public Objective(UnityEvent completeEvent, string objectiveText)
     {
         objectiveObjects = new();
         _onComplete = completeEvent;
         _onStarted = new();
+        _objectiveText = objectiveText;
     }
 
-    public Objective(UnityEvent completeEvent, List<ObjectiveObject> objectiveObjects) : this(completeEvent)
+    public Objective(UnityEvent completeEvent, string objectiveText,
+        List<ObjectiveObject> objectiveObjects) : this(completeEvent,objectiveText)
     {
         this.objectiveObjects = new List<ObjectiveObject>(objectiveObjects);
     }
 
+    /// <summary>
+    /// calculates how complete the objective is
+    /// </summary>
+    /// <returns>the ratio of completeness</returns>
     public abstract float getCompletenessRatio();
 
+    /// <summary>
+    /// add an objectiveObject to the list of the concerned objects
+    /// </summary>
+    /// <param name="objObj">the added object</param>
     public void AddObjectiveObject(ObjectiveObject objObj)
     {
         objectiveObjects.Add(objObj);
@@ -73,6 +83,12 @@ public abstract class Objective
     {
         return _onStarted;
     }
+
+    /// <summary>
+    /// the text describing what need to be done to complete the objective
+    /// </summary>
+    /// <returns>the text</returns>
+    public string GetObjectiveText() { return _objectiveText; }
 }
 
 public abstract class ObjectiveObject : MonoBehaviour
@@ -94,6 +110,11 @@ public abstract class ObjectiveObject : MonoBehaviour
     }
     protected virtual void ReadyOnAwake(){}
 
+    /// <summary>
+    /// Gets the object event, the event activated 
+    /// when interacted with by the player(not necessarily through the interactable script)
+    /// </summary>
+    /// <returns></returns>
     public UnityEvent GetObjectEvent() 
     {
         return _objectEvent;
@@ -109,6 +130,9 @@ public abstract class ObjectiveObject : MonoBehaviour
         return _onTurnedOff;
     }
 
+    /// <summary>
+    /// get the object ready to be interacted with
+    /// </summary>
     public void turnOn() {
         isOn = true;
 
@@ -118,6 +142,9 @@ public abstract class ObjectiveObject : MonoBehaviour
         _onTurnedOn.Invoke();
     }
 
+    /// <summary>
+    /// make the object no longer interactable with
+    /// </summary>
     public void turnOff() {
         isOn = false;
 
@@ -127,5 +154,9 @@ public abstract class ObjectiveObject : MonoBehaviour
         _onTurnedOff.Invoke();
     }
 
+    /// <summary>
+    /// tells you if the object is on
+    /// </summary>
+    /// <returns> the isOn bool</returns>
     public bool getIsOn() { return isOn; }
 }

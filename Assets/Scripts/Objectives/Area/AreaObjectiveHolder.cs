@@ -7,7 +7,7 @@ public class AreaObjectiveHolder : ObjectiveHolder
 {
     [SerializeField] private float totalStayTime;
 
-    protected override Objective BuildPureObjective(UnityEvent onComplete)
+    protected override Objective BuildPureObjective(UnityEvent onComplete, string objectiveText)
     {
         List<ObjectiveObject> objects = GetObjects();
 
@@ -17,6 +17,6 @@ public class AreaObjectiveHolder : ObjectiveHolder
         if (objects[0] is not AreaObjectiveObject)
             throw new System.ArgumentException("Wrong Objective object type given to " + name);
 
-        return new AreaObjective(onComplete, totalStayTime, (AreaObjectiveObject)objects[0]);
+        return new AreaObjective(onComplete, objectiveText, totalStayTime, (AreaObjectiveObject)objects[0]);
     }
 }
