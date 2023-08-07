@@ -84,7 +84,7 @@ public class ButtonsObjective : Objective
         if (_buttonsToPress <= 0) { Complete(); }
     }
 
-    public override float getCompletenessRatio()
+    public override float GetCompletenessRatio()
     {
         return _buttonsToPress / _totalButtonsToPress;
     }

@@ -30,7 +30,7 @@ public abstract class Objective
     /// calculates how complete the objective is
     /// </summary>
     /// <returns>the ratio of completeness</returns>
-    public abstract float getCompletenessRatio();
+    public abstract float GetCompletenessRatio();
 
     /// <summary>
     /// add an objectiveObject to the list of the concerned objects

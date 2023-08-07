@@ -29,8 +29,9 @@ public class MovePointToPoint : MonoBehaviour
     private IEnumerator Point1to2Numerator()
     {
         _isMoving = true;
+        _elapsedLerpTime = 0;
 
-        while(_elapsedLerpTime < LERP1)
+        while (_elapsedLerpTime < LERP1)
         {
             _elapsedLerpTime += Time.deltaTime/timeTillCompletion;
 
@@ -46,12 +47,13 @@ public class MovePointToPoint : MonoBehaviour
     {
         if (!_rectTransform) _rectTransform = GetComponent<RectTransform>();
 
-        if (!_isMoving) StartCoroutine(nameof(Point1to2Numerator));
+        if (!_isMoving) StartCoroutine(nameof(Point2to1Numerator));
     }
 
     private IEnumerator Point2to1Numerator()
     {
         _isMoving = true;
+        _elapsedLerpTime = 0;
 
         while (_elapsedLerpTime < LERP1)
         {

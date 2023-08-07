@@ -40,7 +40,7 @@ public class AreaObjective : Objective
         if (_currentStayTime >= _totalStayTime) Complete();
     }
 
-    public override float getCompletenessRatio()
+    public override float GetCompletenessRatio()
     {
         return _currentStayTime / _totalStayTime;
     }

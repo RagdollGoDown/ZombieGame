@@ -7,20 +7,31 @@ using UnityEngine.UI;
 public class PlayerUI : MonoBehaviour
 {
     //private static Vector3 POSITION_OF_HIDDEN_WEAPON_MODEL = new Vector3(0, -1000, 0);
-    private static float HEALTH100 = 100f;
+    private readonly static float HEALTH100 = 100f;
 
     private PlayerController _playerController;
 
     private GameObject _playScreen;
     private GameObject _deathScreen;
 
-    private Slider _healthBarSlider;
-    private TextMeshProUGUI _healthText;
+    private struct HealthUI
+    {
+        public Slider slider;
+        public TextMeshProUGUI tmp;
+    }
+    private HealthUI _healthUI;
 
     private TextMeshProUGUI _currentRoundText;
     private TextMeshProUGUI _interactText;
 
-    private MovePointToPointNonUI _talkieWalkieMove;
+    private struct ObjectiveUI
+    {
+        public MovePointToPointNonUI talkieWalkieMover;
+        public MovePointToPoint backgroundAndTextMover;
+        public Slider completenessSlider;
+        public TextMeshProUGUI tmp;
+    }
+    private ObjectiveUI _objectiveUI;
 
     private MovePointToPoint _weaponModelHolder;
     private Transform _weaponModelHolderTransform;
@@ -39,12 +50,18 @@ public class PlayerUI : MonoBehaviour
         _deathScreen = transform.Find("DeathScreen").gameObject;
         _deathScreen.SetActive(false);
 
-        _healthBarSlider = _playScreen.transform.Find("HealthBar").GetComponent<Slider>();
-        _healthText = _healthBarSlider.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
+        _healthUI = new();
+        _healthUI.slider = _playScreen.transform.Find("HealthBar").GetComponent<Slider>();
+        _healthUI.tmp = _healthUI.slider.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
 
         _currentRoundText = _playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
 
-        _talkieWalkieMove = transform.parent.Find("GunCamera/WalkieTalkie").GetComponent<MovePointToPointNonUI>();
+        _objectiveUI = new();
+        _objectiveUI.talkieWalkieMover = transform.parent.Find("GunCamera/WalkieTalkie").GetComponent<MovePointToPointNonUI>();
+        _objectiveUI.backgroundAndTextMover = _playScreen.transform.Find("Objective").GetComponent<MovePointToPoint>();
+        _objectiveUI.completenessSlider = _objectiveUI.backgroundAndTextMover.transform.Find("Slider").GetComponent<Slider>();
+        _objectiveUI.tmp = _objectiveUI.backgroundAndTextMover.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        _objectiveUI.tmp.text = string.Empty;
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
@@ -84,10 +101,10 @@ public class PlayerUI : MonoBehaviour
         if (_playerController.GetPlayerState() != PlayerController.PlayerState.Normal) return;
 
         float ratio = _playerController.GetPlayerHealthRatio();
-        _healthBarSlider.value = 1-ratio;
-        _healthText.text = (ratio * HEALTH100).ToString();
+        _healthUI.slider.value = 1-ratio;
+        _healthUI.tmp.text = (ratio * HEALTH100).ToString();
 
-        if (_healthBarSlider.value == 1) { Die(); }
+        if (_healthUI.slider.value == 1) { Die(); }
     }
 
     //----------------------------------------Setters
@@ -105,11 +122,15 @@ public class PlayerUI : MonoBehaviour
     {
         if (objective == null)
         {
-            _talkieWalkieMove.Point1to2();
+            _objectiveUI.talkieWalkieMover.Point1to2();
+            _objectiveUI.backgroundAndTextMover.Point1to2();
+            _objectiveUI.tmp.text = string.Empty;
         }
         else
         {
-            _talkieWalkieMove.Point2to1();
+            _objectiveUI.talkieWalkieMover.Point2to1();
+            _objectiveUI.backgroundAndTextMover.Point2to1();
+            _objectiveUI.tmp.text = objective.GetObjectiveText();
         }
     }
 

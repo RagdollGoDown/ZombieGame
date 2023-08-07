@@ -28,8 +28,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     private static readonly float TIME_BEFORE_BODY_DISINTEGRATES = 20;
 
-    private static readonly float ATTACK_ANIMATION_STUNT_TIME = 0.1f;
-
     private static readonly int SPEED_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Speed");
     private static readonly int JUMP_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Jump");
 

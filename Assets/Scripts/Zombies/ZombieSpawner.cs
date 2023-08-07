@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class ZombieSpawner : MonoBehaviour
 {
+    private readonly float TIME_BETWEEN_SPAWNS;
+
     [SerializeField] private GameObject zombiePrefab;
 
     private int _zombiesToSpawn;
     private ZombieTarget _zombieTargetOnSpawn;
     private bool _isSpawning;
-    [SerializeField] private float timeBetweenZombieSpawns;
 
     private bool _canSpawn;
 
@@ -69,7 +70,7 @@ public class ZombieSpawner : MonoBehaviour
         //zb.ChooseRandomMesh();
 
         _zombiesToSpawn--;
-        Invoke("SpawnZombie", timeBetweenZombieSpawns);
+        Invoke("SpawnZombie", TIME_BETWEEN_SPAWNS);
     }
 
     //-----------------------------------------------getters

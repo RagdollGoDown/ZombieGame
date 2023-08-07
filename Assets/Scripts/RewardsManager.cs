@@ -41,8 +41,6 @@ class RewardManager : MonoBehaviour
 
     private string SelectRandomWeaponName()
     {
-        string s = WEAPON_NAMES[Random.Range(0, WEAPON_NAMES.Length)];
-        Debug.Log(s);
-        return s;
+        return WEAPON_NAMES[Random.Range(0, WEAPON_NAMES.Length)];
     }
 }
