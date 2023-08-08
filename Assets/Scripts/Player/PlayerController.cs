@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 {
     private static List<PlayerController> PLAYERS;
 
+    private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
+
     public enum PlayerState
     {
         Normal,
@@ -66,6 +68,15 @@ public class PlayerController : MonoBehaviour
     private Interaction _currentInteract;
     private List<Interaction> _interactions;
 
+    //---------------------------kicking
+    private Animator _kickAnimator;
+    [SerializeField] private float maxKickForce;
+    [SerializeField] private float kickRange;
+    private float _kickForce;
+    [SerializeField] private float kickAnimationLength;
+    [SerializeField] private float timeBetweenFullForceKick;
+    private float _lastTimeKicked;
+
     //--------------------------------------------------general
     private void GunSetup()
     {
@@ -116,7 +127,7 @@ public class PlayerController : MonoBehaviour
 
         //---------------normal movement
         _movementVector = transform.right * _movementDirection.x + transform.forward * _movementDirection.y;
-        _movementVector *= deltaTime * _currentMovementSpeed;
+        _movementVector *= deltaTime *_currentMovementSpeed;
 
         _movementVector += _movementSpeedAffectedByAcceleration * deltaTime;
 
@@ -170,6 +181,8 @@ public class PlayerController : MonoBehaviour
         GunSetup();
 
         _interactions = new List<Interaction>();
+
+        _kickAnimator = transform.Find("CameraAndGunHolder/PlayerCamera/GunCamera/KickAnimations").GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -365,6 +378,17 @@ public class PlayerController : MonoBehaviour
         if (context.started && _currentInteract != null) { 
             _currentInteract.GetAction().Invoke();
             RemoveInteractListener(_currentInteract);
+        }
+    }
+
+    public void Kick(InputAction.CallbackContext context)
+    {
+        if (context.started && Time.time - _lastTimeKicked > kickAnimationLength)
+        {
+            Debug.Log("kicked");
+            _kickAnimator.SetTrigger(KICK_TRIGGER_PARAM_ID);
+
+            _lastTimeKicked = Time.time;
         }
     }
 

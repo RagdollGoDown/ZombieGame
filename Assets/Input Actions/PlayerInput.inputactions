@@ -39,7 +39,7 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Reload",
@@ -63,6 +63,15 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "19d5e604-e807-4def-b8c5-b86c4162e8c9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Kick",
+                    "type": "Button",
+                    "id": "d1ab7d98-9f79-49a3-905e-9e7116f1c0c3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -164,7 +173,7 @@
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyBoardAndMouse",
                     "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -175,7 +184,7 @@
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyBoardAndMouse",
                     "action": "SlowDownAndAim",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -186,8 +195,19 @@
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyBoardAndMouse",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "441eb034-35c4-412d-a8bf-cfe9b8625341",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyBoardAndMouse",
+                    "action": "Kick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
