@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reloadDuration: 1
-  timeToEquip: 0.5
+  timeToEquip: 0.4
   shotsPerShootingAnimation: 5
   shootingAnimationLength: 1
   reloadAnimationTime: 3.3

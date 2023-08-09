@@ -2170,7 +2170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reloadDuration: 1
-  timeToEquip: 1
+  timeToEquip: 0.4
   shotsPerShootingAnimation: 1
   shootingAnimationLength: 2.042
   reloadAnimationTime: 1
@@ -2194,7 +2194,7 @@ MonoBehaviour:
   bulletLerpSpeed: 100
   barrelExit: {fileID: 661866200493340501}
   maxBulletsInMag: 8
-  maxBulletsOnPlayer: 8
+  maxBulletsOnPlayer: 16
   shotsPerTriggerPress: 1
   reloadEnterAnimationTime: 0.583
   reloadChunkAnimationTime: 0.583

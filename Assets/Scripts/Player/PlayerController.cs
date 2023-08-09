@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     private static List<PlayerController> PLAYERS;
 
     private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
+    private static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
+    private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
     public enum PlayerState
     {
@@ -44,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _movementDirection;
     private Vector3 _movementVector;
     private Vector3 _movementSpeedAffectedByAcceleration;
+    private Vector3 _movementSpeedGravity;
     private float _currentMovementSpeed;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float movementSpeedWhenAiming;
@@ -70,11 +73,11 @@ public class PlayerController : MonoBehaviour
 
     //---------------------------kicking
     private Animator _kickAnimator;
-    [SerializeField] private float maxKickForce;
+    [SerializeField] private float kickForce;
+    [SerializeField] private float kickDamage;
     [SerializeField] private float kickRange;
-    private float _kickForce;
     [SerializeField] private float kickAnimationLength;
-    [SerializeField] private float timeBetweenFullForceKick;
+    [SerializeField] private float kickDuration;
     private float _lastTimeKicked;
 
     //--------------------------------------------------general
@@ -112,24 +115,41 @@ public class PlayerController : MonoBehaviour
         CalculateSway(_movementDirection, deltaTime);
     }
 
-    private void MovePlayer(float deltaTime)
+    private void PlayerAcceleration(float deltaTime)
     {
+        _movementSpeedAffectedByAcceleration -= 
+            ACCELERATION_DEGRADATION_SPEED * _movementSpeedAffectedByAcceleration * deltaTime;
+
         //-----------------acceleration
         if (!_characterController.isGrounded)
         {
             //add gravity
-            _movementSpeedAffectedByAcceleration.y -= deltaTime * 9.81f;
+            _movementSpeedGravity.y -= deltaTime * 9.81f;
         }
-        else if (_movementSpeedAffectedByAcceleration.y < 0)
+        else
         {
-            _movementSpeedAffectedByAcceleration.y = 0;
+            //make sure when the player is grounded he doesn't go through the floor
+            if (_movementSpeedAffectedByAcceleration.y < 0)
+            {
+                _movementSpeedAffectedByAcceleration.y = 0;
+            }
+
+            if (_movementSpeedGravity.y < 0)
+            {
+                _movementSpeedGravity.y = 0;
+            }
         }
+    }
+
+    private void MovePlayer(float deltaTime)
+    {
+        PlayerAcceleration(deltaTime);
 
         //---------------normal movement
         _movementVector = transform.right * _movementDirection.x + transform.forward * _movementDirection.y;
         _movementVector *= deltaTime *_currentMovementSpeed;
 
-        _movementVector += _movementSpeedAffectedByAcceleration * deltaTime;
+        _movementVector += (_movementSpeedAffectedByAcceleration+_movementSpeedGravity) * deltaTime;
 
         _characterController.Move(_movementVector);
     }
@@ -159,6 +179,7 @@ public class PlayerController : MonoBehaviour
         _playerState = PlayerState.Normal;
 
         _characterController = GetComponent<CharacterController>();
+   
         _playerInput = GetComponent<PlayerInput>();
         PlayerScore.ResetScore();
 
@@ -183,6 +204,7 @@ public class PlayerController : MonoBehaviour
         _interactions = new List<Interaction>();
 
         _kickAnimator = transform.Find("CameraAndGunHolder/PlayerCamera/GunCamera/KickAnimations").GetComponent<Animator>();
+        _kickAnimator.SetFloat(KICK_SPEED_PARAM_ID, kickAnimationLength / kickDuration);
     }
 
     private void FixedUpdate()
@@ -204,7 +226,6 @@ public class PlayerController : MonoBehaviour
     {
         direction = direction.normalized;
 
-        float distance = Vector3.Distance(direction * maximumHeadSway, _cameraTransform.localPosition);
         _cameraTransform.localPosition += (direction * maximumHeadSway - _cameraTransform.localPosition) * headSwaySpeed * deltaTime;
     }
 
@@ -222,14 +243,13 @@ public class PlayerController : MonoBehaviour
     //------------------------------------------------------------------weapons
     public RaycastHit GetRaycastHitInFrontOfCamera(float spread)
     {
-        RaycastHit hit;
 
-        float randomAngle = UnityEngine.Random.Range(0,2*Mathf.PI);
+        float randomAngle = UnityEngine.Random.Range(0, 2 * Mathf.PI);
 
         Vector3 spreadDiff = _cameraTransform.up * Mathf.Cos(randomAngle) + _cameraTransform.right * Mathf.Sin(randomAngle);
         spreadDiff *= spread * UnityEngine.Random.value;
 
-        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out hit, 1000,shootableLayerMaskValue);
+        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,shootableLayerMaskValue);
         return hit;
     }
 
@@ -321,11 +341,9 @@ public class PlayerController : MonoBehaviour
     }
 
     //-----------------------------------------player state
-    private void Die()
+    public void Die()
     {
         _playerState = PlayerState.Dead;
-
-        _playerUI.Die();
     }
 
     //----------------------------input events
@@ -341,15 +359,20 @@ public class PlayerController : MonoBehaviour
 
     public void ShootCurrentGun(InputAction.CallbackContext context)
     {
-        if (_playerState != PlayerState.Dead)_weaponsHeld[_currentWeaponIndex].ShootInputAction(context);
+        if (_playerState == PlayerState.Dead) return;
+
+        _weaponsHeld[_currentWeaponIndex].ShootInputAction(context);
     }
     
     public void ReloadCurrentGun(InputAction.CallbackContext context)
     {
+        if (_playerState == PlayerState.Dead) return;
+
         _weaponsHeld[_currentWeaponIndex].ReloadInputAction(context);
     }
     public void AimCurrentGun(InputAction.CallbackContext context)
     {
+        if (_playerState == PlayerState.Dead) return;
         _weaponsHeld[_currentWeaponIndex].AimInputAction(context);
 
         if (context.started) { _currentMovementSpeed = movementSpeedWhenAiming; }
@@ -358,6 +381,8 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchWeapons(InputAction.CallbackContext context)
     {
+        if (_playerState == PlayerState.Dead) return;
+
         if (_weaponsHeld[0].IsReadyForSwitch() && _weaponsHeld[1].IsReadyForSwitch() && context.started)
         {
             _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
@@ -383,12 +408,28 @@ public class PlayerController : MonoBehaviour
 
     public void Kick(InputAction.CallbackContext context)
     {
-        if (context.started && Time.time - _lastTimeKicked > kickAnimationLength)
+        if (_playerState == PlayerState.Dead) return;
+
+        if (context.started && Time.time - _lastTimeKicked > kickDuration)
         {
-            Debug.Log("kicked");
             _kickAnimator.SetTrigger(KICK_TRIGGER_PARAM_ID);
 
             _lastTimeKicked = Time.time;
+
+            Physics.Raycast(_cameraTransform.position, _cameraTransform.forward, out RaycastHit hit, kickRange, shootableLayerMaskValue);
+
+            //if you hit an object with kick then you get pushed up
+            if (hit.transform)
+            {
+                _movementSpeedAffectedByAcceleration -= kickForce * _cameraTransform.forward;
+
+                if (hit.transform.TryGetComponent(out DamageableObject damObj))
+                {
+                    _movementSpeedAffectedByAcceleration += kickForce * _cameraTransform.forward;
+
+                    damObj.getHit.Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
+                }
+            }
         }
     }
 
