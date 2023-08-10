@@ -16,7 +16,15 @@ public class PlayerController : MonoBehaviour
 
     private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
     private static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
+
     private static float ACCELERATION_DEGRADATION_SPEED = 5;
+
+    private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
+    {
+        new Vector3(1,0,0), new Vector3(0.9f,0.1f,0), new Vector3(0.9f,0,0.1f), 
+        new Vector3(0.9f,-0.1f,0), new Vector3(0.9f,0,-0.1f), new Vector3(0.9f,-0.05f,.05f),
+        new Vector3(0.9f,0.05f, .05f), new Vector3(0.9f,-0.05f,-0.05f), new Vector3(0.9f,0.05f,-0.05f)
+    };
 
     public enum PlayerState
     {
@@ -73,7 +81,6 @@ public class PlayerController : MonoBehaviour
 
     //---------------------------kicking
     private Animator _kickAnimator;
-    [SerializeField] private float kickForce;
     [SerializeField] private float kickDamage;
     [SerializeField] private float kickRange;
     [SerializeField] private float kickAnimationLength;
@@ -168,6 +175,22 @@ public class PlayerController : MonoBehaviour
         CalculateBob(deltaTime);
     }
 
+    private void HandleKickDamageAndRayCast() 
+    {
+        RaycastHit hit;
+
+        foreach (Vector3 v in KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE)
+        {
+            Physics.Raycast(_cameraTransform.position, 
+                _cameraTransform.forward * v.x + _cameraTransform.right * v.y + _cameraTransform.up * v.z,
+                out hit, kickRange, shootableLayerMaskValue);
+
+            if (hit.transform && hit.transform.TryGetComponent(out DamageableObject damObj))
+            {
+                damObj.getHit.Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
+            }
+        }
+    }
 
     //--------------------------------------------------unity events
     private void Awake()
@@ -416,20 +439,7 @@ public class PlayerController : MonoBehaviour
 
             _lastTimeKicked = Time.time;
 
-            Physics.Raycast(_cameraTransform.position, _cameraTransform.forward, out RaycastHit hit, kickRange, shootableLayerMaskValue);
-
-            //if you hit an object with kick then you get pushed up
-            if (hit.transform)
-            {
-                _movementSpeedAffectedByAcceleration -= kickForce * _cameraTransform.forward;
-
-                if (hit.transform.TryGetComponent(out DamageableObject damObj))
-                {
-                    _movementSpeedAffectedByAcceleration += kickForce * _cameraTransform.forward;
-
-                    damObj.getHit.Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
-                }
-            }
+            HandleKickDamageAndRayCast();
         }
     }
 
