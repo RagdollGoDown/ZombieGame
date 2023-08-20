@@ -11,7 +11,8 @@ public class RayCastGunBehaviour : WeaponBehaviour
         AwakeWeapon();
     }
     
-    protected override void AwakeWeapon();
-    
-    public override void 
+    protected override void AwakeWeapon()
+    {
+        base.AwakeWeapon();
+    }
 }
