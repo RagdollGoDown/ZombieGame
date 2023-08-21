@@ -3,14 +3,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.Events;
+using Utility;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(DamageableObject))]
 [RequireComponent(typeof(ZombieTarget))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour,Interactor
 {
     private static List<PlayerController> PLAYERS;
 
@@ -284,7 +284,7 @@ public class PlayerController : MonoBehaviour
     }
 
     //---------------------------------------------------------------interactions
-    public void AddInteractListener(Interaction interaction)
+    public void OnInteractableEntered(Interaction interaction)
     {
         if (!_interactions.Contains(interaction))
         {
@@ -294,7 +294,7 @@ public class PlayerController : MonoBehaviour
         UpdateCurrentInteraction();
     }
 
-    public void RemoveInteractListener(Interaction interaction)
+    public void OnInteractableExit(Interaction interaction)
     {
         _interactions.Remove(interaction);
 

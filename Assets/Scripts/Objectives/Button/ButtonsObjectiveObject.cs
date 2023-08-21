@@ -1,91 +1,94 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Utility;
 
-[RequireComponent(typeof(Collider))]
-[RequireComponent(typeof(Interactable))]
-public class ButtonsObjectiveObject : ObjectiveObject
+namespace Objectives.Button
 {
-    private static LayerMask DEFAULT = 0;
-    private static LayerMask HIGHLIGHTED = 10;
-
-    private Interactable _interactable;
-
-    [SerializeField]private List<GameObject> meshs;
-
-    protected override void ReadyOnAwake()
+    [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Interactable))]
+    public class ButtonsObjectiveObject : ObjectiveObject
     {
-        base.ReadyOnAwake();
+        private static LayerMask DEFAULT = 0;
+        private static LayerMask HIGHLIGHTED = 10;
 
-        GetOnTurnedOnEvent().AddListener(ReadyToPress);
-        _interactable = GetComponent<Interactable>();
+        private Interactable _interactable;
 
-        Invoke(nameof(SwitchInteractable), 0.1f);
-    }
+        [SerializeField] private List<GameObject> meshs;
 
-    private void SwitchInteractable()
-    {
-        _interactable.enabled = !_interactable.enabled;
-    }
-
-    public void PressButton()
-    {
-        GetObjectEvent().Invoke();
-        turnOff();
-
-        foreach(GameObject go in meshs)
+        protected override void ReadyOnAwake()
         {
-            go.layer = DEFAULT;
+            base.ReadyOnAwake();
+
+            GetOnTurnedOnEvent().AddListener(ReadyToPress);
+            _interactable = GetComponent<Interactable>();
+
+            Invoke(nameof(SwitchInteractable), 0.1f);
         }
 
-        SwitchInteractable();
-    }
-
-    private void ReadyToPress()
-    {
-        foreach (GameObject go in meshs)
+        private void SwitchInteractable()
         {
-            go.layer = HIGHLIGHTED;
+            _interactable.enabled = !_interactable.enabled;
         }
 
-        SwitchInteractable();
-    }
-}
-public class ButtonsObjective : Objective
-{
-    private readonly int _totalButtonsToPress;
-    private int _buttonsToPress;
-
-    public ButtonsObjective(UnityEvent onComplete, string objectiveText,
-        ButtonsObjectiveObject[] buttons) : 
-        base(onComplete,objectiveText)
-    {
-        _totalButtonsToPress = buttons.Length;
-
-        foreach (ButtonsObjectiveObject button in buttons)
+        public void PressButton()
         {
-            AddObjectiveObject(button);
-            button.GetObjectEvent().AddListener(PressButton);
+            GetObjectEvent().Invoke();
+            turnOff();
+
+            foreach (GameObject go in meshs)
+            {
+                go.layer = DEFAULT;
+            }
+
+            SwitchInteractable();
+        }
+
+        private void ReadyToPress()
+        {
+            foreach (GameObject go in meshs)
+            {
+                go.layer = HIGHLIGHTED;
+            }
+
+            SwitchInteractable();
         }
     }
-
-    public override void Begin()
+    public class ButtonsObjective : Objective
     {
-        base.Begin();
+        private readonly int _totalButtonsToPress;
+        private int _buttonsToPress;
 
-        _buttonsToPress = _totalButtonsToPress;
-    }
+        public ButtonsObjective(UnityEvent onComplete, string objectiveText,
+            ButtonsObjectiveObject[] buttons) :
+            base(onComplete, objectiveText)
+        {
+            _totalButtonsToPress = buttons.Length;
 
-    private void PressButton()
-    {
-        _buttonsToPress -= 1;
+            foreach (ButtonsObjectiveObject button in buttons)
+            {
+                AddObjectiveObject(button);
+                button.GetObjectEvent().AddListener(PressButton);
+            }
+        }
 
-        if (_buttonsToPress <= 0) { Complete(); }
-    }
+        public override void Begin()
+        {
+            base.Begin();
 
-    public override float GetCompletenessRatio()
-    {
-        return _buttonsToPress / _totalButtonsToPress;
+            _buttonsToPress = _totalButtonsToPress;
+        }
+
+        private void PressButton()
+        {
+            _buttonsToPress -= 1;
+
+            if (_buttonsToPress <= 0) { Complete(); }
+        }
+
+        public override float GetCompletenessRatio()
+        {
+            return _buttonsToPress / _totalButtonsToPress;
+        }
     }
 }

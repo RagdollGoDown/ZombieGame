@@ -3,45 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(Collider))]
-public class AreaObjectiveObject : ObjectiveObject
-{  
-    private void OnTriggerStay(Collider other)
-    {
-        if (!other.tag.Equals("Player") || !getIsOn()) return;
-
-        GetObjectEvent().Invoke();
-    }
-}
-public class AreaObjective : Objective
+namespace Objectives.Area
 {
-    private float _currentStayTime;
-    private readonly float _totalStayTime;
-
-    public AreaObjective(UnityEvent onComplete, string objectiveText, 
-        float totalStayTime, AreaObjectiveObject areaObjective) : 
-        base(onComplete,objectiveText)
+    [RequireComponent(typeof(Collider))]
+    public class AreaObjectiveObject : ObjectiveObject
     {
-        AddObjectiveObject(areaObjective);
-        _totalStayTime = totalStayTime;
-        areaObjective.GetObjectEvent().AddListener(stayInObjective);
+        private void OnTriggerStay(Collider other)
+        {
+            if (!other.tag.Equals("Player") || !getIsOn()) return;
+
+            GetObjectEvent().Invoke();
+        }
     }
-
-    public override void Begin()
+    public class AreaObjective : Objective
     {
-        base.Begin();
+        private float _currentStayTime;
+        private readonly float _totalStayTime;
 
-        _currentStayTime = 0;
-    }
+        public AreaObjective(UnityEvent onComplete, string objectiveText,
+            float totalStayTime, AreaObjectiveObject areaObjective) :
+            base(onComplete, objectiveText)
+        {
+            AddObjectiveObject(areaObjective);
+            _totalStayTime = totalStayTime;
+            areaObjective.GetObjectEvent().AddListener(stayInObjective);
+        }
 
-    private void stayInObjective()
-    {
-        _currentStayTime += Time.fixedDeltaTime;
-        if (_currentStayTime >= _totalStayTime) Complete();
-    }
+        public override void Begin()
+        {
+            base.Begin();
 
-    public override float GetCompletenessRatio()
-    {
-        return _currentStayTime / _totalStayTime;
+            _currentStayTime = 0;
+        }
+
+        private void stayInObjective()
+        {
+            _currentStayTime += Time.fixedDeltaTime;
+            if (_currentStayTime >= _totalStayTime) Complete();
+        }
+
+        public override float GetCompletenessRatio()
+        {
+            return _currentStayTime / _totalStayTime;
+        }
     }
 }

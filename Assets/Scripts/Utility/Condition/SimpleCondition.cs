@@ -1,0 +1,24 @@
+﻿using Utility.Observable;
+
+namespace Utility.Condition
+{
+    public class SimpleCondition : Condition
+    {
+        private bool value;
+
+        public SimpleCondition(ObservableBool observedBool)
+        {
+            observedBool.AddActionToOnValueChange(SetValue);
+        }
+
+        private void SetValue(bool value)
+        {
+            this.value = value;
+        }
+
+        public override bool IsFullfilled()
+        {
+            return value;
+        }
+    }
+}

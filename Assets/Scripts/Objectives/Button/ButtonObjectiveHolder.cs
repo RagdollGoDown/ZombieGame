@@ -3,25 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class ButtonsObjectiveHolder : ObjectiveHolder
+namespace Objectives.Button
 {
-
-    protected override Objective BuildPureObjective(UnityEvent onComplete,string objectiveText)
+    public class ButtonsObjectiveHolder : ObjectiveHolder
     {
-        List<ButtonsObjectiveObject> objects = new();
-
-        foreach(ObjectiveObject oo in GetObjects())
+        protected override Objective BuildPureObjective(UnityEvent onComplete, string objectiveText)
         {
-            if (oo is not ButtonsObjectiveObject)
-                throw new System.ArgumentException("Wrong Objective object type given to " + name
-                    + " given in : " + oo.name);
+            List<ButtonsObjectiveObject> objects = new();
 
-            objects.Add((ButtonsObjectiveObject)oo);
+            foreach (ObjectiveObject oo in GetObjects())
+            {
+                if (oo is not ButtonsObjectiveObject)
+                    throw new System.ArgumentException("Wrong Objective object type given to " + name
+                        + " given in : " + oo.name);
+
+                objects.Add((ButtonsObjectiveObject)oo);
+            }
+
+            if (objects.Count == 0)
+                throw new System.ArgumentException("No objective objects in : " + name);
+
+            return new ButtonsObjective(onComplete, objectiveText, objects.ToArray());
         }
-
-        if (objects.Count == 0)
-            throw new System.ArgumentException("No objective objects in : " + name);
-
-        return new ButtonsObjective(onComplete, objectiveText, objects.ToArray());
     }
+
 }

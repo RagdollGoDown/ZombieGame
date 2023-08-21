@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Assets.Scripts.Objectives
+namespace Objectives
 {
     public class ObjectivesManager : MonoBehaviour
     {
         private UnityEvent _onObjectiveComplete;
-        private RewardManager _rewardManager;
 
         private Objective _currentObjective;
         private Objective[] _objs;
@@ -35,9 +34,6 @@ namespace Assets.Scripts.Objectives
             if (_necessaryTimeBetweenObjectives >= _maximumTimeBetweenObjectives) 
                 throw new System.ArgumentException("Necessary time needs to be strictly smaller than the maximum time");
 
-            _rewardManager = transform.Find("/RewardManager").GetComponent<RewardManager>();
-            if (_rewardManager == null) throw new System.Exception("reward manager not found");
-
             _onObjectiveComplete = new UnityEvent();
 
             _onObjectiveComplete.AddListener(CompleteObjective);
@@ -60,8 +56,6 @@ namespace Assets.Scripts.Objectives
         {
             Debug.Log("complete");
             _timeDifferenceSinceLastObjective = 0;
-
-            _rewardManager.GiveReward();
 
             ChangePlayerObjectiveText(null);
 
