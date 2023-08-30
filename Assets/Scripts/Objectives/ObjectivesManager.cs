@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Utility.Observable;
+using Utility.Conditions;
 
 namespace Objectives
 {
@@ -17,16 +18,13 @@ namespace Objectives
         private Objective[] _objs;
         private List<Objective> _lastObjs;
 
+        private LogicAndCondition necessaryConditionsToStartNextObjective;
+
         [Header("Objective Times")]
         [SerializeField] private float necessaryTimeBetweenObjectives;
         [SerializeField] private float maximumTimeBetweenObjectives;
         [SerializeField] private float timeBetweenChecks;
         private float timeSinceLastObjective;
-
-        public ObjectivesManager(Objective[] _objs, UnityEvent _onObjectiveComplete)
-        {
-            this._objs = _objs;
-        }
 
         private void Awake()
         {
@@ -37,17 +35,16 @@ namespace Objectives
 
             _onObjectiveComplete.AddListener(CompleteObjective);
 
-
             List<Objective> _objsList = new();
-
             foreach(ObjectiveHolder oh in transform.GetComponentsInChildren<ObjectiveHolder>())
             {
                 _objsList.Add(oh.Build(_onObjectiveComplete));
             }
-
             _objs = _objsList.ToArray();
-            
+
             _lastObjs = new();
+
+            necessaryConditionsToStartNextObjective = new();
 
             Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
@@ -72,7 +69,8 @@ namespace Objectives
             timeSinceLastObjective += timeBetweenChecks;
 
             if (maximumTimeBetweenObjectives <= timeSinceLastObjective && 
-                ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK &&
+                necessaryConditionsToStartNextObjective.IsFullfilled() &&
+                //ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK &&
                timeSinceLastObjective > necessaryTimeBetweenObjectives) BeginObjective();
             else Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
@@ -90,6 +88,23 @@ namespace Objectives
             _lastObjs.Add(currentObjective.GetValue());
 
             if (_lastObjs.Count == _objs.Length) { _lastObjs = new(); }
+        }
+
+        public void AddToNecessaryConditionsBeforeObjectiveStarts(Condition condition)
+        {
+            if (necessaryConditionsToStartNextObjective == null)
+            {
+                necessaryConditionsToStartNextObjective = new();
+            }
+            
+            necessaryConditionsToStartNextObjective.AddCondition(condition);
+        }
+
+        public void RemoveFromNecessaryConditionsBeforeObjectiveStarts(Condition condition)
+        {
+            if (necessaryConditionsToStartNextObjective == null) return;
+
+            necessaryConditionsToStartNextObjective.RemoveCondition(condition);
         }
     }
 }
