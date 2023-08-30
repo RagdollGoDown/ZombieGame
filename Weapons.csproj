@@ -64,7 +64,7 @@
     <Compile Include="Assets\Scripts\Weapons\BloodSpillOnCollide.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\HighlightBoosts.cs" />
     <Compile Include="Assets\Scripts\Weapons\RayCastGunBehaviour.cs" />
-    <Compile Include="Assets\Scripts\Weapons\RandomVectors.cs" />
+    <Compile Include="Assets\Scripts\Weapons\MeleeWeapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\Weapons\Weapons.asmdef" />

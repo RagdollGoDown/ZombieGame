@@ -3,26 +3,25 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Utility.Observable;
 
 namespace Objectives
 {
     public class ObjectivesManager : MonoBehaviour
     {
+        //this unity event is used by the objectives
+        //while the delegate is used for other objects
         private UnityEvent _onObjectiveComplete;
 
-        private Objective _currentObjective;
+        public ObservableObject<Objective> currentObjective;
         private Objective[] _objs;
         private List<Objective> _lastObjs;
 
         [Header("Objective Times")]
-        [SerializeField] private float _necessaryTimeBetweenObjectives;
-        [SerializeField] private float _maximumTimeBetweenObjectives;
+        [SerializeField] private float necessaryTimeBetweenObjectives;
+        [SerializeField] private float maximumTimeBetweenObjectives;
         [SerializeField] private float timeBetweenChecks;
-        private float _timeDifferenceSinceLastObjective;
-
-        [Header("Objective Triggers")]
-        //ammo fill ratio = current ammo on player / base ammo
-        [SerializeField] private float playerAmmoFillRatioForTrigger;
+        private float timeSinceLastObjective;
 
         public ObjectivesManager(Objective[] _objs, UnityEvent _onObjectiveComplete)
         {
@@ -31,12 +30,13 @@ namespace Objectives
 
         private void Awake()
         {
-            if (_necessaryTimeBetweenObjectives >= _maximumTimeBetweenObjectives) 
+            if (necessaryTimeBetweenObjectives >= maximumTimeBetweenObjectives) 
                 throw new System.ArgumentException("Necessary time needs to be strictly smaller than the maximum time");
 
             _onObjectiveComplete = new UnityEvent();
 
             _onObjectiveComplete.AddListener(CompleteObjective);
+
 
             List<Objective> _objsList = new();
 
@@ -55,9 +55,7 @@ namespace Objectives
         private void CompleteObjective()
         {
             Debug.Log("complete");
-            _timeDifferenceSinceLastObjective = 0;
-
-            ChangePlayerObjectiveText(null);
+            timeSinceLastObjective = 0;
 
             Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
@@ -65,32 +63,18 @@ namespace Objectives
         {
             Debug.Log("begin");
             FindNextRandomObjective();
-            _currentObjective.Begin();
-
-            ChangePlayerObjectiveText(_currentObjective);
+            currentObjective.GetValue().Begin();
         }
 
         private void CheckIfShouldStartObjective()
         {
             Debug.Log("check");
-            _timeDifferenceSinceLastObjective += timeBetweenChecks;
+            timeSinceLastObjective += timeBetweenChecks;
 
-            if ((CheckIfPlayerNeedsGun() || _maximumTimeBetweenObjectives <= _timeDifferenceSinceLastObjective) && 
+            if (maximumTimeBetweenObjectives <= timeSinceLastObjective && 
                 ZombieSpawnerManager.GetCurrentSpawnerState() != ZombieSpawnerManager.SpawnerState.BREAK &&
-               _timeDifferenceSinceLastObjective > _necessaryTimeBetweenObjectives) BeginObjective();
+               timeSinceLastObjective > necessaryTimeBetweenObjectives) BeginObjective();
             else Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
-        }
-
-        private bool CheckIfPlayerNeedsGun()
-        {
-            bool needsNewWeapon = false;
-
-            foreach (PlayerController p in PlayerController.GetPlayers())
-            {
-                needsNewWeapon = p.GetPlayerAmmoFillRatio() < playerAmmoFillRatioForTrigger || needsNewWeapon;
-            }
-
-            return needsNewWeapon;
         }
 
         private void FindNextRandomObjective()
@@ -102,18 +86,10 @@ namespace Objectives
                 selectedObj = Random.Range(0, _objs.Length);
             }
 
-            _currentObjective = _objs[selectedObj];
-            _lastObjs.Add(_currentObjective);
+            currentObjective.SetValue(_objs[selectedObj]);
+            _lastObjs.Add(currentObjective.GetValue());
 
             if (_lastObjs.Count == _objs.Length) { _lastObjs = new(); }
-        }
-
-        private void ChangePlayerObjectiveText(Objective objective)
-        {
-            foreach(PlayerController p in PlayerController.GetPlayers())
-            {
-                p.SetObjectiveText(objective);
-            }
         }
     }
 }

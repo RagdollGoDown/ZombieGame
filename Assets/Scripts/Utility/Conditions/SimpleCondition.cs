@@ -1,6 +1,6 @@
 ﻿using Utility.Observable;
 
-namespace Utility.Condition
+namespace Utility.Conditions
 {
     public class SimpleCondition : Condition
     {
