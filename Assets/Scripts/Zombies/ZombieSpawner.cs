@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public class ZombieSpawner : MonoBehaviour
 {
@@ -9,12 +10,10 @@ public class ZombieSpawner : MonoBehaviour
     [SerializeField] private GameObject zombiePrefab;
 
     private int _zombiesToSpawn;
-    private ZombieTarget _zombieTargetOnSpawn;
+    private DamageableObject _zombieTargetOnSpawn;
     private bool _isSpawning;
 
     private bool _canSpawn;
-
-    private int _maxZombiesToSpawn;
 
     //these positions are offsets from the gameobject's position
     [SerializeField] private Vector3[] spawnPositionsOffset;
@@ -30,11 +29,9 @@ public class ZombieSpawner : MonoBehaviour
         {
             spawnPositionsOffset = new Vector3[]{Vector3.zero};
         }
-
-        _maxZombiesToSpawn = spawnPositionsOffset.Length;
     }
 
-    public int AddZombiesToSpawn(int amountOfZombies,ZombieTarget zombieTarget)
+    public int AddZombiesToSpawn(int amountOfZombies,DamageableObject zombieTarget)
     {
         if (!_canSpawn) {return 0;}
 

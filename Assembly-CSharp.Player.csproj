@@ -706,9 +706,9 @@
       <Project>{7CEA51D9-92A8-357E-2C74-10AF6515DAAA}</Project>
       <Name>Unity.InputSystem.Player</Name>
     </ProjectReference>
-    <ProjectReference Include="Zombie.Player.csproj">
-      <Project>{F81C848F-E0FC-778B-E5F0-636A44377038}</Project>
-      <Name>Zombie.Player</Name>
+    <ProjectReference Include="Zombies.Player.csproj">
+      <Project>{12034D92-6F13-1F4B-13D2-4B8E6D43D923}</Project>
+      <Name>Zombies.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime.Player.csproj">
       <Project>{70F1280F-B6DD-DA6E-DB51-3DE06FDFA757}</Project>

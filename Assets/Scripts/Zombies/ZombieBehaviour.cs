@@ -2,14 +2,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using TMPro.EditorUtilities;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
 using Debug = UnityEngine.Debug;
+using Utility;
 
 public enum ZombieState
 {
@@ -24,12 +21,13 @@ public enum ZombieState
 [RequireComponent(typeof(BoxCollider))]
 public class ZombieBehaviour : MonoBehaviour
 {
-    private static readonly int DETECTION_LAYERMASK = 9;
-
     private static readonly float TIME_BEFORE_BODY_DISINTEGRATES = 20;
 
     private static readonly int SPEED_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Speed");
     private static readonly int JUMP_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Jump");
+
+    //we don't want the zombie to look at the damageable object but at the head
+    private static readonly Vector3 OFFSET_FOR_HEAD_CONSTRAINT = new Vector3(0,1.7f,0);
 
     private ZombieState _currentState;
     
@@ -47,7 +45,7 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float maxRunningSpeed;
     private float runningSpeed;
     [SerializeField] private float crawlingSpeed;
-    private ZombieTarget _zombieTarget;
+    private DamageableObject _zombieTarget;
 
     //--------------------animation
     private MultiAimConstraint _headConstraint;
@@ -126,7 +124,7 @@ public class ZombieBehaviour : MonoBehaviour
 
             SkinnedMeshRenderer zombieSkinnedMesh = _selectedZombieMesh.GetComponent<SkinnedMeshRenderer>();
             
-            if (!zombieSkinnedMesh.IsUnityNull())
+            if (!zombieSkinnedMesh)
             {
                 zombieSkinnedMesh.material =
                 differentZombieMaterialsForSkinnedMesh[UnityEngine.Random.Range(0, differentZombieMaterialsForSkinnedMesh.Count)];
@@ -144,25 +142,6 @@ public class ZombieBehaviour : MonoBehaviour
             }
         }
     }
-    
-    private bool CanSeeTarget(ZombieTarget target)
-    {
-        Vector3 position = _headTransform.position;
-        Vector3 direction = target.GetTargetPosition() - position;
-
-        if (IsInFieldOfView(target.GetTargetPosition()))
-        {
-            RaycastHit hit;
-            //only sees default layer
-            Physics.Raycast(position, direction, out hit, 50,DETECTION_LAYERMASK);
-            Debug.DrawRay(position,direction);
-            return !hit.transform.IsUnityNull() && hit.transform.name.Equals(target.name);
-        }
-        else
-        {
-            return false;
-        }
-    }
 
     private bool IsInFieldOfView(Vector3 point)
     {
@@ -173,19 +152,8 @@ public class ZombieBehaviour : MonoBehaviour
     }
 
     //------------------------------chasing
-    public bool CheckChase(ZombieTarget Target)
-    {
-        if (_currentState == ZombieState.Idle && CanSeeTarget(Target))
-        {
-            StartChase(Target);
 
-            return true;
-        }
-
-        return false;
-    }
-
-    public void StartChase(ZombieTarget target)
+    public void StartChase(DamageableObject target)
     {
         if (target == null) { return; }
 
@@ -205,15 +173,16 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void Chase()
     {
-        _navMeshAgent.SetDestination(_zombieTarget.GetTargetPosition());
+        Vector3 lookingPosition = _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT;
+
+        _navMeshAgent.SetDestination(lookingPosition);
 
         //-------------------------------------attack
-        float distanceFromPLayer = Vector3.Distance(_zombieTarget.GetTargetPosition(),transform.position);
+        float distanceFromPLayer = Vector3.Distance(lookingPosition,transform.position);
 
         if (distanceFromPLayer <= distanceBeforeAttack 
             && _navMeshAgent.velocity.magnitude <= MaxNavMeshSpeedRequieredAttack
-            && _timeBetweenAttackCounter <= 0 
-            && CanSeeTarget(_zombieTarget)) { 
+            && _timeBetweenAttackCounter <= 0) { 
             StartCoroutine(Attack());
         }
 
@@ -235,7 +204,7 @@ public class ZombieBehaviour : MonoBehaviour
             _zombieAnimator.SetInteger("AttackType", 3);
         }
 
-        _zombieTarget.HitTarget(new Damage(attackDamage,transform.position - _zombieTarget.GetTargetPosition(), this));
+        _zombieTarget.getHit.Invoke(new Damage(attackDamage,transform.position - _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT, this));
         _timeBetweenAttackCounter = timeBetweenAttacks;
         
         yield return new WaitForSeconds(TIME_BEFORE_BODY_DISINTEGRATES);
@@ -298,16 +267,9 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
-    public void ScoreHeadShot()
-    {
-
-    }
-
     public void Die()
     {
         if (_currentState == ZombieState.Dead) { return; }
-
-        PlayerScore.AddKill();
 
         _currentState = ZombieState.Dead;
         _zombieAnimator.enabled = false;

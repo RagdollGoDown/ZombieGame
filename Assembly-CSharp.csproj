@@ -798,9 +798,9 @@
       <Project>{3C183E19-FDB5-65FF-31C7-AFD0A5E54805}</Project>
       <Name>Unity.InputSystem</Name>
     </ProjectReference>
-    <ProjectReference Include="Zombie.csproj">
-      <Project>{02DD8F69-0BFB-3600-1CE6-C23C4A0774D0}</Project>
-      <Name>Zombie</Name>
+    <ProjectReference Include="Zombies.csproj">
+      <Project>{E35A23F7-7D19-99F7-B64E-B285283355E7}</Project>
+      <Name>Zombies</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime.csproj">
       <Project>{09CCDF22-AFF7-C84B-4F3D-961158DB0311}</Project>

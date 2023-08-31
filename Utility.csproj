@@ -60,11 +60,13 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Utility\Interactor.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableObject.cs" />
+    <Compile Include="Assets\Scripts\Utility\Observable\ReadOnly\ReadOnlyObservableObject.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableBool.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\LogicAndCondition.cs" />
     <Compile Include="Assets\Scripts\Utility\DamageableObject.cs" />
     <Compile Include="Assets\Scripts\Utility\Interactable.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableRatio.cs" />
+    <Compile Include="Assets\Scripts\Utility\Observable\ReadOnly\ReadOnlyObservableFloat.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\MultipleConditions.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\Condition.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\SimpleCondition.cs" />

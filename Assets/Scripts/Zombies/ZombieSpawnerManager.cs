@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
+using Utility;
 
 public class ZombieSpawnerManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class ZombieSpawnerManager : MonoBehaviour
     [SerializeField] private int timeBetweenRounds = 10;
     [SerializeField] private int timeBeforeFirstRound = 2;
 
+    private DamageableObject target;
+
     public enum SpawnerState
     {
         MIDROUND,
@@ -25,9 +28,6 @@ public class ZombieSpawnerManager : MonoBehaviour
     private ZombieSpawner[] _spawners;
     [SerializeField]private ZombieSpawner spawner;
     private int _indexInSpawners;
-
-    private ZombieTarget[] _targets;
-    private ReadOnlyCollection<PlayerController> oldListOfPLayers;
 
     private int _currentRound;
 
@@ -57,8 +57,6 @@ public class ZombieSpawnerManager : MonoBehaviour
     {
         Debug.Log("Break");
         _spawnerState = SpawnerState.BREAK;
-
-        SetPlayerRoundCounters();
 
         Invoke("EnterRound", timeBetweenRounds);
     }
@@ -99,44 +97,15 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         _maxZombiesInWorld += escalationPerRound;
 
-        ReloadTargetsArrayIfNecessary();
-
-        if (zombiesToSpawn < 1 && _targets.Length > 0) { return; }
-
-        int targetIndex = 0;
+        if (zombiesToSpawn < 1 && target != null) { return; }
 
         while (zombiesToSpawn > 0)
         {
             int a = _spawners[_indexInSpawners].
-                AddZombiesToSpawn(Random.Range(1, zombiesToSpawn + 1), _targets[targetIndex]);
+                AddZombiesToSpawn(Random.Range(1, zombiesToSpawn + 1), target);
             zombiesToSpawn -= a;
 
-            targetIndex = (targetIndex + 1) % _targets.Length;
-
             _indexInSpawners = (_indexInSpawners+1) % _spawners.Length;
-        }
-    }
-
-    private void ReloadTargetsArrayIfNecessary()
-    {
-        if (_targets != null && PlayerController.GetPlayers().Equals(oldListOfPLayers)) return;
-
-        oldListOfPLayers = PlayerController.GetPlayers();
-
-        _targets = new ZombieTarget[oldListOfPLayers.Count];
-
-        int i = 0;
-        foreach (PlayerController p in oldListOfPLayers)
-        {
-            _targets[i++] = p.GetPlayerTargetComponent();
-        }
-    }
-
-    private void SetPlayerRoundCounters()
-    {
-        foreach(PlayerController p in PlayerController.GetPlayers())
-        {
-            p.SetRoundText(_currentRound);
         }
     }
 
@@ -185,5 +154,10 @@ public class ZombieSpawnerManager : MonoBehaviour
     public static SpawnerState GetCurrentSpawnerState() {
         if (CURRENT_SPAWNER) return CURRENT_SPAWNER._spawnerState;
         else return SpawnerState.UNKNOWN;
+    }
+
+    public void SetTarget(DamageableObject target)
+    {
+        this.target = target;
     }
 }

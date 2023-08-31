@@ -3,6 +3,7 @@ using Utility;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine.InputSystem;
+using Weapons;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(DamageableObject))]
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
+    private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
     private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
     {
         new Vector3(1,0,0), new Vector3(0.9f,0.1f,0), new Vector3(0.9f,0,0.1f), 
@@ -65,8 +67,6 @@ public class PlayerController : MonoBehaviour,Interactor
     //temporarily a serialize field to check the guns
     private int _currentWeaponIndex;
     [SerializeField] private WeaponBehaviour[] _weaponsHeld;
-    public GunUI playerInfoForGunSetup;
-    private static readonly int shootableLayerMaskValue = 65;
 
     private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
 
@@ -85,15 +85,6 @@ public class PlayerController : MonoBehaviour,Interactor
     //--------------------------------------------------general
     private void GunSetup()
     {
-        playerInfoForGunSetup = new InfoForGunSetup(
-           _cameraTransform.Find("UI/PlayScreen/Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>(),
-           _cameraTransform.Find("UI/PlayScreen/Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>(),
-           _cameraTransform.Find("UI/PlayScreen/Crosshair").GetComponent<RectTransform>(),
-           _cameraTransform.Find("UI").GetComponent<CanvasScaler>(),
-           _cameraTransform.Find("UI").GetComponent<Canvas>(),
-           _cameraTransform.GetComponent<Camera>()
-           );
-
         _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
 
         foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
@@ -178,7 +169,7 @@ public class PlayerController : MonoBehaviour,Interactor
         {
             Physics.Raycast(_cameraTransform.position, 
                 _cameraTransform.forward * v.x + _cameraTransform.right * v.y + _cameraTransform.up * v.z,
-                out hit, kickRange, shootableLayerMaskValue);
+                out hit, kickRange, SHOOTABLE_LAYERMASK_VALUE);
 
             if (hit.transform && hit.transform.TryGetComponent(out DamageableObject damObj))
             {
@@ -261,12 +252,12 @@ public class PlayerController : MonoBehaviour,Interactor
     public RaycastHit GetRaycastHitInFrontOfCamera(float spread)
     {
 
-        float randomAngle = UnityEngine.Random.Range(0, 2 * Mathf.PI);
+        float randomAngle = Random.Range(0, 2 * Mathf.PI);
 
         Vector3 spreadDiff = _cameraTransform.up * Mathf.Cos(randomAngle) + _cameraTransform.right * Mathf.Sin(randomAngle);
-        spreadDiff *= spread * UnityEngine.Random.value;
+        spreadDiff *= spread * Random.value;
 
-        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,shootableLayerMaskValue);
+        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,SHOOTABLE_LAYERMASK_VALUE);
         return hit;
     }
 
@@ -417,7 +408,7 @@ public class PlayerController : MonoBehaviour,Interactor
     {
         if (context.started && _currentInteract != null) { 
             _currentInteract.GetAction().Invoke();
-            RemoveInteractListener(_currentInteract);
+            OnInteractableExit(_currentInteract);
         }
     }
 
@@ -437,7 +428,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     //--------------------------------------------------------getters
 
-    public DamageableObject GetPlayerTargetComponent() { return _d; }
+    public DamageableObject GetPlayerTargetComponent() { return _damageablePlayer; }
 
     public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
 

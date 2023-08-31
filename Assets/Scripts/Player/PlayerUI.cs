@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Utility;
+using Utility.Observable;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PlayerUI : MonoBehaviour
 
     private Canvas canvas;
     private CanvasScaler canvasScaler;
+    private ObservableFloat uiScale;
 
     private GameObject _playScreen;
     private GameObject _deathScreen;
@@ -46,9 +48,6 @@ public class PlayerUI : MonoBehaviour
     }
     private ObjectiveUI _objectiveUI;
 
-    private MovePointToPoint _weaponModelHolder;
-    private Transform _weaponModelHolderTransform;
-
     [Header("Shaking on damage taken")]
     private ShakableUIElement[] _shakableUIElements;
     [SerializeField] private float shakingLength;
@@ -62,6 +61,7 @@ public class PlayerUI : MonoBehaviour
 
         canvas = GetComponent<Canvas>();
         canvasScaler = GetComponent<CanvasScaler>();
+        uiScale = new();
 
         _playScreen = transform.Find("PlayScreen").gameObject;
         _deathScreen = transform.Find("DeathScreen").gameObject;
@@ -154,9 +154,10 @@ public class PlayerUI : MonoBehaviour
 
     //------------------------------------getters
 
-    public float GetUIScale()
+    public ObservableFloat GetUIScale()
     {
-        return canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView;
+        uiScale.SetValue(canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView);
+        return uiScale;
     }
 
     //------------------------------------setters
@@ -169,5 +170,10 @@ public class PlayerUI : MonoBehaviour
     public void SetAmmoText(string ammo)
     {
         weaponUI.ammoTextHolder.text = ammo;
+    }
+
+    public void UpdateCrosshairScale(float spread)
+    {
+        weaponUI.crosshairTransform.sizeDelta = new Vector2(spread, spread) * uiScale.GetValue();
     }
 }

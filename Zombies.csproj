@@ -58,7 +58,6 @@
     <Analyzer Include="C:\Program Files\2022.2.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Zombies\ZombieTarget.cs" />
     <Compile Include="Assets\Scripts\Zombies\ZombieSpawner.cs" />
     <Compile Include="Assets\Scripts\Zombies\ZombieBehaviour.cs" />
     <Compile Include="Assets\Scripts\Zombies\ZombieSpawnerManager.cs" />
@@ -702,6 +701,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Unity.Animation.Rigging.csproj">
+      <Project>{40D7D3A9-79EE-9789-79AA-DBD0B86CCD9E}</Project>
+      <Name>Unity.Animation.Rigging</Name>
+    </ProjectReference>
+    <ProjectReference Include="Utility.csproj">
+      <Project>{9C4BA79E-5424-4B5F-D841-E72AB13EEE23}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{3DB35FA4-976B-2089-C18F-F5EA7AEC7583}</Project>
       <Name>UnityEditor.UI</Name>

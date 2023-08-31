@@ -59,7 +59,7 @@ namespace Utility
 
             if (shrinkOnDeath && _health <= 0)
             {
-                Destroy(damage, false);
+                Destroy(damage);
             }
         }
 
@@ -73,7 +73,7 @@ namespace Utility
             return _lastDamageDealer;
         }
 
-        private void Destroy(Damage damage, bool asChild)
+        private void Destroy(Damage damage)
         {
             if (_isDestroyed) { return; }
 
@@ -110,7 +110,7 @@ namespace Utility
         {
             foreach (var dc in _damageableChildren)
             {
-                dc.Destroy(damage, true);
+                dc.Destroy(damage);
             }
         }
     }

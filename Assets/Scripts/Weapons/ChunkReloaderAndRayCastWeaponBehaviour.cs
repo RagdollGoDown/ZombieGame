@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Assets.Scripts.Weapons
+namespace Weapons
 {
     public sealed class ChunkReloaderWeaponBehaviour : RayCastGunBehaviour
     {
