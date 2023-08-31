@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{B39FAA44-EBFE-5695-9807-5713BED926B4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -59,15 +58,17 @@
     <Analyzer Include="D:\Unity\2022.2.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Utility\Conditions\LogicAndCondition.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableObject.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableBool.cs" />
+    <Compile Include="Assets\Scripts\Utility\Conditions\LogicAndCondition.cs" />
     <Compile Include="Assets\Scripts\Utility\DamageableObject.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\MultipleConditions.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\Condition.cs" />
-    <Compile Include="Assets\Scripts\Utility\Interactor.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\SimpleCondition.cs" />
+    <Compile Include="Assets\Scripts\Utility\Observable\ObservableFloat.cs" />
+    <Compile Include="Assets\Scripts\Utility\Interactor.cs" />
     <Compile Include="Assets\Scripts\Utility\Interactable.cs" />
+    <Compile Include="Assets\Scripts\Utility\Observable\ObservableRatio.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\Utility\Utility.asmdef" />
