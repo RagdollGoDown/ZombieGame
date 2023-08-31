@@ -394,3 +394,130 @@ Assets/ImportedAssets/PolygonApocalypse/Materials/Character_Mats/PolygonApocalyp
 
 # Gradle cache directory
 .gradle/
+Unity.AI.Navigation.csproj
+Unity.AI.Navigation.Editor.ConversionSystem.csproj
+Unity.AI.Navigation.Editor.csproj
+Unity.AI.Navigation.Player.csproj
+Unity.AI.Navigation.Updater.csproj
+Unity.Animation.Rigging.csproj
+Unity.Animation.Rigging.DocCodeExamples.csproj
+Unity.Animation.Rigging.DocCodeExamples.Player.csproj
+Unity.Animation.Rigging.Editor.csproj
+Unity.Animation.Rigging.Player.csproj
+Unity.Burst.CodeGen.csproj
+Unity.Burst.csproj
+Unity.Burst.Editor.csproj
+Unity.Burst.Player.csproj
+Unity.InputSystem.csproj
+Unity.InputSystem.Player.csproj
+Unity.InputSystem.TestFramework.csproj
+Unity.InputSystem.TestFramework.Player.csproj
+Unity.Mathematics.csproj
+Unity.Mathematics.Editor.csproj
+Unity.Mathematics.Player.csproj
+Unity.RenderPipeline.Universal.ShaderLibrary.csproj
+Unity.RenderPipeline.Universal.ShaderLibrary.Player.csproj
+Unity.RenderPipelines.Core.Editor.csproj
+Unity.RenderPipelines.Core.Runtime.csproj
+Unity.RenderPipelines.Core.Runtime.Player.csproj
+Unity.RenderPipelines.Core.ShaderLibrary.csproj
+Unity.RenderPipelines.Core.ShaderLibrary.Player.csproj
+Unity.RenderPipelines.HighDefinition.Config.Runtime.csproj
+Unity.RenderPipelines.HighDefinition.Config.Runtime.Player.csproj
+Unity.RenderPipelines.HighDefinition.Editor.csproj
+Unity.RenderPipelines.HighDefinition.Runtime.csproj
+Unity.RenderPipelines.HighDefinition.Runtime.Player.csproj
+Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.csproj
+Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.Player.csproj
+Unity.RenderPipelines.Universal.Editor.csproj
+Unity.RenderPipelines.Universal.Runtime.csproj
+Unity.RenderPipelines.Universal.Runtime.Player.csproj
+Unity.RenderPipelines.Universal.Shaders.csproj
+Unity.RenderPipelines.Universal.Shaders.Player.csproj
+Unity.Searcher.Editor.csproj
+Unity.ShaderGraph.Editor.csproj
+Unity.ShaderGraph.Utilities.csproj
+Unity.TextMeshPro.csproj
+Unity.TextMeshPro.Editor.csproj
+Unity.TextMeshPro.Player.csproj
+Unity.VisualEffectGraph.Editor.csproj
+Unity.VisualEffectGraph.Runtime.csproj
+Unity.VisualEffectGraph.Runtime.Player.csproj
+Unity.VisualStudio.Editor.csproj
+UnityEditor.TestRunner.csproj
+UnityEditor.UI.csproj
+UnityEngine.TestRunner.csproj
+UnityEngine.TestRunner.Player.csproj
+UnityEngine.UI.csproj
+UnityEngine.UI.Player.csproj
+Assets/TextMesh Pro/Sprites/EmojiOne.png
+Assets/TextMesh Pro/Sprites/EmojiOne.json
+Assets/TextMesh Pro/Sprites/EmojiOne Attribution.txt
+Assets/TextMesh Pro/Shaders/TMPro_Surface.cginc
+Assets/TextMesh Pro/Shaders/TMPro_Properties.cginc
+Assets/TextMesh Pro/Shaders/TMPro_Mobile.cginc
+Assets/TextMesh Pro/Shaders/TMPro.cginc
+Assets/TextMesh Pro/Shaders/TMP_Sprite.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF-Surface.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF-Surface-Mobile.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile SSD.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Overlay.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile Masking.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF SSD.shader
+Assets/TextMesh Pro/Shaders/TMP_SDF Overlay.shader
+Assets/TextMesh Pro/Shaders/TMP_Bitmap.shader
+Assets/TextMesh Pro/Shaders/TMP_Bitmap-Mobile.shader
+Assets/TextMesh Pro/Shaders/TMP_Bitmap-Custom-Atlas.shader
+Assets/TextMesh Pro/Resources/TMP Settings.asset
+Assets/TextMesh Pro/Resources/Style Sheets/Default Style Sheet.asset
+Assets/TextMesh Pro/Resources/Sprite Assets/EmojiOne.asset
+Assets/TextMesh Pro/Resources/LineBreaking Leading Characters.txt
+Assets/TextMesh Pro/Resources/LineBreaking Following Characters.txt
+Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset
+Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Outline.mat
+Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
+Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Drop Shadow.mat
+Assets/TextMesh Pro/Fonts/LiberationSans.ttf
+Assets/TextMesh Pro/Fonts/LiberationSans - OFL.txt
+Assets/TextMesh Pro/Documentation/TextMesh Pro User Guide 2016.pdf
+ZombieGame.sln
+Zombie.Player.csproj
+Zombie.csproj
+Weapons.Player.csproj
+Weapons.csproj
+Utility.Player.csproj
+Utility.csproj
+UI.Player.csproj
+UI.csproj
+PPv2URPConverters.csproj
+Player.Player.csproj
+Player.csproj
+Objective.Player.csproj
+Objective.csproj
+Weapons.csproj
+Utility.csproj
+UI.csproj
+Player.csproj
+Objective.csproj
+Objective.csproj
+Assets/Scripts/Zombies/Zombies.asmdef
+Assets/Scripts/Weapons/Weapons.asmdef
+Assets/Scripts/UI/UI.asmdef
+Assets/Scripts/Player/Player.asmdef
+Assets/Scripts/Objectives/Objective.asmdef
+Assembly-CSharp.Player.csproj
+Assembly-CSharp.csproj
+Objective.csproj
+Assets/Scripts/Weapons/Weapons.asmdef
+Assets/Scripts/UI/UI.asmdef
+Assets/Scripts/Player/Player.asmdef
+Assets/Scripts/Objectives/Objective.asmdef
+Assembly-CSharp.csproj
+Objective.csproj
+Assets/Scripts/Weapons/Weapons.asmdef
+Assets/Scripts/UI/UI.asmdef
+Assets/Scripts/Player/Player.asmdef
+Assets/Scripts/Objectives/Objective.asmdef
+Assembly-CSharp.csproj

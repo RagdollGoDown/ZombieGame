@@ -1,15 +1,11 @@
-using TMPro;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using Utility;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(DamageableObject))]
-[RequireComponent(typeof(ZombieTarget))]
 public class PlayerController : MonoBehaviour,Interactor
 {
     private static List<PlayerController> PLAYERS;
@@ -47,7 +43,6 @@ public class PlayerController : MonoBehaviour,Interactor
     private Vector3 _tempHeadBobDirection;
 
     private DamageableObject _damageablePlayer;
-    private ZombieTarget _playerTarget;
 
     //--------------------movement
     [Header("Mouvement")]
@@ -70,7 +65,7 @@ public class PlayerController : MonoBehaviour,Interactor
     //temporarily a serialize field to check the guns
     private int _currentWeaponIndex;
     [SerializeField] private WeaponBehaviour[] _weaponsHeld;
-    public InfoForGunSetup playerInfoForGunSetup;
+    public GunUI playerInfoForGunSetup;
     private static readonly int shootableLayerMaskValue = 65;
 
     private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
@@ -220,7 +215,6 @@ public class PlayerController : MonoBehaviour,Interactor
 
         _damageablePlayer = GetComponent<DamageableObject>();
         _damageablePlayer.getHit.AddListener(_playerUI.UpdateHealthBar);
-        _playerTarget = GetComponent<ZombieTarget>();
 
         GunSetup();
 
@@ -279,8 +273,6 @@ public class PlayerController : MonoBehaviour,Interactor
     public void EquipNextWeapon()
     {
         _weaponsHeld[_currentWeaponIndex].EquipOrUnequip();
-
-        //_playerUI.SetUIWeaponModel(_weaponsHeld[_currentWeaponIndex].GetWeaponModelTransform());
     }
 
     //---------------------------------------------------------------interactions
@@ -445,7 +437,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     //--------------------------------------------------------getters
 
-    public ZombieTarget GetPlayerTargetComponent() { return _playerTarget; }
+    public DamageableObject GetPlayerTargetComponent() { return _d; }
 
     public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
 
@@ -466,9 +458,9 @@ public class PlayerController : MonoBehaviour,Interactor
         _playerUI.SetRoundText(round);
     }
 
-    public void SetObjectiveText(Objective objective)
+    public void SetObjectiveText(string text)
     {
-        _playerUI.SetObjectiveText(objective);
+        _playerUI.SetObjectiveText(text);
     }
 }
 

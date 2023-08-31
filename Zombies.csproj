@@ -9,10 +9,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{88A20264-60C3-5604-CFE4-1D1D4AC7F845}</ProjectGuid>
+    <ProjectGuid>{E35A23F7-7D19-99F7-B64E-B285283355E7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Weapons</AssemblyName>
+    <AssemblyName>Zombies</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -58,16 +58,13 @@
     <Analyzer Include="C:\Program Files\2022.2.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Weapons\ChunkReloaderAndRayCastWeaponBehaviour.cs" />
-    <Compile Include="Assets\Scripts\Weapons\BloodSpillOnCollide.cs" />
-    <Compile Include="Assets\Scripts\Weapons\Boosts\HighlightBoosts.cs" />
-    <Compile Include="Assets\Scripts\Weapons\RayCastGunBehaviour.cs" />
-    <Compile Include="Assets\Scripts\Weapons\Boosts\MultiKillBoostCondition.cs" />
-    <Compile Include="Assets\Scripts\Weapons\MeleeWeapon.cs" />
-    <Compile Include="Assets\Scripts\Weapons\WeaponBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Zombies\ZombieTarget.cs" />
+    <Compile Include="Assets\Scripts\Zombies\ZombieSpawner.cs" />
+    <Compile Include="Assets\Scripts\Zombies\ZombieBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Zombies\ZombieSpawnerManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\Weapons\Weapons.asmdef" />
+    <None Include="Assets\Scripts\Zombies\Zombies.asmdef" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -705,18 +702,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Unity.TextMeshPro.csproj">
-      <Project>{070C5447-FD27-CAAB-EA8E-7C9E3701512E}</Project>
-      <Name>Unity.TextMeshPro</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.InputSystem.csproj">
-      <Project>{3C183E19-FDB5-65FF-31C7-AFD0A5E54805}</Project>
-      <Name>Unity.InputSystem</Name>
-    </ProjectReference>
-    <ProjectReference Include="Utility.csproj">
-      <Project>{9C4BA79E-5424-4B5F-D841-E72AB13EEE23}</Project>
-      <Name>Utility</Name>
-    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{3DB35FA4-976B-2089-C18F-F5EA7AEC7583}</Project>
       <Name>UnityEditor.UI</Name>

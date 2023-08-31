@@ -1,21 +1,11 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Utility.Observable;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using TMPro;
 
 public abstract class WeaponBehaviour : MonoBehaviour
 {
-    private PlayerController _playerController;
-    private TextMeshProUGUI _ammoTextHolder;
-    private TextMeshProUGUI _weaponNameTextHolder;
-    private RectTransform _crosshairTransform;
-    private Canvas _playerCanvas;
-    private CanvasScaler _canvasScaler;
-    private Camera _playerCamera;
-
     private Animator _gunAnimator;
 
     [Header("General")]
@@ -23,7 +13,7 @@ public abstract class WeaponBehaviour : MonoBehaviour
     [SerializeField] private float timeToEquip = 1;
     //[SerializeField] private Transform UIModel;
 
-    private float _uiScale;
+    private float uiScale;
 
     //---------------------------------state bools
     private bool _isReloading;
@@ -44,16 +34,6 @@ public abstract class WeaponBehaviour : MonoBehaviour
     {
         if (reloadDuration <= 0) throw new ArgumentException("duration not strictly positiv");
         if (timeToEquip <= 0) throw new ArgumentException("time to equip not strictly positiv");
-        //if (!UIModel) throw new ArgumentException("no UI model");
-
-        _playerController = transform.GetComponentInParent<PlayerController>();
-        InfoForGunSetup IFGS = _playerController.playerInfoForGunSetup;
-        _ammoTextHolder = IFGS.GetAmmoTextHolder();
-        _weaponNameTextHolder = IFGS.GetWeaponNameTextHolder();
-        _crosshairTransform = IFGS.GetCrosshairTransform();
-        _canvasScaler = IFGS.GetCanvasScaler();
-        _playerCanvas = IFGS.GetCanvas();
-        _playerCamera = IFGS.GetPlayerCamera();
 
         _gunAnimator = GetComponent<Animator>();
         ReadyAnimationLengths(_gunAnimator);
@@ -200,7 +180,6 @@ public abstract class WeaponBehaviour : MonoBehaviour
         _isSwitching = false;
 
         UpdateAmmoText();
-        UpdateWeaponNameText();
     }
 
     public abstract void RefillWeaponAmmo();
@@ -208,25 +187,9 @@ public abstract class WeaponBehaviour : MonoBehaviour
     //----------------------------------------------ui
     protected virtual void UpdateAmmoText() { }
 
-    private void UpdateWeaponNameText() 
-    {
-        _weaponNameTextHolder.text = name;
-    }
-
     protected virtual void UpdateCrosshair() { }
 
-    //this is public because we want to access it from the options menu if we ever have one
-    public void UpdateUIScale()
-    {
-        _uiScale = _canvasScaler.referencePixelsPerUnit * _canvasScaler.referenceResolution.x / _playerCamera.fieldOfView;
-    }
-
     //-------------------------------------------------getters
-
-    protected PlayerController GetPlayerController()
-    {
-        return _playerController;
-    }
 
     protected Animator GetAnimator()
     {
@@ -276,75 +239,15 @@ public abstract class WeaponBehaviour : MonoBehaviour
      */
     public abstract float GetAmmoFillRatio();
 
-    //---------------------------------------getters_ui
-    protected Camera GetPLayerCamera()
-    {
-        return _playerCamera;
-    }
-
-    protected RectTransform GetCrosshairTransform()
-    {
-        return _crosshairTransform;
-    }
-
-    protected TextMeshProUGUI GetAmmoTextHolder()
-    {
-        return _ammoTextHolder;
-    }
+    //---------------------------------------get/setters_ui
 
     protected float GetUIScale()
     {
-        return _uiScale;
+        return uiScale;
     }
 
-    /*public Transform GetWeaponModelTransform()
+    public void SetUIScale(float scale)
     {
-        return UIModel;
-    }*/
-}
-
-public class InfoForGunSetup
-{
-    private readonly TextMeshProUGUI _ammoTextHolder;
-    private readonly TextMeshProUGUI _weaponNameTextHolder;
-    private readonly RectTransform _crosshairTransform;
-    private readonly CanvasScaler _canvasScaler;
-    private readonly Canvas _canvas;
-    private readonly Camera _playerCamera;
-
-    public InfoForGunSetup(TextMeshProUGUI ammoTextHolder, TextMeshProUGUI weaponNameTextHolder
-        , RectTransform crosshairTransform, CanvasScaler canvasScaler, Canvas canvas, Camera playerCamera)
-    {
-        _ammoTextHolder = ammoTextHolder;
-        _weaponNameTextHolder = weaponNameTextHolder;
-        _crosshairTransform = crosshairTransform;
-        _canvasScaler = canvasScaler;
-        _canvas = canvas;
-        _playerCamera = playerCamera;
-    }
-
-    public TextMeshProUGUI GetAmmoTextHolder()
-    {
-        return _ammoTextHolder;
-    }
-    public TextMeshProUGUI GetWeaponNameTextHolder()
-    {
-        return _weaponNameTextHolder;
-    }
-    public RectTransform GetCrosshairTransform()
-    {
-        return _crosshairTransform;
-    }
-    public CanvasScaler GetCanvasScaler()
-    {
-        return _canvasScaler;
-    }
-    public Canvas GetCanvas()
-    {
-        return _canvas;
-    }
-    public Camera GetPlayerCamera()
-    {
-        return _playerCamera;
+        uiScale = scale;
     }
 }
