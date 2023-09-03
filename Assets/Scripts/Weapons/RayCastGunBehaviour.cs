@@ -98,7 +98,7 @@ namespace Weapons
                 if (_ammoRemainingInMag == 0 || _remainingShots == 0)
                 {
                     //we need to stop it next frame or else the animation for the shot won't start
-                    Invoke(nameof(StopShooting), Time.deltaTime);
+                    Invoke(nameof(StopUsing), Time.deltaTime);
                 }
                 else if (_ammoRemainingInMag == 0)
                 {
@@ -208,11 +208,11 @@ namespace Weapons
             Destroy(bullet.gameObject);
         }
 
-        protected override void StartShooting()
+        protected override void StartUsing()
         {
             if (_lastTimeShot + fireRateForShots <= Time.time && _ammoRemainingInMag != 0)
             {
-                base.StartShooting();
+                base.StartUsing();
 
                 _remainingShots = shotsPerTriggerPress;
             }
@@ -255,9 +255,9 @@ namespace Weapons
 
         //-------------------------------------------get/setters
 
-        private void SetSpreadOrigin(Transform spreadOrigin)
+        public void SetSpreadOrigin(Transform raycastOrigin)
         {
-            this.raycastOrigin = spreadOrigin;
+            this.raycastOrigin = raycastOrigin;
         }
 
         public override float GetAmmoFillRatio()

@@ -70,6 +70,9 @@ public class PlayerController : MonoBehaviour,Interactor
 
     private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
 
+    [SerializeField] private float timeBetweenWeaponSwitches;
+    private float lastTimeSwitched;
+
     //---------------------------interaction
     private Interaction _currentInteract;
     private List<Interaction> _interactions;
@@ -86,6 +89,7 @@ public class PlayerController : MonoBehaviour,Interactor
     private void GunSetup()
     {
         _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
+        _currentWeaponIndex = 0;
 
         foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
         {
@@ -93,12 +97,12 @@ public class PlayerController : MonoBehaviour,Interactor
             {
                 _onPlayerWeaponsToName.Add(t.name, wpb);
 
-                t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
+                if (wpb is RayCastGunBehaviour) { ((RayCastGunBehaviour)wpb).SetSpreadOrigin(_cameraTransform); }
+
+                //t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
+                t.gameObject.SetActive(_weaponsHeld[_currentWeaponIndex] == wpb);
             }
         }
-
-        _currentWeaponIndex = 0;
-        Invoke("EquipNextWeapon", Time.fixedDeltaTime);
     }
 
     private void PlayerMovement(float deltaTime)
@@ -206,7 +210,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
         _damageablePlayer = GetComponent<DamageableObject>();
         _damageablePlayer.getHit.AddListener(_playerUI.UpdateHealthBar);
-
+        
         GunSetup();
 
         _interactions = new List<Interaction>();
@@ -251,7 +255,6 @@ public class PlayerController : MonoBehaviour,Interactor
     //------------------------------------------------------------------weapons
     public RaycastHit GetRaycastHitInFrontOfCamera(float spread)
     {
-
         float randomAngle = Random.Range(0, 2 * Mathf.PI);
 
         Vector3 spreadDiff = _cameraTransform.up * Mathf.Cos(randomAngle) + _cameraTransform.right * Mathf.Sin(randomAngle);
@@ -259,11 +262,6 @@ public class PlayerController : MonoBehaviour,Interactor
 
         Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,SHOOTABLE_LAYERMASK_VALUE);
         return hit;
-    }
-
-    public void EquipNextWeapon()
-    {
-        _weaponsHeld[_currentWeaponIndex].EquipOrUnequip();
     }
 
     //---------------------------------------------------------------interactions
@@ -306,11 +304,9 @@ public class PlayerController : MonoBehaviour,Interactor
      */
     public bool PickUpWeapon(string weaponName)
     {
-        if (_weaponsHeld[0].GetIsSwitching() || _weaponsHeld[1].GetIsSwitching()) return false;
-
         if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
         {
-            _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
+            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
 
             newWeapon.gameObject.SetActive(true);
 
@@ -363,19 +359,20 @@ public class PlayerController : MonoBehaviour,Interactor
         _mouseDelta = context.ReadValue<Vector2>();
     }
 
-    public void ShootCurrentGun(InputAction.CallbackContext context)
+    public void UseWeaponInput(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 
-        _weaponsHeld[_currentWeaponIndex].ShootInputAction(context);
+        _weaponsHeld[_currentWeaponIndex].UseWeaponInput(context);
     }
     
     public void ReloadCurrentGun(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 
-        _weaponsHeld[_currentWeaponIndex].ReloadInputAction(context);
+        _weaponsHeld[_currentWeaponIndex].ReloadInput(context);
     }
+
     public void AimCurrentGun(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
@@ -385,13 +382,14 @@ public class PlayerController : MonoBehaviour,Interactor
         if (context.canceled) { _currentMovementSpeed = movementSpeed; }
     }
 
-    public void SwitchWeapons(InputAction.CallbackContext context)
+    public void SwitchWeaponsInput(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 
-        if (_weaponsHeld[0].IsReadyForSwitch() && _weaponsHeld[1].IsReadyForSwitch() && context.started)
+        if (context.started)
         {
-            _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
+            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
+            _weaponsHeld[_currentWeaponIndex].AmmoText.RemoveActionToOnValueChange(_playerUI.SetAmmoText);
 
             if (_currentWeaponIndex == 0)
             {
@@ -401,10 +399,14 @@ public class PlayerController : MonoBehaviour,Interactor
             {
                 _currentWeaponIndex = 0;
             }
+
+            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
+            _weaponsHeld[_currentWeaponIndex].AmmoText.AddActionToOnValueChange(_playerUI.SetAmmoText);
+            _playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
         }
     }
 
-    public void Interact(InputAction.CallbackContext context)
+    public void InteractInput(InputAction.CallbackContext context)
     {
         if (context.started && _currentInteract != null) { 
             _currentInteract.GetAction().Invoke();
@@ -412,7 +414,7 @@ public class PlayerController : MonoBehaviour,Interactor
         }
     }
 
-    public void Kick(InputAction.CallbackContext context)
+    public void KickInput(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 

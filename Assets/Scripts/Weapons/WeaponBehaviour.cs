@@ -15,7 +15,6 @@ namespace Weapons
  
         [Header("General")]
         [SerializeField] private float reloadDuration = 1;
-        [SerializeField] private float timeToEquip = 1;
 
         //---------------------------------state bools
         private bool _isReloading;
@@ -24,18 +23,15 @@ namespace Weapons
         private bool _isAiming;
 
         private bool _isHolstered = true;
-        private bool _isSwitching;
 
         [Header("Animations and effects")]
         [SerializeField] private int shotsPerShootingAnimation = 1;
         [SerializeField] private float shootingAnimationLength = 1;
         [SerializeField] private float reloadAnimationTime = 1;
-        [SerializeField] private float switchAnimationLength = 1;
 
         protected virtual void AwakeWeapon()
         {
             if (reloadDuration <= 0) throw new ArgumentException("duration not strictly positiv");
-            if (timeToEquip <= 0) throw new ArgumentException("time to equip not strictly positiv");
 
             _gunAnimator = GetComponent<Animator>();
             ReadyAnimationLengths(_gunAnimator);
@@ -48,25 +44,24 @@ namespace Weapons
         {
             animator.SetFloat("reloadSpeed", reloadAnimationTime / reloadDuration);
             animator.SetFloat("shootingSpeed", shootingAnimationLength / shotsPerShootingAnimation);
-            animator.SetFloat("switchSpeed", switchAnimationLength / timeToEquip);
         }
 
         protected abstract void UpdateWeapon();
 
         //-------------------------------inputs
-        public virtual void ShootInputAction(InputAction.CallbackContext context)
+        public virtual void UseWeaponInput(InputAction.CallbackContext context)
         {
             if (context.started && !_isReloading && !_isHolstered)
             {
-                StartShooting();
+                StartUsing();
             }
             else if (context.canceled)
             {
-                StopShooting();
+                StopUsing();
             }
         }
 
-        public virtual void ReloadInputAction(InputAction.CallbackContext context)
+        public virtual void ReloadInput(InputAction.CallbackContext context)
         {
             if (context.started && !_isShooting && ReloadConditions() && !_isHolstered)
             {
@@ -86,24 +81,32 @@ namespace Weapons
             }
         }
 
-        public void SwitchInputAction(InputAction.CallbackContext context)
+        //---------------------------------------unity events
+
+        private void OnEnable()
         {
-            if (context.started)
-            {
-                EquipOrUnequip();
-            }
+            _isHolstered = false;
+            ReadyAnimationLengths(_gunAnimator);
+        }
+
+        private void OnDisable()
+        {
+            _isShooting = false;
+            _isReloading = false;
+
+            _isHolstered= true;
         }
 
         //---------------------------------------shooting
         protected abstract void UseWeapon();
 
-        protected virtual void StartShooting()
+        protected virtual void StartUsing()
         {
             _isShooting = true;
             if (_gunAnimator) _gunAnimator.SetBool("IsShooting", true);
         }
 
-        protected virtual void StopShooting()
+        protected virtual void StopUsing()
         {
             _isShooting = false;
             if (_gunAnimator) _gunAnimator.SetBool("IsShooting", false);
@@ -136,57 +139,6 @@ namespace Weapons
             if (_gunAnimator) _gunAnimator.SetBool("IsReloading", false);
         }
 
-        //--------------------------------------------equiping
-        public void EquipOrUnequip()
-        {
-            if (!_isSwitching)
-            {
-                if (_isHolstered)
-                {
-                    StartCoroutine(nameof(EquipWeapon));
-                }
-                else
-                {
-                    StartCoroutine(nameof(UnequipWeapon));
-                }
-            }
-        }
-
-        private IEnumerator UnequipWeapon()
-        {
-            _isSwitching = true;
-            _isHolstered = true;
-
-            _gunAnimator.SetBool("IsSwitching", true);
-            StopReload();
-
-            StopShooting();
-
-            //the param change needs to be done earlier or it will cycle to the equip animation
-            yield return new WaitForSeconds(timeToEquip / 2);
-            _gunAnimator.SetBool("IsSwitching", false);
-
-            yield return new WaitForSeconds(timeToEquip / 2);
-            _isSwitching = false;
-            //_playerController.EquipNextWeapon();
-        }
-
-        private IEnumerator EquipWeapon()
-        {
-            _isSwitching = true;
-            _gunAnimator.SetBool("IsSwitching", true);
-
-            //the param change needs to be done earlier or it will cycle to the unequip animation
-            yield return new WaitForSeconds(timeToEquip / 2);
-            _gunAnimator.SetBool("IsSwitching", false);
-
-            yield return new WaitForSeconds(timeToEquip / 2);
-            _isHolstered = false;
-            _isSwitching = false;
-
-            UpdateAmmoText();
-        }
-
         public abstract void RefillWeaponAmmo();
 
         //----------------------------------------------ui
@@ -205,11 +157,6 @@ namespace Weapons
         }
 
         //-------------------------------------------------getters/setters_state
-
-        public bool IsReadyForSwitch()
-        {
-            return !_isSwitching;
-        }
 
         protected bool GetIsShooting()
         {
@@ -234,12 +181,6 @@ namespace Weapons
         protected bool GetIsAiming()
         {
             return _isAiming;
-        }
-
-        //tells us if the gun is being switched or not
-        public bool GetIsSwitching()
-        {
-            return _isSwitching;
         }
 
         /*

@@ -124,7 +124,7 @@ public class ZombieBehaviour : MonoBehaviour
 
             SkinnedMeshRenderer zombieSkinnedMesh = _selectedZombieMesh.GetComponent<SkinnedMeshRenderer>();
             
-            if (!zombieSkinnedMesh)
+            if (zombieSkinnedMesh != null)
             {
                 zombieSkinnedMesh.material =
                 differentZombieMaterialsForSkinnedMesh[UnityEngine.Random.Range(0, differentZombieMaterialsForSkinnedMesh.Count)];

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using Utility;
+using Utility.Observable;
 
 public class ZombieSpawnerManager : MonoBehaviour
 {

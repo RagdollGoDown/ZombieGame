@@ -31,6 +31,6 @@ public class WeaponCrate : MonoBehaviour
     public void GiveGun()
     {
         Debug.Log("Give Gun");
-        //if (_inter.GetInteractorInArea().PickUpWeapon(weaponName)) Destroy(gameObject);
+        if (((PlayerController)_inter.GetInteractorInArea()).PickUpWeapon(weaponName)) Destroy(gameObject);
     }
 }
