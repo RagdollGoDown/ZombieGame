@@ -386,7 +386,7 @@ public class PlayerController : MonoBehaviour,Interactor
     {
         if (_playerState == PlayerState.Dead) return;
 
-        if (context.started)
+        if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
         {
             _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
             _weaponsHeld[_currentWeaponIndex].AmmoText.RemoveActionToOnValueChange(_playerUI.SetAmmoText);
@@ -403,6 +403,8 @@ public class PlayerController : MonoBehaviour,Interactor
             _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
             _weaponsHeld[_currentWeaponIndex].AmmoText.AddActionToOnValueChange(_playerUI.SetAmmoText);
             _playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
+
+            lastTimeSwitched = Time.time;
         }
     }
 

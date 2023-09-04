@@ -2182,7 +2182,7 @@ MonoBehaviour:
   _weaponsHeld:
   - {fileID: 5847717264853021304}
   - {fileID: 9040535435785125949}
-  timeBetweenWeaponSwitches: 0
+  timeBetweenWeaponSwitches: 0.5
   kickDamage: 40
   kickRange: 3
   kickAnimationLength: 0.7
