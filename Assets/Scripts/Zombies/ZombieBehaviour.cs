@@ -33,7 +33,6 @@ public class ZombieBehaviour : MonoBehaviour
     
     //TODO unserialize
     [SerializeField]private Transform _headTransform;
-    private float _cosOfAngleOfVision;
 
     //used as a collider the other objects can collide with to
     //get the behavior script without passing by the children
@@ -79,8 +78,6 @@ public class ZombieBehaviour : MonoBehaviour
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         _navMeshAgent.speed = runningSpeed;
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;
-        
-        _cosOfAngleOfVision = 0.2f;
 
         _currentState = ZombieState.Idle;
 
@@ -141,14 +138,6 @@ public class ZombieBehaviour : MonoBehaviour
                 }
             }
         }
-    }
-
-    private bool IsInFieldOfView(Vector3 point)
-    {
-        Vector3 position = _headTransform.position;
-        Vector3 direction = point - position;
-        float cosinBetweenVectors = Vector3.Dot(_headTransform.forward, direction) / direction.magnitude;
-        return cosinBetweenVectors > _cosOfAngleOfVision;
     }
 
     //------------------------------chasing

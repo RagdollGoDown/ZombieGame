@@ -55,6 +55,8 @@ namespace Utility
         {
             OnDamageTaken.Invoke();
 
+            _lastDamageDealer = damage.GetDamageDealer();
+
             _health -= damage.GetDamageDone();
 
             if (shrinkOnDeath && _health <= 0)

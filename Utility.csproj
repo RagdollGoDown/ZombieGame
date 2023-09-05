@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableObject.cs" />
+    <Compile Include="Assets\Scripts\Utility\BloodSpillOnCollide.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableBool.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\LogicAndCondition.cs" />
     <Compile Include="Assets\Scripts\Utility\DamageableObject.cs" />

@@ -16,7 +16,7 @@ public class PlayerUI : MonoBehaviour
 
     private Canvas canvas;
     private CanvasScaler canvasScaler;
-    private ObservableFloat uiScale;
+    private float uiScale;
 
     private GameObject _playScreen;
     private GameObject _deathScreen;
@@ -57,11 +57,12 @@ public class PlayerUI : MonoBehaviour
     void Awake()
     {
         _playerController = transform.parent.parent.parent.GetComponent<PlayerController>();
-        playerCamera = _playerController.GetComponent<Camera>();
+        playerCamera = transform.parent.GetComponent<Camera>();
 
         canvas = GetComponent<Canvas>();
         canvasScaler = GetComponent<CanvasScaler>();
         uiScale = new();
+        UpdateUIScale();
 
         _playScreen = transform.Find("PlayScreen").gameObject;
         _deathScreen = transform.Find("DeathScreen").gameObject;
@@ -154,10 +155,9 @@ public class PlayerUI : MonoBehaviour
 
     //------------------------------------getters
 
-    public ObservableFloat GetUIScale()
+    public void UpdateUIScale()
     {
-        uiScale.SetValue(canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView);
-        return uiScale;
+        uiScale = canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView;
     }
 
     //------------------------------------setters
@@ -167,13 +167,13 @@ public class PlayerUI : MonoBehaviour
         weaponUI.weaponNameTextHolder.text = name;
     }
 
-    public void SetAmmoText(string ammo)
+    public void SetAmmoText(string text)
     {
-        weaponUI.ammoTextHolder.text = ammo;
+        weaponUI.ammoTextHolder.text = text;
     }
 
-    public void UpdateCrosshairScale(float spread)
+    public void SetCrosshairScale(float spread)
     {
-        weaponUI.crosshairTransform.sizeDelta = new Vector2(spread, spread) * uiScale.GetValue();
+        weaponUI.crosshairTransform.sizeDelta = new Vector2(spread, spread) * uiScale;
     }
 }

@@ -2520,7 +2520,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &166250699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7799,7 +7799,7 @@ MonoBehaviour:
       - m_Target: {fileID: 959563097}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: StartGame
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11166,7 +11166,6 @@ MonoBehaviour:
   escalationPerRound: 10
   timeBetweenRounds: 10
   timeBeforeFirstRound: 4
-  spawner: {fileID: 712549422}
 --- !u!1001 &821725194
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12030,7 +12029,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &911040580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16148,7 +16147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1395467441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18327,7 +18326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1444095944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30778,7 +30777,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0324ab10fdcec934180962f109baa0e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentObjective: {fileID: 0}
   necessaryTimeBetweenObjectives: 10
   maximumTimeBetweenObjectives: 30
   timeBetweenChecks: 5

@@ -6,7 +6,12 @@ namespace Utility.Observable
     {
         public ReadOnlyObservableObject(ObservableObject<T> observable) : base(observable.GetValue())
         {
-            observable.AddActionToOnValueChange(base.SetValue);
+            observable.onValueChange += DiscretelySetValue;
+        }
+
+        private void DiscretelySetValue(T newValue)
+        {
+            base.SetValue(newValue);
         }
 
         public new void SetValue(T newValue)

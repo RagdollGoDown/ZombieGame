@@ -27,7 +27,6 @@ public class ZombieSpawnerManager : MonoBehaviour
     private SpawnerState _spawnerState;
 
     private ZombieSpawner[] _spawners;
-    [SerializeField]private ZombieSpawner spawner;
     private int _indexInSpawners;
 
     private int _currentRound;
@@ -73,9 +72,11 @@ public class ZombieSpawnerManager : MonoBehaviour
 
     public void BeginToSpawn()
     {
-        if (CURRENT_SPAWNER != this) return;
-
-        if (_spawners.Length > 0 && CanSpawn())
+        if (CURRENT_SPAWNER != this) 
+        {
+            Debug.Log("There are two zombie spawners");
+        }
+        else if (_spawners.Length > 0 && CanSpawn())
         {
             Invoke(nameof(EnterRound), timeBeforeFirstRound);
         }
@@ -104,6 +105,7 @@ public class ZombieSpawnerManager : MonoBehaviour
         {
             int a = _spawners[_indexInSpawners].
                 AddZombiesToSpawn(Random.Range(1, zombiesToSpawn + 1), target);
+
             zombiesToSpawn -= a;
 
             _indexInSpawners = (_indexInSpawners+1) % _spawners.Length;

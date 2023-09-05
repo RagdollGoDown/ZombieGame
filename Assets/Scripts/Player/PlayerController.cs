@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Events;
 using Utility;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine.InputSystem;
 using Weapons;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(DamageableObject))]
@@ -97,12 +99,14 @@ public class PlayerController : MonoBehaviour,Interactor
             {
                 _onPlayerWeaponsToName.Add(t.name, wpb);
 
-                if (wpb is RayCastGunBehaviour) { ((RayCastGunBehaviour)wpb).SetSpreadOrigin(_cameraTransform); }
+                if (wpb is CrossHaired) { ((CrossHaired)wpb).SetSpreadOrigin(_cameraTransform); }
 
                 //t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
                 t.gameObject.SetActive(_weaponsHeld[_currentWeaponIndex] == wpb);
             }
         }
+
+        Invoke(nameof(EquipCurrentWeapon), Time.deltaTime);
     }
 
     private void PlayerMovement(float deltaTime)
@@ -264,6 +268,47 @@ public class PlayerController : MonoBehaviour,Interactor
         return hit;
     }
 
+    private void Switch()
+    {
+        UnequipCurrentWeapon();
+
+        if (_currentWeaponIndex == 0)
+        {
+            _currentWeaponIndex = 1;
+        }
+        else
+        {
+            _currentWeaponIndex = 0;
+        }
+
+        EquipCurrentWeapon();
+    }
+
+    private void EquipCurrentWeapon()
+    {
+        _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
+        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += _playerUI.SetAmmoText;
+        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
+        {
+            CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
+
+            c.GetSpread().onValueChange += _playerUI.SetCrosshairScale;
+        }
+        _playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
+    }
+
+    private void UnequipCurrentWeapon()
+    {
+        _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
+        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= _playerUI.SetAmmoText;
+        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
+        {
+            CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
+
+            c.GetSpread().onValueChange -= _playerUI.SetCrosshairScale;
+        }
+    }
+
     //---------------------------------------------------------------interactions
     public void OnInteractableEntered(Interaction interaction)
     {
@@ -388,21 +433,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
         if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
         {
-            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
-            _weaponsHeld[_currentWeaponIndex].AmmoText.RemoveActionToOnValueChange(_playerUI.SetAmmoText);
-
-            if (_currentWeaponIndex == 0)
-            {
-                _currentWeaponIndex = 1;
-            }
-            else
-            {
-                _currentWeaponIndex = 0;
-            }
-
-            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
-            _weaponsHeld[_currentWeaponIndex].AmmoText.AddActionToOnValueChange(_playerUI.SetAmmoText);
-            _playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
+            Switch();
 
             lastTimeSwitched = Time.time;
         }

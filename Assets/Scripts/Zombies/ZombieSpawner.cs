@@ -5,7 +5,7 @@ using Utility;
 
 public class ZombieSpawner : MonoBehaviour
 {
-    private readonly float TIME_BETWEEN_SPAWNS;
+    [SerializeField] private float timeBetweenSpawns = 1;
 
     [SerializeField] private GameObject zombiePrefab;
 
@@ -67,7 +67,7 @@ public class ZombieSpawner : MonoBehaviour
         //zb.ChooseRandomMesh();
 
         _zombiesToSpawn--;
-        Invoke("SpawnZombie", TIME_BETWEEN_SPAWNS);
+        Invoke(nameof(SpawnZombie), timeBetweenSpawns);
     }
 
     //-----------------------------------------------getters

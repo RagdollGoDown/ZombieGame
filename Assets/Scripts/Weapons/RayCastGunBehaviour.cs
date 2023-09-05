@@ -1,12 +1,13 @@
 using System.Collections;
 using UnityEngine.VFX;
 using UnityEngine;
+using UnityEngine.Events;
 using Utility;
 using Utility.Observable;
 
 namespace Weapons
 {
-    public class RayCastGunBehaviour : WeaponBehaviour
+    public class RayCastGunBehaviour : WeaponBehaviour, CrossHaired
     {
         private static readonly float BULLETHOLE_LIFETIME = 10;
         private static readonly float HITMARKER_LIFETIME = .1f;
@@ -273,6 +274,11 @@ namespace Weapons
         protected override void UpdateSpread()
         {
             spread.SetValue(Mathf.Lerp(_restingSpread, _maxSpread, _spreadPositionInLerp));
+        }
+
+        public ReadOnlyObservableFloat GetSpread()
+        {
+            return Spread;
         }
     }
 }

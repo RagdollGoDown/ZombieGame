@@ -8,7 +8,7 @@ namespace Utility.Conditions
 
         public SimpleCondition(ObservableBool observedBool)
         {
-            observedBool.AddActionToOnValueChange(SetValue);
+            observedBool.onValueChange += SetValue;
         }
 
         private void SetValue(bool value)
