@@ -148,9 +148,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8783243ccc87a314b909ab81b3cc747d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bloodSpillPrefab: {fileID: 643517796497277911, guid: 1ffb05dc191acf24d81fe559ac649a05,
-    type: 3}
+  bloodSpillPrefabs:
+  - {fileID: 643517796497277911, guid: 0eb973624b482c64e96b973f89740b63, type: 3}
+  - {fileID: 643517796497277911, guid: 4b014486b8c8683478dd6448cb77c99b, type: 3}
+  - {fileID: 643517796497277911, guid: e009ce58c9f568142a91851b5ff240de, type: 3}
   destroyOnCollide: 0
+  scale: 0.3
 --- !u!1001 &2139294291133011032
 PrefabInstance:
   m_ObjectHideFlags: 0
