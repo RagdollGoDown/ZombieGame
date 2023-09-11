@@ -1,350 +1,191 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Utility.Observable;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using TMPro;
 
-public abstract class WeaponBehaviour : MonoBehaviour
+namespace Weapons
 {
-    private PlayerController _playerController;
-    private TextMeshProUGUI _ammoTextHolder;
-    private TextMeshProUGUI _weaponNameTextHolder;
-    private RectTransform _crosshairTransform;
-    private Canvas _playerCanvas;
-    private CanvasScaler _canvasScaler;
-    private Camera _playerCamera;
-
-    private Animator _gunAnimator;
-
-    [Header("General")]
-    [SerializeField] private float reloadDuration = 1;
-    [SerializeField] private float timeToEquip = 1;
-    //[SerializeField] private Transform UIModel;
-
-    private float _uiScale;
-
-    //---------------------------------state bools
-    private bool _isReloading;
-
-    private bool _isShooting;
-    private bool _isAiming;
-
-    private bool _isHolstered = true;
-    private bool _isSwitching;
-
-    [Header("Animations and effects")]
-    [SerializeField] private int shotsPerShootingAnimation = 1;
-    [SerializeField] private float shootingAnimationLength = 1;
-    [SerializeField] private float reloadAnimationTime = 1;
-    [SerializeField] private float switchAnimationLength = 1;
-
-    protected virtual void AwakeWeapon()
+    public abstract class WeaponBehaviour : MonoBehaviour
     {
-        if (reloadDuration <= 0) throw new ArgumentException("duration not strictly positiv");
-        if (timeToEquip <= 0) throw new ArgumentException("time to equip not strictly positiv");
-        //if (!UIModel) throw new ArgumentException("no UI model");
+        private Animator _gunAnimator;
 
-        _playerController = transform.GetComponentInParent<PlayerController>();
-        InfoForGunSetup IFGS = _playerController.playerInfoForGunSetup;
-        _ammoTextHolder = IFGS.GetAmmoTextHolder();
-        _weaponNameTextHolder = IFGS.GetWeaponNameTextHolder();
-        _crosshairTransform = IFGS.GetCrosshairTransform();
-        _canvasScaler = IFGS.GetCanvasScaler();
-        _playerCanvas = IFGS.GetCanvas();
-        _playerCamera = IFGS.GetPlayerCamera();
+        protected ObservableObject<string> ammoText;
+        public ReadOnlyObservableObject<string> AmmoText;
+ 
+        [Header("General")]
+        [SerializeField] private float reloadDuration = 1;
 
-        _gunAnimator = GetComponent<Animator>();
-        ReadyAnimationLengths(_gunAnimator);
-    }
+        //---------------------------------state bools
+        private bool _isReloading;
 
-    protected virtual void ReadyAnimationLengths(Animator animator)
-    {
-        animator.SetFloat("reloadSpeed", reloadAnimationTime / reloadDuration);
-        animator.SetFloat("shootingSpeed", shootingAnimationLength / shotsPerShootingAnimation);
-        animator.SetFloat("switchSpeed", switchAnimationLength / timeToEquip);
-    }
+        private bool _isShooting;
+        private bool _isAiming;
 
-    protected abstract void UpdateWeapon();
+        private bool _isHolstered = true;
 
-    //-------------------------------inputs
-    public virtual void ShootInputAction(InputAction.CallbackContext context)
-    {
-        if (context.started && !_isReloading && !_isHolstered)
+        [Header("Animations and effects")]
+        [SerializeField] private int shotsPerShootingAnimation = 1;
+        [SerializeField] private float shootingAnimationLength = 1;
+        [SerializeField] private float reloadAnimationTime = 1;
+
+        protected virtual void AwakeWeapon()
         {
-            StartShooting();
+            if (reloadDuration <= 0) throw new ArgumentException("duration not strictly positiv");
+
+            _gunAnimator = GetComponent<Animator>();
+            ReadyAnimationLengths(_gunAnimator);
+
+            ammoText = new("");
+            AmmoText = new(ammoText);
         }
-        else if (context.canceled)
+
+        protected virtual void ReadyAnimationLengths(Animator animator)
         {
-            StopShooting();
+            animator.SetFloat("reloadSpeed", reloadAnimationTime / reloadDuration);
+            animator.SetFloat("shootingSpeed", shootingAnimationLength / shotsPerShootingAnimation);
         }
-    }
-    
-    public virtual void ReloadInputAction(InputAction.CallbackContext context)
-    {
-        if (context.started && !_isShooting && ReloadConditions() && !_isHolstered)
+
+        protected abstract void UpdateWeapon();
+
+        //-------------------------------inputs
+        public virtual void UseWeaponInput(InputAction.CallbackContext context)
         {
-            StartReload();
-        }
-    }
-
-    public virtual void AimInputAction(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            _isAiming = true;
-        }
-        else if (context.canceled)
-        {
-            _isAiming = false;
-        }
-    }
-
-    public void SwitchInputAction(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            EquipOrUnequip();
-        }
-    }
-
-    //---------------------------------------shooting
-    protected abstract void ShootGun();
-
-    protected virtual void StartShooting()
-    {
-        _isShooting = true;
-        if (_gunAnimator)_gunAnimator.SetBool("IsShooting", true);
-    }
-
-    protected virtual void StopShooting()
-    {
-        _isShooting = false;
-       if(_gunAnimator)_gunAnimator.SetBool("IsShooting", false);
-    }
-
-    protected virtual void ValidateKill(){}
-
-    //----------------------------------------reloading
-    protected abstract bool ReloadConditions();
-
-    protected virtual void StartReload()
-    {
-        if (!ReloadConditions()) return;
-
-        _isReloading = true;
-        if(_gunAnimator)_gunAnimator.SetBool("IsReloading", true);
-        Invoke("StopAndAccomplishReload", reloadDuration);
-    }
-
-    protected virtual void StopAndAccomplishReload()
-    {
-        _isReloading = false;
-        if(_gunAnimator)_gunAnimator.SetBool("IsReloading", false);
-    }
-
-    protected virtual void StopReload()
-    {
-        CancelInvoke("StopAndAccomplishReload");
-        _isReloading = false;
-        if(_gunAnimator)_gunAnimator.SetBool("IsReloading", false);
-    }
-
-    //--------------------------------------------equiping
-    public void EquipOrUnequip()
-    {
-        if (!_isSwitching)
-        {
-            if (_isHolstered)
+            if (context.started && !_isReloading && !_isHolstered)
             {
-                StartCoroutine(nameof(EquipWeapon));
+                StartUsing();
             }
-            else
+            else if (context.canceled)
             {
-                StartCoroutine(nameof(UnequipWeapon));
+                StopUsing();
             }
         }
-    }
 
-    private IEnumerator UnequipWeapon()
-    {
-        _isSwitching = true;
-        _isHolstered = true;
+        public virtual void ReloadInput(InputAction.CallbackContext context)
+        {
+            if (context.started && !_isShooting && ReloadConditions() && !_isHolstered)
+            {
+                StartReload();
+            }
+        }
 
-        _gunAnimator.SetBool("IsSwitching", true);
-        StopReload();
+        public virtual void AimInputAction(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                _isAiming = true;
+            }
+            else if (context.canceled)
+            {
+                _isAiming = false;
+            }
+        }
 
-        StopShooting();
+        //---------------------------------------unity events
 
-        //the param change needs to be done earlier or it will cycle to the equip animation
-        yield return new WaitForSeconds(timeToEquip/2);
-        _gunAnimator.SetBool("IsSwitching", false);
+        private void OnEnable()
+        {
+            _isHolstered = false;
+            ReadyAnimationLengths(_gunAnimator);
+        }
 
-        yield return new WaitForSeconds(timeToEquip / 2);
-        _isSwitching = false;
-        _playerController.EquipNextWeapon();
-    }
+        private void OnDisable()
+        {
+            _isShooting = false;
+            _isReloading = false;
 
-    private IEnumerator EquipWeapon()
-    {
-        _isSwitching = true;
-        _gunAnimator.SetBool("IsSwitching", true);
+            _isHolstered= true;
+        }
 
-        //the param change needs to be done earlier or it will cycle to the unequip animation
-        yield return new WaitForSeconds(timeToEquip/2);
-        _gunAnimator.SetBool("IsSwitching", false);
+        //---------------------------------------shooting
+        protected abstract void UseWeapon();
 
-        yield return new WaitForSeconds(timeToEquip / 2);
-        _isHolstered = false;
-        _isSwitching = false;
+        protected virtual void StartUsing()
+        {
+            _isShooting = true;
+            if (_gunAnimator) _gunAnimator.SetBool("IsShooting", true);
+        }
 
-        UpdateAmmoText();
-        UpdateWeaponNameText();
-    }
+        protected virtual void StopUsing()
+        {
+            _isShooting = false;
+            if (_gunAnimator) _gunAnimator.SetBool("IsShooting", false);
+        }
 
-    public abstract void RefillWeaponAmmo();
+        protected virtual void ValidateKill() { }
 
-    //----------------------------------------------ui
-    protected virtual void UpdateAmmoText() { }
+        //----------------------------------------reloading
+        protected abstract bool ReloadConditions();
 
-    private void UpdateWeaponNameText() 
-    {
-        _weaponNameTextHolder.text = name;
-    }
+        protected virtual void StartReload()
+        {
+            if (!ReloadConditions()) return;
 
-    protected virtual void UpdateCrosshair() { }
+            _isReloading = true;
+            if (_gunAnimator) _gunAnimator.SetBool("IsReloading", true);
+            Invoke("StopAndAccomplishReload", reloadDuration);
+        }
 
-    //this is public because we want to access it from the options menu if we ever have one
-    public void UpdateUIScale()
-    {
-        _uiScale = _canvasScaler.referencePixelsPerUnit * _canvasScaler.referenceResolution.x / _playerCamera.fieldOfView;
-    }
+        protected virtual void StopAndAccomplishReload()
+        {
+            _isReloading = false;
+            if (_gunAnimator) _gunAnimator.SetBool("IsReloading", false);
+        }
 
-    //-------------------------------------------------getters
+        protected virtual void StopReload()
+        {
+            CancelInvoke("StopAndAccomplishReload");
+            _isReloading = false;
+            if (_gunAnimator) _gunAnimator.SetBool("IsReloading", false);
+        }
 
-    protected PlayerController GetPlayerController()
-    {
-        return _playerController;
-    }
+        public abstract void RefillWeaponAmmo();
 
-    protected Animator GetAnimator()
-    {
-        return _gunAnimator;
-    }
+        //----------------------------------------------ui
 
-    //-------------------------------------------------getters/setters_state
+        /// <summary>
+        /// will update the value of the ammoText, making it available to AmmoText
+        /// </summary>
+        protected virtual void UpdateAmmoText() {}
 
-    public bool IsReadyForSwitch()
-    {
-        return !_isSwitching;
-    }
+        protected virtual void UpdateSpread() { }
 
-    protected bool GetIsShooting()
-    {
-        return _isShooting;
-    }
+        //-------------------------------------------------getters
+        protected Animator GetAnimator()
+        {
+            return _gunAnimator;
+        }
 
-    protected bool GetIsReloading()
-    {
-        return _isReloading;
-    }
+        //-------------------------------------------------getters/setters_state
 
-    protected void SetIsReloading(bool val)
-    {
-        _isReloading = val;
-    }
+        protected bool GetIsShooting()
+        {
+            return _isShooting;
+        }
 
-    protected bool GetIsHolstered()
-    {
-        return _isHolstered;
-    }
+        protected bool GetIsReloading()
+        {
+            return _isReloading;
+        }
 
-    protected bool GetIsAiming()
-    {
-        return _isAiming;
-    }
+        protected void SetIsReloading(bool val)
+        {
+            _isReloading = val;
+        }
 
-    //tells us if the gun is being switched or not
-    public bool GetIsSwitching()
-    {
-        return _isSwitching;
-    }
+        protected bool GetIsHolstered()
+        {
+            return _isHolstered;
+        }
 
-    /*
-     * Give the current bullets left on player divided by the max bullets on player
-     */
-    public abstract float GetAmmoFillRatio();
+        protected bool GetIsAiming()
+        {
+            return _isAiming;
+        }
 
-    //---------------------------------------getters_ui
-    protected Camera GetPLayerCamera()
-    {
-        return _playerCamera;
-    }
-
-    protected RectTransform GetCrosshairTransform()
-    {
-        return _crosshairTransform;
-    }
-
-    protected TextMeshProUGUI GetAmmoTextHolder()
-    {
-        return _ammoTextHolder;
-    }
-
-    protected float GetUIScale()
-    {
-        return _uiScale;
-    }
-
-    /*public Transform GetWeaponModelTransform()
-    {
-        return UIModel;
-    }*/
-}
-
-public class InfoForGunSetup
-{
-    private readonly TextMeshProUGUI _ammoTextHolder;
-    private readonly TextMeshProUGUI _weaponNameTextHolder;
-    private readonly RectTransform _crosshairTransform;
-    private readonly CanvasScaler _canvasScaler;
-    private readonly Canvas _canvas;
-    private readonly Camera _playerCamera;
-
-    public InfoForGunSetup(TextMeshProUGUI ammoTextHolder, TextMeshProUGUI weaponNameTextHolder
-        , RectTransform crosshairTransform, CanvasScaler canvasScaler, Canvas canvas, Camera playerCamera)
-    {
-        _ammoTextHolder = ammoTextHolder;
-        _weaponNameTextHolder = weaponNameTextHolder;
-        _crosshairTransform = crosshairTransform;
-        _canvasScaler = canvasScaler;
-        _canvas = canvas;
-        _playerCamera = playerCamera;
-    }
-
-    public TextMeshProUGUI GetAmmoTextHolder()
-    {
-        return _ammoTextHolder;
-    }
-    public TextMeshProUGUI GetWeaponNameTextHolder()
-    {
-        return _weaponNameTextHolder;
-    }
-    public RectTransform GetCrosshairTransform()
-    {
-        return _crosshairTransform;
-    }
-    public CanvasScaler GetCanvasScaler()
-    {
-        return _canvasScaler;
-    }
-    public Canvas GetCanvas()
-    {
-        return _canvas;
-    }
-    public Camera GetPlayerCamera()
-    {
-        return _playerCamera;
+        /*
+         * Give the current bullets left on player divided by the max bullets on player
+         */
+        public abstract float GetAmmoFillRatio();
     }
 }

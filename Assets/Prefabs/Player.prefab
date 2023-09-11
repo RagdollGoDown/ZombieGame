@@ -1570,11 +1570,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3820685052815430743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dea25ebd2f2a35840a77be62296d8677, type: 3}
+  m_Script: {fileID: 11500000, guid: 29ddd52a34520e04f89622d778ef4f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shakingLength: 1
-  shakingStrength: 50
+  shakingStrength: 10
 --- !u!1 &3996322371060808399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1889,7 +1889,6 @@ GameObject:
   - component: {fileID: 4463498479093733609}
   - component: {fileID: 4463498479093733607}
   - component: {fileID: 4042588842284002895}
-  - component: {fileID: 1361185912473933333}
   - component: {fileID: 4463498479093733604}
   m_Layer: 3
   m_Name: Player
@@ -2028,8 +2027,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4463498479093733604}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: ShootCurrentGun
+        m_TargetAssemblyTypeName: PlayerController, Player
+        m_MethodName: UseWeaponInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2044,8 +2043,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4463498479093733604}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: SwitchWeapons
+        m_TargetAssemblyTypeName: PlayerController, Player
+        m_MethodName: SwitchWeaponsInput
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2161,19 +2160,6 @@ MonoBehaviour:
       m_Calls: []
   shrinkOnDeath: 0
   destroyChildrenOnDeath: 0
---- !u!114 &1361185912473933333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4463498479093733608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da480145a999a36479efc761410a4b92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetOffsetFromPosition: {x: 0, y: 1.8, z: 0}
 --- !u!114 &4463498479093733604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2195,8 +2181,8 @@ MonoBehaviour:
   mouseSensitivity: 20
   _weaponsHeld:
   - {fileID: 5847717264853021304}
-  - {fileID: 1051864591873449496}
-  kickForce: 30
+  - {fileID: 9040535435785125949}
+  timeBetweenWeaponSwitches: 0.5
   kickDamage: 40
   kickRange: 3
   kickAnimationLength: 0.7
@@ -2934,7 +2920,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7743787711206514359
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4521,6 +4507,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1956161118473648932}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9040535435785125949 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7373449462057843481, guid: 851d85646f2cd9d46aaa8441c6cda36d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1956161118473648932}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66313582b6c6c754cbe1274ad4fc7276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6115947898909038039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4594,18 +4592,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ce861bcb386bb24ebb1380c976272a9, type: 3}
---- !u!114 &1051864591873449496 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6519188541319711695, guid: 0ce861bcb386bb24ebb1380c976272a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 6115947898909038039}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1051864591873449498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6519188541319711693, guid: 0ce861bcb386bb24ebb1380c976272a9,
@@ -4680,6 +4666,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7304357630652276217, guid: 3f1b91762f2c04f428107259dfbcfb6e,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 3343021b7e2749c4098bec9f58820f6a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4769,6 +4760,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7304357630652276217, guid: 00a647f83c496a74a9e3385544584e66,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 3343021b7e2749c4098bec9f58820f6a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

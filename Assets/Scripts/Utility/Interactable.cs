@@ -67,12 +67,12 @@ namespace Utility
 
         private void OnEnable()
         {
-            if (interactorInArea == null) interactorInArea.OnInteractableEntered(_interaction);
+            if (interactorInArea != null) interactorInArea.OnInteractableEntered(_interaction);
         }
 
         private void OnDisable()
         {
-            if (interactorInArea == null) interactorInArea.OnInteractableExit(_interaction);
+            if (interactorInArea != null) interactorInArea.OnInteractableExit(_interaction);
         }
     }
 

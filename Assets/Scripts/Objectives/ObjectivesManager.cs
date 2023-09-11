@@ -14,7 +14,7 @@ namespace Objectives
         //while the delegate is used for other objects
         private UnityEvent _onObjectiveComplete;
 
-        public ObservableObject<Objective> currentObjective;
+        private ObservableObject<Objective> currentObjective;
         private Objective[] _objs;
         private List<Objective> _lastObjs;
 
@@ -34,6 +34,10 @@ namespace Objectives
             _onObjectiveComplete = new UnityEvent();
 
             _onObjectiveComplete.AddListener(CompleteObjective);
+
+            currentObjective = new(null);
+            currentObjective.GetValue();
+            Invoke(nameof(FindNextRandomObjective),1f);
 
             List<Objective> _objsList = new();
             foreach(ObjectiveHolder oh in transform.GetComponentsInChildren<ObjectiveHolder>())

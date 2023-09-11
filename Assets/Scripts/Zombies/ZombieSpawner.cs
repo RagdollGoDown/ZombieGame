@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public class ZombieSpawner : MonoBehaviour
 {
-<<<<<<< Updated upstream
-    private readonly float TIME_BETWEEN_SPAWNS;
+    [SerializeField] private float timeBetweenSpawns = 1;
 
 =======
     [SerializeField] private float timeBetweenSpawns = 1;
@@ -13,14 +13,12 @@ public class ZombieSpawner : MonoBehaviour
     [SerializeField] private GameObject zombiePrefab;
 
     private int _zombiesToSpawn;
-    private ZombieTarget _zombieTargetOnSpawn;
+    private DamageableObject _zombieTargetOnSpawn;
     private bool _isSpawning;
 
     private ObjectPool zombiePool;
 
     private bool _canSpawn;
-
-    private int _maxZombiesToSpawn;
 
     //these positions are offsets from the gameobject's position
     [SerializeField] private Vector3[] spawnPositionsOffset;
@@ -29,22 +27,22 @@ public class ZombieSpawner : MonoBehaviour
     {
         _canSpawn = !(zombiePrefab == null);
 
-        if (_canSpawn) {
-            zombiePrefab.SetActive(false); }
+        if (_canSpawn)
+        {
+            zombiePrefab.SetActive(false);
+        }
 
         if (spawnPositionsOffset.Length == 0)
         {
-            spawnPositionsOffset = new Vector3[]{Vector3.zero};
+            spawnPositionsOffset = new Vector3[] { Vector3.zero };
         }
-
-        _maxZombiesToSpawn = spawnPositionsOffset.Length;
     }
 
-    public int AddZombiesToSpawn(int amountOfZombies,ZombieTarget zombieTarget)
+    public int AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget)
     {
         if (zombiePool == null) throw new System.NullReferenceException("No object pool to take zombies from");
 
-        if (!_canSpawn) {return 0;}
+        if (!_canSpawn) { return 0; }
 
         _zombiesToSpawn += amountOfZombies;
         _zombieTargetOnSpawn = zombieTarget;
@@ -62,7 +60,7 @@ public class ZombieSpawner : MonoBehaviour
     private void SpawnZombie()
     {
         _isSpawning = true;
-        
+
         if (_zombiesToSpawn <= 0)
         {
             _isSpawning = false;
@@ -77,7 +75,7 @@ public class ZombieSpawner : MonoBehaviour
         Debug.Log(zb.transform.position);
         zb.StartChase(_zombieTargetOnSpawn);
         _zombiesToSpawn--;
-        Invoke("SpawnZombie", TIME_BETWEEN_SPAWNS);
+        Invoke(nameof(SpawnZombie), timeBetweenSpawns);
     }
 
     //-----------------------------------------------get/setters

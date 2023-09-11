@@ -1,15 +1,14 @@
-using TMPro;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using UnityEngine.Events;
 using Utility;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine.InputSystem;
+using Weapons;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(DamageableObject))]
-[RequireComponent(typeof(ZombieTarget))]
 public class PlayerController : MonoBehaviour,Interactor
 {
     private static List<PlayerController> PLAYERS;
@@ -19,6 +18,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
+    private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
     private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
     {
         new Vector3(1,0,0), new Vector3(0.9f,0.1f,0), new Vector3(0.9f,0,0.1f), 
@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour,Interactor
     private Vector3 _tempHeadBobDirection;
 
     private DamageableObject _damageablePlayer;
-    private ZombieTarget _playerTarget;
 
     //--------------------movement
     [Header("Mouvement")]
@@ -70,10 +69,11 @@ public class PlayerController : MonoBehaviour,Interactor
     //temporarily a serialize field to check the guns
     private int _currentWeaponIndex;
     [SerializeField] private WeaponBehaviour[] _weaponsHeld;
-    public InfoForGunSetup playerInfoForGunSetup;
-    private static readonly int shootableLayerMaskValue = 65;
 
     private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
+
+    [SerializeField] private float timeBetweenWeaponSwitches;
+    private float lastTimeSwitched;
 
     //---------------------------interaction
     private Interaction _currentInteract;
@@ -90,16 +90,8 @@ public class PlayerController : MonoBehaviour,Interactor
     //--------------------------------------------------general
     private void GunSetup()
     {
-        playerInfoForGunSetup = new InfoForGunSetup(
-           _cameraTransform.Find("UI/PlayScreen/Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>(),
-           _cameraTransform.Find("UI/PlayScreen/Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>(),
-           _cameraTransform.Find("UI/PlayScreen/Crosshair").GetComponent<RectTransform>(),
-           _cameraTransform.Find("UI").GetComponent<CanvasScaler>(),
-           _cameraTransform.Find("UI").GetComponent<Canvas>(),
-           _cameraTransform.GetComponent<Camera>()
-           );
-
         _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
+        _currentWeaponIndex = 0;
 
         foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
         {
@@ -107,12 +99,14 @@ public class PlayerController : MonoBehaviour,Interactor
             {
                 _onPlayerWeaponsToName.Add(t.name, wpb);
 
-                t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
+                if (wpb is CrossHaired) { ((CrossHaired)wpb).SetSpreadOrigin(_cameraTransform); }
+
+                //t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
+                t.gameObject.SetActive(_weaponsHeld[_currentWeaponIndex] == wpb);
             }
         }
 
-        _currentWeaponIndex = 0;
-        Invoke("EquipNextWeapon", Time.fixedDeltaTime);
+        Invoke(nameof(EquipCurrentWeapon), Time.deltaTime);
     }
 
     private void PlayerMovement(float deltaTime)
@@ -183,7 +177,7 @@ public class PlayerController : MonoBehaviour,Interactor
         {
             Physics.Raycast(_cameraTransform.position, 
                 _cameraTransform.forward * v.x + _cameraTransform.right * v.y + _cameraTransform.up * v.z,
-                out hit, kickRange, shootableLayerMaskValue);
+                out hit, kickRange, SHOOTABLE_LAYERMASK_VALUE);
 
             if (hit.transform && hit.transform.TryGetComponent(out DamageableObject damObj))
             {
@@ -220,8 +214,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
         _damageablePlayer = GetComponent<DamageableObject>();
         _damageablePlayer.getHit.AddListener(_playerUI.UpdateHealthBar);
-        _playerTarget = GetComponent<ZombieTarget>();
-
+        
         GunSetup();
 
         _interactions = new List<Interaction>();
@@ -266,21 +259,54 @@ public class PlayerController : MonoBehaviour,Interactor
     //------------------------------------------------------------------weapons
     public RaycastHit GetRaycastHitInFrontOfCamera(float spread)
     {
-
-        float randomAngle = UnityEngine.Random.Range(0, 2 * Mathf.PI);
+        float randomAngle = Random.Range(0, 2 * Mathf.PI);
 
         Vector3 spreadDiff = _cameraTransform.up * Mathf.Cos(randomAngle) + _cameraTransform.right * Mathf.Sin(randomAngle);
-        spreadDiff *= spread * UnityEngine.Random.value;
+        spreadDiff *= spread * Random.value;
 
-        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,shootableLayerMaskValue);
+        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,SHOOTABLE_LAYERMASK_VALUE);
         return hit;
     }
 
-    public void EquipNextWeapon()
+    private void Switch()
     {
-        _weaponsHeld[_currentWeaponIndex].EquipOrUnequip();
+        UnequipCurrentWeapon();
 
-        //_playerUI.SetUIWeaponModel(_weaponsHeld[_currentWeaponIndex].GetWeaponModelTransform());
+        if (_currentWeaponIndex == 0)
+        {
+            _currentWeaponIndex = 1;
+        }
+        else
+        {
+            _currentWeaponIndex = 0;
+        }
+
+        EquipCurrentWeapon();
+    }
+
+    private void EquipCurrentWeapon()
+    {
+        _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
+        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += _playerUI.SetAmmoText;
+        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
+        {
+            CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
+
+            c.GetSpread().onValueChange += _playerUI.SetCrosshairScale;
+        }
+        _playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
+    }
+
+    private void UnequipCurrentWeapon()
+    {
+        _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
+        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= _playerUI.SetAmmoText;
+        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
+        {
+            CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
+
+            c.GetSpread().onValueChange -= _playerUI.SetCrosshairScale;
+        }
     }
 
     //---------------------------------------------------------------interactions
@@ -323,11 +349,9 @@ public class PlayerController : MonoBehaviour,Interactor
      */
     public bool PickUpWeapon(string weaponName)
     {
-        if (_weaponsHeld[0].GetIsSwitching() || _weaponsHeld[1].GetIsSwitching()) return false;
-
         if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
         {
-            _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
+            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
 
             newWeapon.gameObject.SetActive(true);
 
@@ -380,19 +404,20 @@ public class PlayerController : MonoBehaviour,Interactor
         _mouseDelta = context.ReadValue<Vector2>();
     }
 
-    public void ShootCurrentGun(InputAction.CallbackContext context)
+    public void UseWeaponInput(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 
-        _weaponsHeld[_currentWeaponIndex].ShootInputAction(context);
+        _weaponsHeld[_currentWeaponIndex].UseWeaponInput(context);
     }
     
     public void ReloadCurrentGun(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 
-        _weaponsHeld[_currentWeaponIndex].ReloadInputAction(context);
+        _weaponsHeld[_currentWeaponIndex].ReloadInput(context);
     }
+
     public void AimCurrentGun(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
@@ -402,34 +427,27 @@ public class PlayerController : MonoBehaviour,Interactor
         if (context.canceled) { _currentMovementSpeed = movementSpeed; }
     }
 
-    public void SwitchWeapons(InputAction.CallbackContext context)
+    public void SwitchWeaponsInput(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 
-        if (_weaponsHeld[0].IsReadyForSwitch() && _weaponsHeld[1].IsReadyForSwitch() && context.started)
+        if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
         {
-            _weaponsHeld[_currentWeaponIndex].StartCoroutine("UnequipWeapon");
+            Switch();
 
-            if (_currentWeaponIndex == 0)
-            {
-                _currentWeaponIndex = 1;
-            }
-            else
-            {
-                _currentWeaponIndex = 0;
-            }
+            lastTimeSwitched = Time.time;
         }
     }
 
-    public void Interact(InputAction.CallbackContext context)
+    public void InteractInput(InputAction.CallbackContext context)
     {
         if (context.started && _currentInteract != null) { 
             _currentInteract.GetAction().Invoke();
-            RemoveInteractListener(_currentInteract);
+            OnInteractableExit(_currentInteract);
         }
     }
 
-    public void Kick(InputAction.CallbackContext context)
+    public void KickInput(InputAction.CallbackContext context)
     {
         if (_playerState == PlayerState.Dead) return;
 
@@ -445,7 +463,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     //--------------------------------------------------------getters
 
-    public ZombieTarget GetPlayerTargetComponent() { return _playerTarget; }
+    public DamageableObject GetPlayerTargetComponent() { return _damageablePlayer; }
 
     public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
 
@@ -466,9 +484,9 @@ public class PlayerController : MonoBehaviour,Interactor
         _playerUI.SetRoundText(round);
     }
 
-    public void SetObjectiveText(Objective objective)
+    public void SetObjectiveText(string text)
     {
-        _playerUI.SetObjectiveText(objective);
+        _playerUI.SetObjectiveText(text);
     }
 }
 

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Assets.Scripts.Weapons
+namespace Weapons
 {
     public sealed class ChunkReloaderWeaponBehaviour : RayCastGunBehaviour
     {
@@ -42,18 +42,18 @@ namespace Assets.Scripts.Weapons
             animator.SetFloat("reloadSpeed", reloadSpeed);
         }
 
-        public override void ShootInputAction(InputAction.CallbackContext context)
+        public override void UseWeaponInput(InputAction.CallbackContext context)
         {
             _wantsToReload = false;
 
-            base.ShootInputAction(context);
+            base.UseWeaponInput(context);
         }
 
-        public override void ReloadInputAction(InputAction.CallbackContext context)
+        public override void ReloadInput(InputAction.CallbackContext context)
         {
             if (context.started) _wantsToReload = true;
 
-            base.ReloadInputAction(context);
+            base.ReloadInput(context);
         }
 
         protected override void StartReload()

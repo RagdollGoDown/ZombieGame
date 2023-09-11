@@ -741,6 +741,14 @@
       <Project>{B39FAA44-EBFE-5695-9807-5713BED926B4}</Project>
       <Name>Utility</Name>
     </ProjectReference>
+    <ProjectReference Include="Weapons.csproj">
+      <Project>{7A747A90-E370-81A5-D420-839A0B3E4676}</Project>
+      <Name>Weapons</Name>
+    </ProjectReference>
+    <ProjectReference Include="UI.csproj">
+      <Project>{34B56DEF-D299-D287-EE27-CB443EE4C9AD}</Project>
+      <Name>UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

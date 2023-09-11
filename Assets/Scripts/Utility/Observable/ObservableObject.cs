@@ -1,21 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Utility.Observable
 {
-    public class ObservableObject<T> : Object
+    public class ObservableObject<T> : UnityEngine.Object
     {
         private T value;
 
-        private UnityEvent<T> onValueChange;
+        public event Action<T> onValueChange;
 
         public ObservableObject(T value)
         {
             this.value = value;
-
-            onValueChange = new();
+            onValueChange += (a) => { };
         }
 
         public T GetValue()
@@ -26,17 +23,7 @@ namespace Utility.Observable
         public void SetValue(T newValue)
         {
             value = newValue;
-            onValueChange.Invoke(value);
-        }
-
-        public void AddActionToOnValueChange(UnityAction<T> action)
-        {
-            onValueChange.AddListener(action);
-        }
-
-        public void RemoveActionToOnValueChange(UnityAction<T> action)
-        {
-            onValueChange.RemoveListener(action);
+            onValueChange(value);
         }
     }
 }

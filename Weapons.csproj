@@ -61,10 +61,10 @@
     <Compile Include="Assets\Scripts\Weapons\ChunkReloaderAndRayCastWeaponBehaviour.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\MultiKillBoostCondition.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponBehaviour.cs" />
-    <Compile Include="Assets\Scripts\Weapons\BloodSpillOnCollide.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\HighlightBoosts.cs" />
     <Compile Include="Assets\Scripts\Weapons\RayCastGunBehaviour.cs" />
-    <Compile Include="Assets\Scripts\Weapons\MeleeWeapon.cs" />
+    <Compile Include="Assets\Scripts\Weapons\MeleeWeaponBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Weapons\CrossHaired.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\Weapons\Weapons.asmdef" />
@@ -727,6 +727,12 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>D:\Unity\2022.2.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
@@ -735,9 +741,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Player.csproj">
-      <Project>{09D4C4A0-1145-FC47-1060-D37D20944110}</Project>
-      <Name>Player</Name>
+    <ProjectReference Include="Utility.csproj">
+      <Project>{B39FAA44-EBFE-5695-9807-5713BED926B4}</Project>
+      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

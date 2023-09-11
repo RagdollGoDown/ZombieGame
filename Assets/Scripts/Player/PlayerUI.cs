@@ -3,16 +3,31 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utility;
+using Utility.Observable;
 
 public class PlayerUI : MonoBehaviour
 {
-    //private static Vector3 POSITION_OF_HIDDEN_WEAPON_MODEL = new Vector3(0, -1000, 0);
     private readonly static float HEALTH100 = 100f;
 
     private PlayerController _playerController;
 
+    private Camera playerCamera;
+
+    private Canvas canvas;
+    private CanvasScaler canvasScaler;
+    private float uiScale;
+
     private GameObject _playScreen;
     private GameObject _deathScreen;
+
+    private struct WeaponUI
+    {
+        public TextMeshProUGUI ammoTextHolder;
+        public TextMeshProUGUI weaponNameTextHolder;
+        public RectTransform crosshairTransform;
+    }
+    private WeaponUI weaponUI;
 
     private struct HealthUI
     {
@@ -33,9 +48,6 @@ public class PlayerUI : MonoBehaviour
     }
     private ObjectiveUI _objectiveUI;
 
-    private MovePointToPoint _weaponModelHolder;
-    private Transform _weaponModelHolderTransform;
-
     [Header("Shaking on damage taken")]
     private ShakableUIElement[] _shakableUIElements;
     [SerializeField] private float shakingLength;
@@ -45,10 +57,20 @@ public class PlayerUI : MonoBehaviour
     void Awake()
     {
         _playerController = transform.parent.parent.parent.GetComponent<PlayerController>();
+        playerCamera = transform.parent.GetComponent<Camera>();
+
+        canvas = GetComponent<Canvas>();
+        canvasScaler = GetComponent<CanvasScaler>();
+        uiScale = new();
+        UpdateUIScale();
 
         _playScreen = transform.Find("PlayScreen").gameObject;
         _deathScreen = transform.Find("DeathScreen").gameObject;
         _deathScreen.SetActive(false);
+
+        weaponUI.ammoTextHolder = _playScreen.transform.Find("Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>();
+        weaponUI.weaponNameTextHolder = _playScreen.transform.Find("Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>();
+        weaponUI.crosshairTransform = _playScreen.transform.Find("Crosshair").GetComponent<RectTransform>();
 
         _healthUI = new();
         _healthUI.slider = _playScreen.transform.Find("HealthBar").GetComponent<Slider>();
@@ -65,9 +87,6 @@ public class PlayerUI : MonoBehaviour
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
-
-        //_weaponModelHolder = _playScreen.transform.Find("Ammo/WeaponModelHolder").GetComponent<MovePointToPoint>();
-        //_weaponModelHolderTransform = _weaponModelHolder.transform;
 
         _shakableUIElements = _playScreen.GetComponentsInChildren<ShakableUIElement>();
 
@@ -118,9 +137,9 @@ public class PlayerUI : MonoBehaviour
         _currentRoundText.text = round.ToString();
     }
 
-    public void SetObjectiveText(Objective objective)
+    public void SetObjectiveText(string text)
     {
-        if (objective == null)
+        if (text == null)
         {
             _objectiveUI.talkieWalkieMover.Point1to2();
             _objectiveUI.backgroundAndTextMover.Point1to2();
@@ -130,22 +149,31 @@ public class PlayerUI : MonoBehaviour
         {
             _objectiveUI.talkieWalkieMover.Point2to1();
             _objectiveUI.backgroundAndTextMover.Point2to1();
-            _objectiveUI.tmp.text = objective.GetObjectiveText();
+            _objectiveUI.tmp.text = text;
         }
     }
 
-    /*public void SetUIWeaponModel(Transform modelTransform)
-    {
-        if (_weaponModelHolder.transform.childCount == 1)
-        {
-            Transform currentModel = _weaponModelHolder.transform.GetChild(0);
-            currentModel.parent = null;
-            currentModel.position = POSITION_OF_HIDDEN_WEAPON_MODEL;
-        }
+    //------------------------------------getters
 
-        //_weaponModelHolder.Point1to2();
-        modelTransform.parent = _weaponModelHolder.transform;
-        modelTransform.localPosition = Vector3.zero;
-        Debug.Log(_weaponModelHolder.GetComponent<RectTransform>().localPosition);
-    }*/
+    public void UpdateUIScale()
+    {
+        uiScale = canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView;
+    }
+
+    //------------------------------------setters
+
+    public void SetWeaponName(string name)
+    {
+        weaponUI.weaponNameTextHolder.text = name;
+    }
+
+    public void SetAmmoText(string text)
+    {
+        weaponUI.ammoTextHolder.text = text;
+    }
+
+    public void SetCrosshairScale(float spread)
+    {
+        weaponUI.crosshairTransform.sizeDelta = new Vector2(spread, spread) * uiScale;
+    }
 }

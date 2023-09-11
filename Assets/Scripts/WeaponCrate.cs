@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 [RequireComponent(typeof(Interactable))]
 public class WeaponCrate : MonoBehaviour
@@ -29,6 +30,7 @@ public class WeaponCrate : MonoBehaviour
      */
     public void GiveGun()
     {
-        if (_inter.GetPlayerInArea().PickUpWeapon(weaponName)) Destroy(gameObject);
+        Debug.Log("Give Gun");
+        if (((PlayerController)_inter.GetInteractorInArea()).PickUpWeapon(weaponName)) Destroy(gameObject);
     }
 }

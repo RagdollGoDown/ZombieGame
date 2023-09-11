@@ -163,7 +163,7 @@ Animator:
   m_GameObject: {fileID: 672581806022772994}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 364b41fee6da6fd49adf5a05bb2e5ee2, type: 3}
-  m_Controller: {fileID: 9100000, guid: e58e4f67462c2ea4583f12c538c2ac82, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3343021b7e2749c4098bec9f58820f6a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -185,12 +185,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AmmoText: {fileID: 0}
   reloadDuration: 2
-  timeToEquip: 0.4
   shotsPerShootingAnimation: 5
   shootingAnimationLength: 1
   reloadAnimationTime: 3.3
-  switchAnimationLength: 1
   fireRateForShots: 0.14
   damage: 10
   pelletsPerShot: 1
