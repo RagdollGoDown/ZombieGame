@@ -8,7 +8,9 @@ public class ZombieSpawnerManager : MonoBehaviour
     private static int ZOMBIESINWORLD;
     private static ZombieSpawnerManager CURRENT_SPAWNER;
 
+
     private int _maxZombiesInWorld;
+    [SerializeField] private ObjectPool zombiePool;
     [SerializeField] private int baseMaxZombiesPerRound;
     [SerializeField] private int escalationPerRound;
     [SerializeField] private int timeBetweenRounds = 10;
@@ -35,12 +37,18 @@ public class ZombieSpawnerManager : MonoBehaviour
 
     private void Awake()
     {
-        _maxZombiesInWorld = baseMaxZombiesPerRound;
-
         if (timeBetweenRounds < 1) throw new System.ArgumentException("Time between rounds not bigger or equal to 1");
         if (timeBeforeFirstRound <= 0) throw new System.ArgumentException("Time before first round not strictly positiv");
+        if (zombiePool == null) throw new System.NullReferenceException("No object pool to take zombies from");
+
+        _maxZombiesInWorld = baseMaxZombiesPerRound;
 
         _spawners = GetComponentsInChildren<ZombieSpawner>();
+
+        foreach (var spawner in _spawners)
+        {
+            spawner.SetZombiePool(zombiePool);
+        }
 
         _currentRound = 1;
 

@@ -9,7 +9,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
+<<<<<<< Updated upstream
 using Debug = UnityEngine.Debug;
+=======
+using Utility;
+>>>>>>> Stashed changes
 
 public enum ZombieState
 {
@@ -35,11 +39,14 @@ public class ZombieBehaviour : MonoBehaviour
     
     //TODO unserialize
     [SerializeField]private Transform _headTransform;
+<<<<<<< Updated upstream
     private float _cosOfAngleOfVision;
 
     //used as a collider the other objects can collide with to
     //get the behavior script without passing by the children
     private BoxCollider _detectionBox;
+=======
+>>>>>>> Stashed changes
     
     //-------------------navigation
     private NavMeshAgent _navMeshAgent;
@@ -85,8 +92,6 @@ public class ZombieBehaviour : MonoBehaviour
         _cosOfAngleOfVision = 0.2f;
 
         _currentState = ZombieState.Idle;
-
-        _detectionBox = GetComponent<BoxCollider>();
         
         _zombieAnimator = GetComponent<Animator>();
         _headConstraint = transform.Find("HeadRig/HeadAimConstraint").GetComponent<MultiAimConstraint>();
@@ -246,7 +251,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     private void ReadyRagdoll()
     {
-        _detectionBox.enabled = false;
         Rigidbody[] rbs = GetComponentsInChildren<Rigidbody>();
 
         foreach (Rigidbody rb in rbs)

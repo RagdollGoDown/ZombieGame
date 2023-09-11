@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class ZombieSpawner : MonoBehaviour
 {
+<<<<<<< Updated upstream
     private readonly float TIME_BETWEEN_SPAWNS;
 
+=======
+    [SerializeField] private float timeBetweenSpawns = 1;
+>>>>>>> Stashed changes
     [SerializeField] private GameObject zombiePrefab;
 
     private int _zombiesToSpawn;
     private ZombieTarget _zombieTargetOnSpawn;
     private bool _isSpawning;
+
+    private ObjectPool zombiePool;
 
     private bool _canSpawn;
 
@@ -36,6 +42,8 @@ public class ZombieSpawner : MonoBehaviour
 
     public int AddZombiesToSpawn(int amountOfZombies,ZombieTarget zombieTarget)
     {
+        if (zombiePool == null) throw new System.NullReferenceException("No object pool to take zombies from");
+
         if (!_canSpawn) {return 0;}
 
         _zombiesToSpawn += amountOfZombies;
@@ -61,19 +69,23 @@ public class ZombieSpawner : MonoBehaviour
             return;
         }
 
-        ZombieBehaviour zb = Instantiate(zombiePrefab
-            , spawnPositionsOffset[_zombiesToSpawn % spawnPositionsOffset.Length] + transform.position
-            , Quaternion.identity).GetComponent<ZombieBehaviour>();
+        ZombieBehaviour zb = zombiePool.Pull().GetComponent<ZombieBehaviour>();
+        zb.transform.position =
+            //spawnPositionsOffset[_zombiesToSpawn % spawnPositionsOffset.Length] + transform.position;
+            Vector3.zero;
 
-        zb.gameObject.SetActive(true);
+        Debug.Log(zb.transform.position);
         zb.StartChase(_zombieTargetOnSpawn);
-        //zb.ChooseRandomMesh();
-
         _zombiesToSpawn--;
         Invoke("SpawnZombie", TIME_BETWEEN_SPAWNS);
     }
 
-    //-----------------------------------------------getters
+    //-----------------------------------------------get/setters
+
+    public void SetZombiePool(ObjectPool zombiePool)
+    {
+        this.zombiePool = zombiePool;
+    }
 
     public bool CanSpawn() { return _canSpawn; }
 
