@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
-<<<<<<< Updated upstream
 using Debug = UnityEngine.Debug;
 using Utility;
 
@@ -38,8 +37,6 @@ public class ZombieBehaviour : MonoBehaviour
     //used as a collider the other objects can collide with to
     //get the behavior script without passing by the children
     private BoxCollider _detectionBox;
-=======
->>>>>>> Stashed changes
     
     //-------------------navigation
     private NavMeshAgent _navMeshAgent;

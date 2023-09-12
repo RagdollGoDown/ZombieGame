@@ -7,9 +7,6 @@ public class ZombieSpawner : MonoBehaviour
 {
     [SerializeField] private float timeBetweenSpawns = 1;
 
-=======
-    [SerializeField] private float timeBetweenSpawns = 1;
->>>>>>> Stashed changes
     [SerializeField] private GameObject zombiePrefab;
 
     private int _zombiesToSpawn;
