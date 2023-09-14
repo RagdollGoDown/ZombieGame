@@ -33,10 +33,6 @@ public class ZombieBehaviour : MonoBehaviour
     
     //TODO unserialize
     [SerializeField]private Transform _headTransform;
-
-    //used as a collider the other objects can collide with to
-    //get the behavior script without passing by the children
-    private BoxCollider _detectionBox;
     
     //-------------------navigation
     private NavMeshAgent _navMeshAgent;
@@ -56,6 +52,8 @@ public class ZombieBehaviour : MonoBehaviour
     private bool _rightArmBroken;
     private bool _leftLegBroken;
     private bool _rightLegBroken;
+    private Rigidbody[] rigidBodys;
+    private DamageableObject mainDamageableObject;
 
     //--------------------attacking
     [SerializeField]private float attackDamage;
@@ -72,15 +70,20 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] GameObject _selectedZombieMesh;
     //[SerializeField] private GameObject defaultZombieMeshTransform;
 
+    //------------------------------------unity events
     private void Awake()
     {
+        if (!_headTransform) throw new System.NullReferenceException("Head transform is null");
+        
         runningSpeed = UnityEngine.Random.Range(minRunningSpeed, maxRunningSpeed);
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         _navMeshAgent.speed = runningSpeed;
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;
 
         _currentState = ZombieState.Idle;
-        
+        rigidBodys = GetComponentsInChildren<Rigidbody>();
+        mainDamageableObject = GetComponentInChildren<DamageableObject>();
+
         _zombieAnimator = GetComponent<Animator>();
         _headConstraint = transform.Find("HeadRig/HeadAimConstraint").GetComponent<MultiAimConstraint>();
         _rigBuilder = GetComponent<RigBuilder>();
@@ -102,6 +105,21 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        _zombieAnimator.enabled = true;
+
+        _leftArmBroken = false;
+        _leftLegBroken = false;
+        _rightArmBroken = false;
+        _rightLegBroken = false;
+
+        _currentState = ZombieState.Idle;
+
+        Invoke(nameof(UnReadyRagdoll),Time.fixedDeltaTime);
+    }
+
+    //--------------------------------------general
     public void ChooseRandomMesh()
     {
         if (_selectedZombieMesh != null)
@@ -191,26 +209,16 @@ public class ZombieBehaviour : MonoBehaviour
             _zombieAnimator.SetInteger("AttackType", 3);
         }
 
-        _zombieTarget.getHit.Invoke(new Damage(attackDamage,transform.position - _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT, this));
+        _zombieTarget.getHit.Invoke(new Damage(attackDamage, transform.position - _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT, this));
         _timeBetweenAttackCounter = timeBetweenAttacks;
-        
-        yield return new WaitForSeconds(TIME_BEFORE_BODY_DISINTEGRATES);
-        
+
+        yield return null;
+
         //when the attack type is 0 then it isn't attacking
         _zombieAnimator.SetInteger("AttackType", 0);
     }
 
-    private void ReadyRagdoll()
-    {
-        Rigidbody[] rbs = GetComponentsInChildren<Rigidbody>();
-
-        foreach (Rigidbody rb in rbs)
-        {
-            rb.useGravity = true;
-        }
-    }
-
-    //--------------------------get setters
+    //---------------------------------zombie body
 
     public void BreakLeftArm()
     {
@@ -253,6 +261,24 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
+    private void ReadyRagdoll()
+    {
+        foreach (Rigidbody rb in rigidBodys)
+        {
+            rb.useGravity = true;
+        }
+    }
+
+    private void UnReadyRagdoll()
+    {
+        foreach (Rigidbody rb in rigidBodys)
+        {
+            rb.useGravity = false;
+        }
+
+        mainDamageableObject.Revive();
+    }
+
     public void Die()
     {
         if (_currentState == ZombieState.Dead) { return; }
@@ -260,9 +286,21 @@ public class ZombieBehaviour : MonoBehaviour
         _currentState = ZombieState.Dead;
         _zombieAnimator.enabled = false;
 
+        ZombieSpawnerManager.RemoveZombie();
         ReadyRagdoll();
 
-        ZombieSpawnerManager.RemoveZombie();
-        Destroy(gameObject, TIME_BEFORE_BODY_DISINTEGRATES);
+        Invoke(nameof(DisableSelf), TIME_BEFORE_BODY_DISINTEGRATES);
+    }
+
+    private void DisableSelf()
+    {
+        gameObject.SetActive(false);
+    }
+
+    //--------------------------get setters
+
+    public NavMeshAgent GetNavMeshAgent()
+    {
+        return _navMeshAgent;
     }
 }
