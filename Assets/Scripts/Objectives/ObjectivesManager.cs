@@ -69,7 +69,6 @@ namespace Objectives
 
         private void CheckIfShouldStartObjective()
         {
-            Debug.Log("check");
             timeSinceLastObjective += timeBetweenChecks;
 
             if (maximumTimeBetweenObjectives <= timeSinceLastObjective && 

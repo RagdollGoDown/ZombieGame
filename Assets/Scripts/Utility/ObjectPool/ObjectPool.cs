@@ -15,10 +15,11 @@ namespace Utility
         //----------------------------------------pool function
 
         /// <summary>
-        /// Returns the first disabled object in the pool
+        /// Gets the first disabled object in the pool
         /// </summary>
-        /// <returns>the object but enabled</returns>
-        public GameObject Pull()
+        /// <param name="enabled">if we return the object enabled or disabled</param>
+        /// <returns>the pulled object</returns>
+        public GameObject Pull(bool enabled)
         {
             for (int i = 0; i < objects.Count; i++)
             {
@@ -28,7 +29,7 @@ namespace Utility
                     objects.Remove(obj);
                     objects.Insert(objects.Count - 1, obj);
 
-                    obj.SetActive(true);
+                    if (enabled) obj.SetActive(true);
                     return obj;
                 }
             }
@@ -37,6 +38,7 @@ namespace Utility
 
             objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
 
+            if (enabled) objects[objects.Count - 1].SetActive(true);
             return objects[objects.Count - 1];
         }
 

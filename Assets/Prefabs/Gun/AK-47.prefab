@@ -202,7 +202,7 @@ MonoBehaviour:
   muzzleFlash: {fileID: 3701847030435664378}
   HitMarker: {fileID: 7249987246175168379, guid: 7a74e7d3f115c3a42a2ab07fbd97be4c,
     type: 3}
-  bulletHoleOnDefault: {fileID: 7324937899285111298, guid: e08ed50810fa5a7428a8974a3e68a9de,
+  bulletHoleOnDefault: {fileID: 7249987246175168379, guid: 733f2abdac783c54ca0a56109f45ceb2,
     type: 3}
   bulletObject: {fileID: 4766820750362595819, guid: 3a084999302ccd5479f30c9f8bf2bf79,
     type: 3}

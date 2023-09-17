@@ -7,9 +7,6 @@ public class ZombieSpawner : MonoBehaviour
 {
     [SerializeField] private float timeBetweenSpawns = 1;
 
-=======
-    [SerializeField] private float timeBetweenSpawns = 1;
->>>>>>> Stashed changes
     [SerializeField] private GameObject zombiePrefab;
 
     private int _zombiesToSpawn;
@@ -67,12 +64,10 @@ public class ZombieSpawner : MonoBehaviour
             return;
         }
 
-        ZombieBehaviour zb = zombiePool.Pull().GetComponent<ZombieBehaviour>();
+        ZombieBehaviour zb = zombiePool.Pull(enabled:false).GetComponent<ZombieBehaviour>();
         zb.transform.position =
-            //spawnPositionsOffset[_zombiesToSpawn % spawnPositionsOffset.Length] + transform.position;
-            Vector3.zero;
-
-        Debug.Log(zb.transform.position);
+            spawnPositionsOffset[_zombiesToSpawn % spawnPositionsOffset.Length] + transform.position;
+        zb.gameObject.SetActive(true);
         zb.StartChase(_zombieTargetOnSpawn);
         _zombiesToSpawn--;
         Invoke(nameof(SpawnZombie), timeBetweenSpawns);

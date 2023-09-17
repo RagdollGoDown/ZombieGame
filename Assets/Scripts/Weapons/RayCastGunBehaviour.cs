@@ -9,6 +9,8 @@ namespace Weapons
 {
     public class RayCastGunBehaviour : WeaponBehaviour, CrossHaired
     {
+        private static readonly int BULLETHOLE_RECIPIENTS_LAYERMASK = 0;
+
         private static readonly float BULLETHOLE_LIFETIME = 10;
         private static readonly float HITMARKER_LIFETIME = .1f;
 
@@ -164,11 +166,11 @@ namespace Weapons
                 }
 
                 //-----------------------------------------------bullet hole
-                if (pointShot.transform.gameObject.layer == 0)
+                if (pointShot.transform.gameObject.layer == BULLETHOLE_RECIPIENTS_LAYERMASK)
                 {
                     Transform BHD = Instantiate(bulletHoleOnDefault, pointShot.point, Quaternion.identity).transform;
                     BHD.rotation = Quaternion.FromToRotation(BHD.forward, pointShot.normal);
-                    BHD.position -= BHD.forward * 0.03f;
+                    BHD.position += BHD.forward * 0.03f;
                     BHD.parent = pointShot.transform;
 
                     Destroy(BHD.gameObject, BULLETHOLE_LIFETIME);

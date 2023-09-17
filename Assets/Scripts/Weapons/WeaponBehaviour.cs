@@ -86,6 +86,8 @@ namespace Weapons
         private void OnEnable()
         {
             _isHolstered = false;
+            Invoke(nameof(UpdateAmmoText), Time.fixedDeltaTime*2);
+           
             ReadyAnimationLengths(_gunAnimator);
         }
 
@@ -146,7 +148,7 @@ namespace Weapons
         /// <summary>
         /// will update the value of the ammoText, making it available to AmmoText
         /// </summary>
-        protected virtual void UpdateAmmoText() {}
+        protected virtual void UpdateAmmoText() { }
 
         protected virtual void UpdateSpread() { }
 
