@@ -24,6 +24,8 @@ namespace Utility
 
         private Collider[] _colliders;
 
+        private Vector3 initialScale;
+
         //--------------------------to do on destruction
         [SerializeField] private List<GameObject> destructionParticleGameObjectPrefabs;
         public UnityEvent destructionCalls;
@@ -43,12 +45,35 @@ namespace Utility
 
             _colliders = GetComponents<Collider>();
 
+            initialScale = transform.localScale;
+
             _damageableChildren = new List<DamageableObject>();
 
             for (int i = 0; i < transform.childCount; i++)
             {
                 _damageableChildren.Add(transform.GetChild(i).GetComponent<DamageableObject>());
             }
+        }
+
+        public void Revive()
+        {
+            _health = maxHealth;
+            transform.localScale = initialScale;
+
+            foreach (Collider col in _colliders)
+            {
+                col.enabled = true;
+            }
+
+            if (destroyChildrenOnDeath)
+            {
+                foreach (var dc in _damageableChildren)
+                {
+                    dc.Revive();
+                }
+            }
+            
+            _isDestroyed = false;
         }
 
         private void TakeDamage(Damage damage)
