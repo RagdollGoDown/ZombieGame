@@ -1211,7 +1211,7 @@ GameObject:
   - component: {fileID: 6519188541319711692}
   - component: {fileID: 6519188541319711695}
   m_Layer: 7
-  m_Name: SubmachineGun
+  m_Name: SubMachineGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1283,9 +1283,9 @@ MonoBehaviour:
   _spreadDecreaseSpeedWhenAiming: 4
   _spreadIncreasePerShot: 0.3
   muzzleFlash: {fileID: 621770492822851105}
-  HitMarker: {fileID: 7249987246175168379, guid: 6cb3f5f4d08ccdd4f872ed8993a776a3,
+  hitMarker: {fileID: 7249987246175168379, guid: 6cb3f5f4d08ccdd4f872ed8993a776a3,
     type: 3}
-  bulletHoleOnDefault: {fileID: 7249987246175168379, guid: e781e16fab45d354a80aa98f177a2ec6,
+  bulletHole: {fileID: 7249987246175168379, guid: e781e16fab45d354a80aa98f177a2ec6,
     type: 3}
   bulletObject: {fileID: 4766820750362595819, guid: 3a084999302ccd5479f30c9f8bf2bf79,
     type: 3}

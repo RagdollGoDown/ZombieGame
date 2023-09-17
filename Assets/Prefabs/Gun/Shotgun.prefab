@@ -1632,9 +1632,9 @@ MonoBehaviour:
   _spreadDecreaseSpeedWhenAiming: 1
   _spreadIncreasePerShot: 0
   muzzleFlash: {fileID: 67332670061989990}
-  HitMarker: {fileID: 7249987246175168379, guid: 0839edb0d63e9854ba386eede01a3423,
+  hitMarker: {fileID: 7249987246175168379, guid: 0839edb0d63e9854ba386eede01a3423,
     type: 3}
-  bulletHoleOnDefault: {fileID: 7249987246175168379, guid: d72651c90064e56438a43dd5aca0ac25,
+  bulletHole: {fileID: 7249987246175168379, guid: d72651c90064e56438a43dd5aca0ac25,
     type: 3}
   bulletObject: {fileID: 4766820750362595819, guid: 3a084999302ccd5479f30c9f8bf2bf79,
     type: 3}

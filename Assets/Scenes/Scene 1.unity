@@ -15214,6 +15214,52 @@ LODGroup:
     renderers:
     - renderer: {fileID: 2014687998}
   m_Enabled: 1
+--- !u!1 &217861185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 217861186}
+  - component: {fileID: 217861187}
+  m_Layer: 0
+  m_Name: GPUInstanceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &217861186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217861185}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 959563098}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &217861187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217861185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4589a0abb22dcc94d9f96093fdf24bad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testm: {fileID: 4300006, guid: b5f71c859f9f9bf41badda8a4650082c, type: 3}
+  testmat: {fileID: 2100000, guid: 41eb18b94bec1aa4a94ad41da717feb9, type: 2}
 --- !u!1 &220406424
 GameObject:
   m_ObjectHideFlags: 0
@@ -53398,7 +53444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &807853583
 Transform:
   m_ObjectHideFlags: 0
@@ -64654,6 +64700,7 @@ Transform:
   - {fileID: 534663652}
   - {fileID: 1999964145}
   - {fileID: 807853583}
+  - {fileID: 217861186}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
