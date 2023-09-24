@@ -11,6 +11,8 @@ namespace Weapons
     {
         private static readonly int BULLETHOLE_RECIPIENTS_LAYERMASK = 0;
 
+        private static readonly string POOL_HEADER_OBJECT_NAME = "Pools";
+
         private static readonly float BULLETHOLE_LIFETIME = 10;
         private static readonly float HITMARKER_LIFETIME = .1f;
 
@@ -42,7 +44,7 @@ namespace Weapons
         //[SerializeField] private GameObject bulletHole;
         [SerializeField] private Mesh bulletHoleMesh;
         [SerializeField] private Material bulletHoleMaterial;
-        [SerializeField] private GameObject bulletObject;
+        [SerializeField] private ObjectPool bulletTrailPool;
         [SerializeField] private float bulletLerpSpeed = 100;
         [SerializeField] private Transform barrelExit;
 
@@ -74,8 +76,10 @@ namespace Weapons
             Spread = new(spread);
             UpdateSpread();
 
+            bulletTrailPool.transform.parent = GameObject.Find(POOL_HEADER_OBJECT_NAME).transform;
+
             if (!barrelExit) throw new System.ArgumentNullException("Gun barrel is null");
-            if (bulletObject && bulletLerpSpeed <= 0) throw new System.ArgumentException("Speed isn't strictly positiv");
+            if (bulletTrailPool != null && bulletLerpSpeed <= 0) throw new System.ArgumentException("Speed isn't strictly positiv");
         }
 
         protected override void ReadyAnimationLengths(Animator animator)
@@ -153,7 +157,10 @@ namespace Weapons
         {
             if (pointShot.transform && pointShot.distance <= range)
             {
-                StartCoroutine(nameof(BulletTrailHandler), pointShot.point);
+                if (bulletTrailPool != null)
+                {
+                    StartCoroutine(nameof(BulletTrailHandler), pointShot.point);
+                }
 
                 if (pointShot.transform.TryGetComponent(out DamageableObject DO))
                 {
@@ -169,13 +176,6 @@ namespace Weapons
                 //-----------------------------------------------bullet hole
                 if (pointShot.transform.gameObject.layer == BULLETHOLE_RECIPIENTS_LAYERMASK)
                 {
-                    /*Transform BHD = Instantiate(bulletHoleOnDefault, pointShot.point, Quaternion.identity).transform;
-                    BHD.rotation = Quaternion.FromToRotation(BHD.forward, pointShot.normal);
-                    BHD.position += BHD.forward * 0.03f;
-                    BHD.parent = pointShot.transform;
-
-                    Destroy(BHD.gameObject, BULLETHOLE_LIFETIME);*/
-
                     GPUInstanceManager.AddInstance(new GPUInstanceStatic(
                         pointShot.point + pointShot.normal * 0.03f,
                         Quaternion.FromToRotation(Vector3.forward, pointShot.normal),
@@ -201,7 +201,10 @@ namespace Weapons
         {
             Vector3 barrelPosition = barrelExit.position;
 
-            Transform bullet = Instantiate(bulletObject, barrelPosition, barrelExit.rotation).transform;
+            TrailRenderer bulletTrail = bulletTrailPool.Pull(false).GetComponent<TrailRenderer>();
+            bulletTrail.Clear();
+
+            bulletTrail.gameObject.SetActive(true);
 
             float adaptedSpeed = bulletLerpSpeed / Vector3.Distance(barrelPosition, target);
 
@@ -209,14 +212,14 @@ namespace Weapons
 
             while (lerpPosition < 1)
             {
-                bullet.position = Vector3.Lerp(barrelPosition, target, lerpPosition);
+                bulletTrail.transform.position = Vector3.Lerp(barrelPosition, target, lerpPosition);
 
                 lerpPosition += Time.deltaTime * adaptedSpeed;
 
                 yield return null;
             }
 
-            Destroy(bullet.gameObject);
+            bulletTrail.gameObject.SetActive(false);
         }
 
         protected override void StartUsing()
