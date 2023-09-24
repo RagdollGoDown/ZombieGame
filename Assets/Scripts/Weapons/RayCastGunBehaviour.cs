@@ -38,8 +38,10 @@ namespace Weapons
 
         [Header("Visual Effects")]
         [SerializeField] private VisualEffect muzzleFlash;
-        [SerializeField] private GameObject HitMarker;
-        [SerializeField] private GameObject bulletHoleOnDefault;
+        [SerializeField] private GameObject hitMarker;
+        //[SerializeField] private GameObject bulletHole;
+        [SerializeField] private Mesh bulletHoleMesh;
+        [SerializeField] private Material bulletHoleMaterial;
         [SerializeField] private GameObject bulletObject;
         [SerializeField] private float bulletLerpSpeed = 100;
         [SerializeField] private Transform barrelExit;
@@ -71,7 +73,6 @@ namespace Weapons
             spread = new();
             Spread = new(spread);
             UpdateSpread();
-
 
             if (!barrelExit) throw new System.ArgumentNullException("Gun barrel is null");
             if (bulletObject && bulletLerpSpeed <= 0) throw new System.ArgumentException("Speed isn't strictly positiv");
@@ -159,7 +160,7 @@ namespace Weapons
                     DO.getHit.Invoke(new Damage(damage, pointShot.point - transform.position, this));
 
                     //--------------------------hitmarker
-                    Transform HM = Instantiate(HitMarker, pointShot.point, Quaternion.identity).transform;
+                    Transform HM = Instantiate(hitMarker, pointShot.point, Quaternion.identity).transform;
                     HM.transform.LookAt(cameraPosition);
                     HM.localScale *= pointShot.distance / 10;
                     Destroy(HM.gameObject, HITMARKER_LIFETIME);
@@ -168,12 +169,19 @@ namespace Weapons
                 //-----------------------------------------------bullet hole
                 if (pointShot.transform.gameObject.layer == BULLETHOLE_RECIPIENTS_LAYERMASK)
                 {
-                    Transform BHD = Instantiate(bulletHoleOnDefault, pointShot.point, Quaternion.identity).transform;
+                    /*Transform BHD = Instantiate(bulletHoleOnDefault, pointShot.point, Quaternion.identity).transform;
                     BHD.rotation = Quaternion.FromToRotation(BHD.forward, pointShot.normal);
                     BHD.position += BHD.forward * 0.03f;
                     BHD.parent = pointShot.transform;
 
-                    Destroy(BHD.gameObject, BULLETHOLE_LIFETIME);
+                    Destroy(BHD.gameObject, BULLETHOLE_LIFETIME);*/
+
+                    GPUInstanceManager.AddInstance(new GPUInstanceStatic(
+                        pointShot.point + pointShot.normal * 0.03f,
+                        Quaternion.FromToRotation(Vector3.forward, pointShot.normal),
+                        bulletHoleMesh, bulletHoleMaterial,
+                        BULLETHOLE_RECIPIENTS_LAYERMASK,
+                        BULLETHOLE_LIFETIME));
                 }
             }
         }
