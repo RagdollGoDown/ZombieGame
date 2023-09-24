@@ -1634,11 +1634,12 @@ MonoBehaviour:
   muzzleFlash: {fileID: 67332670061989990}
   hitMarker: {fileID: 7249987246175168379, guid: 0839edb0d63e9854ba386eede01a3423,
     type: 3}
-  bulletHole: {fileID: 7249987246175168379, guid: d72651c90064e56438a43dd5aca0ac25,
+  bulletHoleMesh: {fileID: 1353660299662131267, guid: 0efa18a45fe9c7a4b97ff21edf31fc48,
     type: 3}
+  bulletHoleMaterial: {fileID: 2100000, guid: b25bb4309cae5174abbd086a84c149ec, type: 2}
   bulletObject: {fileID: 4766820750362595819, guid: 3a084999302ccd5479f30c9f8bf2bf79,
     type: 3}
-  bulletLerpSpeed: 100
+  bulletLerpSpeed: 200
   barrelExit: {fileID: 661866200493340501}
   maxBulletsInMag: 8
   maxBulletsOnPlayer: 16

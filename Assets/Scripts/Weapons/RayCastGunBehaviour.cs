@@ -39,9 +39,9 @@ namespace Weapons
         [Header("Visual Effects")]
         [SerializeField] private VisualEffect muzzleFlash;
         [SerializeField] private GameObject hitMarker;
-        [SerializeField] private GameObject bulletHole;
-        private Mesh bulletHoleMesh;
-        private Material bulletHoleMaterial;
+        //[SerializeField] private GameObject bulletHole;
+        [SerializeField] private Mesh bulletHoleMesh;
+        [SerializeField] private Material bulletHoleMaterial;
         [SerializeField] private GameObject bulletObject;
         [SerializeField] private float bulletLerpSpeed = 100;
         [SerializeField] private Transform barrelExit;
@@ -73,9 +73,11 @@ namespace Weapons
             spread = new();
             Spread = new(spread);
             UpdateSpread();
-
-            bulletHoleMaterial = bulletHole.GetComponent<Renderer>().sharedMaterial;
-            bulletHoleMesh = bulletHole.GetComponent<MeshFilter>().sharedMesh;
+            
+            foreach(Vector3 i in bulletHoleMesh.vertices)
+            {
+                Debug.Log(bulletHoleMesh.name);
+            }
 
             if (!barrelExit) throw new System.ArgumentNullException("Gun barrel is null");
             if (bulletObject && bulletLerpSpeed <= 0) throw new System.ArgumentException("Speed isn't strictly positiv");
@@ -181,11 +183,10 @@ namespace Weapons
 
                     GPUInstanceManager.AddInstance(new GPUInstanceStatic(
                         pointShot.point + pointShot.normal * 0.03f,
-                        Quaternion.FromToRotation(-Vector3.forward, pointShot.normal),
+                        Quaternion.FromToRotation(Vector3.forward, pointShot.normal),
                         bulletHoleMesh, bulletHoleMaterial,
                         BULLETHOLE_RECIPIENTS_LAYERMASK,
                         BULLETHOLE_LIFETIME));
-                    Debug.Log(Quaternion.FromToRotation(Vector3.forward, pointShot.normal).eulerAngles);
                 }
             }
         }
