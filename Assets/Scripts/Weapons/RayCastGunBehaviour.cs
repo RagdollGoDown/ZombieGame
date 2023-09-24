@@ -73,11 +73,6 @@ namespace Weapons
             spread = new();
             Spread = new(spread);
             UpdateSpread();
-            
-            foreach(Vector3 i in bulletHoleMesh.vertices)
-            {
-                Debug.Log(bulletHoleMesh.name);
-            }
 
             if (!barrelExit) throw new System.ArgumentNullException("Gun barrel is null");
             if (bulletObject && bulletLerpSpeed <= 0) throw new System.ArgumentException("Speed isn't strictly positiv");
