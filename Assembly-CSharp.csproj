@@ -82,10 +82,12 @@
     <None Include="Assets\ImportedAssets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\!GET_MORE_ASSETS_FOR_FREE\DEV FREEDOM.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\ImportedAssets\PolygonPrototype\Shaders\Prototype_Glass_Object.shader" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\ImportedAssets\PolygonCity\Change_Log.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />

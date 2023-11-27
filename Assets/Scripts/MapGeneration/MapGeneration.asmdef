@@ -2,7 +2,8 @@
     "name": "MapGeneration",
     "rootNamespace": "",
     "references": [
-        "GUID:00feaf710e8080443b6a16bfe388895f"
+        "GUID:00feaf710e8080443b6a16bfe388895f",
+        "GUID:1f9ff9b84391a5d4aa056bb9812737b7"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

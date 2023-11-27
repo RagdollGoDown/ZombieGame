@@ -22,9 +22,9 @@ public class ZombieSpawner : MonoBehaviour
 
     private void Awake()
     {
-        _canSpawn = !(zombiePrefab == null);
+        _canSpawn = (zombiePrefab != null) || (zombiePool != null);
 
-        if (_canSpawn)
+        if (_canSpawn && zombiePrefab != null)
         {
             zombiePrefab.SetActive(false);
         }

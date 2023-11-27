@@ -58,12 +58,13 @@
     <Analyzer Include="D:\Unity\2022.2.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\MapGeneration\VillageGeneratorCustomEditor.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\VillageBuildingsCollectionCustomEditor.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\VillageGenerator.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageBuildingsCollectionCustomEditor.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageGenerator.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageBuildingsCollection.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageBuildings.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\BunkerGenerator.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageGeneratorCustomEditor.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\BunkerGeneratorCustomEditor.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\VillageBuildingsCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\MapGeneration\MapGeneration.asmdef" />
@@ -737,6 +738,10 @@
     <ProjectReference Include="Utility.csproj">
       <Project>{B39FAA44-EBFE-5695-9807-5713BED926B4}</Project>
       <Name>Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="Objective.csproj">
+      <Project>{41CC9D9D-F743-2EB3-8F33-69613750FE04}</Project>
+      <Name>Objective</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

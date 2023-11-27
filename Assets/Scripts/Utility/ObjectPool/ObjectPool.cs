@@ -45,7 +45,6 @@ namespace Utility
         //----------------------------------------editor methods
 
         /// <summary>
-        /// SHOULD ONLY BE USED IN EDITOR CODE
         /// Put all initial objects
         /// </summary>
         public void ReadyInitialObjects()
@@ -65,6 +64,17 @@ namespace Utility
                 objects[objects.Count-1].gameObject.SetActive(false);
                 possibleIndex = (possibleIndex + possibleStep) % possibleObjects.Count;
             }
+        }
+
+        /// <summary>
+        /// Put all initial objects
+        /// </summary>
+        /// <param name="numberOfObjects">the number of objects to ready</param>
+        public void ReadyInitialObjects(int numberOfObjects)
+        {
+            initialNumber = numberOfObjects;
+
+            ReadyInitialObjects();
         }
 
         /// <summary>

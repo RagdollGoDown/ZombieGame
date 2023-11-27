@@ -6,6 +6,7 @@ using UnityEditor;
 namespace Utility
 {
     [CustomEditor(typeof(ObjectPool))]
+    [CanEditMultipleObjects]
     public class ObjectPoolEditor : Editor
     {
         private const string initialNumberPath = "initialNumber";
