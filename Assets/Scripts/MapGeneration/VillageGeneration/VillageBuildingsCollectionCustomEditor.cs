@@ -9,6 +9,8 @@ namespace MapGeneration.VillageGeneration
     [CustomEditor(typeof(VillageBuildingsCollection))]
     public class VillageBuildingsCollectionCustomEditor : Editor
     {
+        private VillageBuildingsCollection target;
+
         private const string widthPath = "buildingWidth";
         SerializedProperty width;
 
@@ -18,6 +20,7 @@ namespace MapGeneration.VillageGeneration
 
         private void OnEnable()
         {
+            target = ((VillageBuildingsCollection)serializedObject.targetObject);
             width = serializedObject.FindProperty(widthPath);
         }
 
@@ -27,7 +30,7 @@ namespace MapGeneration.VillageGeneration
             
             EditorGUILayout.PropertyField(width);
 
-            buildingsList = ((VillageBuildingsCollection)serializedObject.targetObject).GetBuildings();
+            buildingsList = target.GetBuildings();
 
             //------------------------------------------show buildings
 

@@ -20,6 +20,9 @@ namespace MapGeneration.VillageGeneration
 
         [SerializeField] private VillageBuildingsCollection villageBuildingsCollection;
 
+        [SerializeField] private bool hasBorders;
+        public bool[] borderConditionalArray;
+
         public enum GenerationMethod
         {
             Random,
@@ -97,6 +100,11 @@ namespace MapGeneration.VillageGeneration
             
                     GenerateBuildingConditionalArrayRandom();
                     break;
+            }
+
+            if (hasBorders && borderConditionalArray != null) 
+            {
+                GenerateBorders();
             }
 
             Debug.Log("Building placement");
@@ -252,6 +260,22 @@ namespace MapGeneration.VillageGeneration
 
                 FillExtract(buildingConditionalArrays, 
                     position.x-(int)Mathf.Floor(objectiveRadius/2), position.y-(int)Mathf.Floor(objectiveRadius / 2), objectiveRadius, false);
+            }
+        }
+
+        private void GenerateBorders()
+        {
+            buildingConditionalArrays[0, 0] = borderConditionalArray[0];
+            buildingConditionalArrays[size - 1, 0] = borderConditionalArray[2];
+            buildingConditionalArrays[0, size - 1] = borderConditionalArray[6];
+            buildingConditionalArrays[size - 1, size - 1] = borderConditionalArray[8];
+
+            for (int i = 1; i < size - 1; i++)
+            {
+                buildingConditionalArrays[i, 0] = borderConditionalArray[1];
+                buildingConditionalArrays[0, i] = borderConditionalArray[3];
+                buildingConditionalArrays[i, size - 1] = borderConditionalArray[7];
+                buildingConditionalArrays[size - 1, i] = borderConditionalArray[5];
             }
         }
 

@@ -9,40 +9,47 @@ namespace MapGeneration.VillageGeneration
     [CustomEditor(typeof(VillageGenerator))]
     public class VillageGeneratorCustomEditor : Editor
     {
+        private VillageGenerator target;
+
         private const string sizePath = "size";
-        SerializedProperty size;
+        private SerializedProperty size;
         private readonly static int BASE_SIZE = 10;
 
         //objectives
         private const string numberOfObjectivesPath = "numberOfObjectives";
-        SerializedProperty numberOfObjectives;
+        private SerializedProperty numberOfObjectives;
 
         private const string objectiveRadiusPath = "objectiveRadius";
-        SerializedProperty objectiveRadius;
+        private SerializedProperty objectiveRadius;
 
         private const string possibleObjectivesPath = "possibleObjectives";
-        SerializedProperty possibleObjectives;
+        private SerializedProperty possibleObjectives;
 
         //generation
         private const string generationMethodPath = "generationMethod";
-        SerializedProperty generationMethod;
+        private SerializedProperty generationMethod;
 
         //when generating random
         private const string densityPath = "density";
-        SerializedProperty density;
+        private SerializedProperty density;
         private readonly static float BASE_DENSITY = 0.5f;
 
         //when generating in corridors
         private const string forwardProbaPath = "forwardProbability";
-        SerializedProperty forwardProbability;
+        private SerializedProperty forwardProbability;
         private const string turnProbaPath = "turnProbability";
-        SerializedProperty turnProbability;
+        private SerializedProperty turnProbability;
 
         private const string vbcPath = "villageBuildingsCollection";
-        SerializedProperty vbc;
+        private SerializedProperty vbc;
+
+        private const string hasBordersPath = "hasBorders";
+        private SerializedProperty hasBorders;
 
         private void OnEnable()
         {
+            target = ((VillageGenerator)serializedObject.targetObject);
+
             size = serializedObject.FindProperty(sizePath);
             density = serializedObject.FindProperty(densityPath);
 
@@ -56,6 +63,8 @@ namespace MapGeneration.VillageGeneration
             forwardProbability = serializedObject.FindProperty(forwardProbaPath);
 
             vbc = serializedObject.FindProperty(vbcPath);
+
+            hasBorders = serializedObject.FindProperty(hasBordersPath);
         }
 
         public override void OnInspectorGUI()
@@ -95,9 +104,15 @@ namespace MapGeneration.VillageGeneration
 
             EditorGUILayout.PropertyField(vbc);
 
+            EditorGUILayout.PropertyField(hasBorders);
+            if (hasBorders.boolValue)
+            {
+                ShowBorderConditionalArray(target);
+            }
+
             if (GUILayout.Button("Generate Village"))
             {
-                ((VillageGenerator)serializedObject.targetObject).Generate();
+                target.Generate();
             }
 
             serializedObject.ApplyModifiedProperties();
@@ -127,6 +142,30 @@ namespace MapGeneration.VillageGeneration
             {
                 forwardProbability.floatValue = 0;
             }
+        }
+
+        private void ShowBorderConditionalArray(VillageGenerator v)
+        {
+            if (v.borderConditionalArray == null || v.borderConditionalArray.Length != 9) v.borderConditionalArray = new bool[9];
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical();
+            v.borderConditionalArray[0] = EditorGUILayout.Toggle(v.borderConditionalArray[0]);
+            v.borderConditionalArray[1] = EditorGUILayout.Toggle(v.borderConditionalArray[1]);
+            v.borderConditionalArray[2] = EditorGUILayout.Toggle(v.borderConditionalArray[2]);
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.BeginVertical();
+            v.borderConditionalArray[3] = EditorGUILayout.Toggle(v.borderConditionalArray[3]);
+            v.borderConditionalArray[4] = EditorGUILayout.Toggle(v.borderConditionalArray[4]);
+            v.borderConditionalArray[5] = EditorGUILayout.Toggle(v.borderConditionalArray[5]);
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.BeginVertical();
+            v.borderConditionalArray[6] = EditorGUILayout.Toggle(v.borderConditionalArray[6]);
+            v.borderConditionalArray[7] = EditorGUILayout.Toggle(v.borderConditionalArray[7]);
+            v.borderConditionalArray[8] = EditorGUILayout.Toggle(v.borderConditionalArray[8]);
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndHorizontal();
+
         }
     }
 }
