@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapGeneration", "MapGeneration.csproj", "{264699B2-A4F6-6660-0C8D-208B2CDACDAE}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility.csproj", "{B39FAA44-EBFE-5695-9807-5713BED926B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Player", "Player.csproj", "{09D4C4A0-1145-FC47-1060-D37D20944110}"
@@ -21,6 +23,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B39FAA44-EBFE-5695-9807-5713BED926B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B39FAA44-EBFE-5695-9807-5713BED926B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B39FAA44-EBFE-5695-9807-5713BED926B4}.Release|Any CPU.ActiveCfg = Release|Any CPU

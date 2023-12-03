@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGame(PlayerInput playerInput)
     {
+
+        Debug.Log("Started Game");
+
         player = playerInput.GetComponent<PlayerController>();
         zombieSpawnerManager.SetTarget(playerInput.GetComponent<DamageableObject>());
         zombieSpawnerManager.BeginToSpawn();

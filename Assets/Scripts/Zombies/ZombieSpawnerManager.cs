@@ -86,6 +86,7 @@ public class ZombieSpawnerManager : MonoBehaviour
         }
         else if (_spawners.Length > 0 && CanSpawn())
         {
+            Debug.Log("Started Spawning");
             Invoke(nameof(EnterRound), timeBeforeFirstRound);
         }
         else
@@ -118,6 +119,8 @@ public class ZombieSpawnerManager : MonoBehaviour
 
             _indexInSpawners = (_indexInSpawners+1) % _spawners.Length;
         }
+
+        EnterBreakTime();
     }
 
     private bool CanSpawn()
@@ -155,9 +158,9 @@ public class ZombieSpawnerManager : MonoBehaviour
     {
         if (ZOMBIESINWORLD > 0) ZOMBIESINWORLD--;
 
-        if (ZOMBIESINWORLD == 0 && 
+        /*if (ZOMBIESINWORLD == 0 && 
             CURRENT_SPAWNER && !CURRENT_SPAWNER.IsSpawning()) 
-            CURRENT_SPAWNER.EnterBreakTime();
+            CURRENT_SPAWNER.EnterBreakTime();*/
     }
 
     //-------------------------------getters

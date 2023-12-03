@@ -82,10 +82,12 @@
     <None Include="Assets\ImportedAssets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\!GET_MORE_ASSETS_FOR_FREE\DEV FREEDOM.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\ImportedAssets\PolygonPrototype\Shaders\Prototype_Glass_Object.shader" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
+    <None Include="Assets\ImportedAssets\PolygonCity\Change_Log.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
     <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
@@ -724,23 +726,11 @@
     <Reference Include="System.Xml.Serialization">
       <HintPath>D:\Unity\2022.2.6f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VisualEffectGraph.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Animation.Rigging">
-      <HintPath>Library\ScriptAssemblies\Unity.Animation.Rigging.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.AI.Navigation">
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
@@ -748,17 +738,71 @@
     <Reference Include="Unity.Burst.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Burst">
-      <HintPath>Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
+    <Reference Include="Unity.Animation.Rigging.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Animation.Rigging.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.AddOns.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AddOns.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Rider.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VisualEffectGraph.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VisualScripting.Flow">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.HighDefinition.Config.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.HighDefinition.Config.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="PPv2URPConverters">
+      <HintPath>Library\ScriptAssemblies\PPv2URPConverters.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
+      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VSCode.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
+      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Animation.Rigging">
+      <HintPath>Library\ScriptAssemblies\Unity.Animation.Rigging.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.HighDefinition.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.HighDefinition.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PlasticSCM.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.PlasticSCM.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst">
+      <HintPath>Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.ProBuilder">
       <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Animation.Rigging.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Animation.Rigging.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
@@ -766,11 +810,11 @@
     <Reference Include="Unity.VisualScripting.Shared.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Shared.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.VisualStudio.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.ShaderGraph.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VisualStudio.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
@@ -784,26 +828,8 @@
     <Reference Include="Unity.VisualScripting.Core.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Core.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Rider.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ProBuilder.AddOns.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AddOns.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualEffectGraph.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualEffectGraph.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Flow.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Flow">
-      <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Mathematics.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
@@ -820,23 +846,14 @@
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.AI.Navigation.Updater">
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="PPv2URPConverters">
-      <HintPath>Library\ScriptAssemblies\PPv2URPConverters.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
@@ -850,20 +867,22 @@
     <Reference Include="Unity.AI.Navigation.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
-      <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VisualScripting.State">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
-      <HintPath>Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.RenderPipelines.Universal.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>
+    <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime">
+      <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Player.csproj">
+      <Project>{09D4C4A0-1145-FC47-1060-D37D20944110}</Project>
+      <Name>Player</Name>
+    </ProjectReference>
+    <ProjectReference Include="MapGeneration.csproj">
+      <Project>{264699B2-A4F6-6660-0C8D-208B2CDACDAE}</Project>
+      <Name>MapGeneration</Name>
+    </ProjectReference>
     <ProjectReference Include="Objective.csproj">
       <Project>{41CC9D9D-F743-2EB3-8F33-69613750FE04}</Project>
       <Name>Objective</Name>
@@ -883,10 +902,6 @@
     <ProjectReference Include="UI.csproj">
       <Project>{34B56DEF-D299-D287-EE27-CB443EE4C9AD}</Project>
       <Name>UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="Player.csproj">
-      <Project>{09D4C4A0-1145-FC47-1060-D37D20944110}</Project>
-      <Name>Player</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
