@@ -15,13 +15,13 @@ namespace MapGeneration.VillageGeneration
         SerializedProperty width;
 
         private List<VillageBuilding> buildingsList;
-        private VillageBuilding buildingToBeAdded;
         private Vector2 buildingsScrollPos;
 
         private void OnEnable()
         {
-            target = ((VillageBuildingsCollection)serializedObject.targetObject);
+            target = (VillageBuildingsCollection)serializedObject.targetObject;
             width = serializedObject.FindProperty(widthPath);
+            buildingsList = target.GetBuildings();
         }
 
         public override void OnInspectorGUI()
@@ -29,8 +29,6 @@ namespace MapGeneration.VillageGeneration
             serializedObject.Update();
             
             EditorGUILayout.PropertyField(width);
-
-            buildingsList = target.GetBuildings();
 
             //------------------------------------------show buildings
 
@@ -51,13 +49,14 @@ namespace MapGeneration.VillageGeneration
             EditorGUILayout.EndScrollView();
 
             //---------------------------------add new building
-
-            if (buildingToBeAdded == null) { buildingToBeAdded = new(); }
-
-            if (GUILayout.Button("Add Building"))
+            if (GUILayout.Button("Add Object Pool Building"))
             {
-                buildingsList.Add(buildingToBeAdded);
-                buildingToBeAdded = null;
+                buildingsList.Add(new ObjectPoolBuilding());
+            }
+
+            if (GUILayout.Button("Add Generator Building"))
+            {
+                buildingsList.Add(new GeneratorProxyBuilding());
             }
 
             serializedObject.ApplyModifiedProperties();
@@ -67,9 +66,19 @@ namespace MapGeneration.VillageGeneration
         {
             EditorGUILayout.BeginVertical();
             v.name = EditorGUILayout.TextField(v.name);
-            v.possibleObjects = (ObjectPool)EditorGUILayout.ObjectField(v.possibleObjects, typeof(ObjectPool), true);
 
-                EditorGUILayout.BeginHorizontal();
+            if (v.GetType() == typeof(ObjectPoolBuilding))
+            {
+                ((ObjectPoolBuilding)v).possibleObjects = 
+                    (ObjectPool)EditorGUILayout.ObjectField(((ObjectPoolBuilding)v).possibleObjects, typeof(ObjectPool), true);
+            }
+            if (v.GetType() == typeof(GeneratorProxyBuilding))
+            {
+                ((GeneratorProxyBuilding)v).generator =
+                    (VillageGenerator)EditorGUILayout.ObjectField(((GeneratorProxyBuilding)v).generator, typeof(VillageGenerator), true);
+            }
+
+            EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.BeginVertical();
                 v.conditionalArray[0].value = (HandyBoolValues)EditorGUILayout.EnumPopup(v.conditionalArray[0].value);
                 v.conditionalArray[1].value = (HandyBoolValues)EditorGUILayout.EnumPopup(v.conditionalArray[1].value);
@@ -94,7 +103,15 @@ namespace MapGeneration.VillageGeneration
 
                 if (GUILayout.Button("Duplicate"))
                 {
-                    buildingsList.Add(new VillageBuilding(v));
+                    switch (v)
+                    {
+                        case ObjectPoolBuilding opb:
+                        buildingsList.Add(new ObjectPoolBuilding(opb));
+                        break;
+                        case GeneratorProxyBuilding gpb:
+                        buildingsList.Add(new GeneratorProxyBuilding(gpb));
+                        break;
+                    }
                 }
 
                 if (GUILayout.Button("Rotate"))

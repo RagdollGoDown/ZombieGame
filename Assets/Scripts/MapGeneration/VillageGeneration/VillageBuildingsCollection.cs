@@ -9,18 +9,15 @@ namespace MapGeneration.VillageGeneration
     [System.Serializable]
     public class VillageBuildingsCollection : MonoBehaviour
     {
-        [SerializeField] private List<VillageBuilding> buildings;
+        [SerializeReference] private List<VillageBuilding> buildings;
         [SerializeField] private float buildingWidth;
 
         private bool[][,] tempArrayAndAllRotations = new bool[4][,];
 
-        public GameObject Get(bool[,] conditionArray)
+        public void Place(bool[,] conditionArray, float width, int size, int posX, int posY)
         {
             if (buildings == null) buildings = new();
-
-            if (conditionArray == null) throw new System.ArgumentException("null condition array given");
-
-            tempArrayAndAllRotations[0] = conditionArray;
+            tempArrayAndAllRotations[0] = conditionArray ?? throw new System.ArgumentException("null condition array given");
             tempArrayAndAllRotations[1] = Rotate(tempArrayAndAllRotations[0]);
             tempArrayAndAllRotations[2] = Rotate(tempArrayAndAllRotations[1]);
             tempArrayAndAllRotations[3] = Rotate(tempArrayAndAllRotations[2]);
@@ -29,20 +26,13 @@ namespace MapGeneration.VillageGeneration
             {
                 for (int i = 0; i < tempArrayAndAllRotations.Length; i++)
                 {
-                    if (vb.Satisfies(tempArrayAndAllRotations[i]) && vb.possibleObjects != null)
+                    if (vb.Satisfies(tempArrayAndAllRotations[i]))
                     {
-                        GameObject obj = vb.possibleObjects.Pull(true);
-                        if (obj != null)
-                        {
-                            //obj.transform.Rotate(Vector3.forward, i * 90);
-                            obj.transform.Rotate(Vector3.up, i * 90);
-                            return obj;
-                        }
+                        vb.Place(width, size, posX, posY, i * 90);
+                        return;
                     }
                 }
             }
-
-            return null;
         }
 
         /// <summary>
@@ -71,19 +61,25 @@ namespace MapGeneration.VillageGeneration
 
         public List<VillageBuilding> GetBuildings()
         {
-            if (buildings == null) { buildings = new(); }
+            if (buildings == null) {
+                buildings = new(); }
 
             return buildings;
         }
 
-        public void ClearBuildingsOnMap()
+        public void ReadyCollection(int size)
         {
             foreach (VillageBuilding vb in buildings)
             {
-                if (vb.possibleObjects != null)
-                {
-                    vb.possibleObjects.ReadyInitialObjects();
-                }
+                vb.Ready(size);
+            }
+        }
+
+        public void FinishCollection(float width)
+        {
+            foreach (VillageBuilding vb in buildings)
+            {
+                vb.Finish(width);
             }
         }
     }

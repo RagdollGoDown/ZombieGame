@@ -10,6 +10,7 @@ namespace MapGeneration.VillageGeneration
     public class VillageGenerator : MonoBehaviour
     {
         [SerializeField] private int size;
+        private float width;
 
         [SerializeField] private int numberOfObjectives = 4;
         [SerializeField] private int objectiveRadius = 3;
@@ -20,8 +21,9 @@ namespace MapGeneration.VillageGeneration
 
         [SerializeField] private VillageBuildingsCollection villageBuildingsCollection;
 
-        [SerializeField] private bool hasBorders;
         public bool[] borderConditionalArray;
+
+        private bool[,] mask;
 
         public enum GenerationMethod
         {
@@ -40,13 +42,34 @@ namespace MapGeneration.VillageGeneration
 
         public void Generate()
         {
+            Generate(0);
+        }
+
+        /// <summary>
+        /// Generates the village first by making a 2 dimensional bool array 
+        /// then using the village collection places the buildings
+        /// When this function is used with width != 0 this means that is is being used as a building
+        /// meaning it's og size will overiden to make it fit in the bigger generator and the mask will make it
+        /// go only in the places given by the bigger generator
+        /// </summary>
+        /// <param name="UpperWidth"> the width of the upper generator</param>
+        public void Generate(float UpperWidth)
+        {
+            //if the mask is null then it has already been used
+            if (UpperWidth != 0 && mask == null) return;
             if (villageBuildingsCollection == null) throw new System.Exception("Need to have a village collection component");
-            if (possibleObjectives == null || possibleObjectives.Length == 0) throw new System.Exception("Need to have at least one objective to choose from");
+            if (numberOfObjectives != 0 && (possibleObjectives == null || possibleObjectives.Length == 0)) throw new System.Exception("Need to have at least one objective to choose from");
             if (size < 3) throw new System.ArgumentException("Size must be bigger than 2");
             if (density < 0 || density > 1) throw new System.ArgumentException("Density must be between 0 and 1");
+            
+            width = villageBuildingsCollection.GetWidth();
+            
+            if (UpperWidth % width != 0) throw new System.Exception("Sub generator with width not divideable by upper generator width given");
 
-            buildingConditionalArrays = new bool[size, size];
-            villageBuildingsCollection.ClearBuildingsOnMap();
+            size = UpperWidth == 0 ? size : mask.GetLength(0) * (int)(UpperWidth / width);
+
+            buildingConditionalArrays = new bool[size+2, size+2];
+            villageBuildingsCollection.ReadyCollection(size);
 
             //objectives
             foreach(ObjectPool pool in possibleObjectives)
@@ -57,76 +80,38 @@ namespace MapGeneration.VillageGeneration
 
             objectivePositions = new();
 
-            Debug.Log("Objective Placement");
-            //place the objectives
+            PlaceObjectives();
 
-            float width = villageBuildingsCollection.GetWidth();
+            GenerateConditionalBoolArray();
 
-            float tempAngle = 0;
-            float tempDistance;
-
-            int tempX;
-            int tempY;
-
-            Vector2 angleRange = new(2 * Mathf.PI / (numberOfObjectives + 1), 2 * Mathf.PI / (numberOfObjectives - 1));
-            Vector2 distanceRange = new(size / 4, size / 2.5f);
-
-            GameObject objective;
-
-            for (int i = 0; i < numberOfObjectives; i++)
+            if (mask != null)
             {
-                tempAngle += Random.Range(angleRange.x, angleRange.y);
-                tempDistance = Random.Range(distanceRange.x, distanceRange.y);
-                tempX = (int)(tempDistance * Mathf.Cos(tempAngle)) + size / 2;
-                tempY = (int)(tempDistance * Mathf.Sin(tempAngle)) + size / 2;
+                int divide = (int)(UpperWidth / width);
 
-                objective = possibleObjectives[Random.Range(0, possibleObjectives.Length)].Pull(false);
-                objective.transform.position = transform.position + new Vector3(tempX * width, 0, tempY * width);
-                objective.SetActive(true);
-
-                objectivePositions.Add(new(tempX, tempY));
-            }
-
-            Debug.Log("Bool map setup");
-            //generate random bool map
-
-            switch (generationMethod)
-            {
-                case GenerationMethod.Corridors:
-                    GenerateBuildingConditionalArrayCorridors();
-                    break;
-
-                default:
-            
-                    GenerateBuildingConditionalArrayRandom();
-                    break;
-            }
-
-            if (hasBorders && borderConditionalArray != null) 
-            {
-                GenerateBorders();
-            }
-
-            Debug.Log("Building placement");
-            //convert bool map to buildings using buildings collection
-
-            for (int i = 0; i < size - 2; i++)
-            {
-                for (int j = 0; j < size - 2; j++)
+                for (int i = 0; i < mask.GetLength(0); i++)
                 {
-                    GameObject building = villageBuildingsCollection.Get(
-                        ExtractArray(buildingConditionalArrays, i, j, 3));
-
-                    if (building != null)
+                    for (int j = 0; j < mask.GetLength(1); j++)
                     {
-                        building.transform.position = transform.position + new Vector3((i+1) * width, 0, (j+1) * width);
+                        if (!mask[i, j])
+                        {
+                            FillExtract(buildingConditionalArrays, i * divide, j * divide, divide, false);
+                        }
                     }
                 }
+
+                mask = null;
             }
+
+            GenerateBorders();
+
+            PlaceBuildings();
+
+            villageBuildingsCollection.FinishCollection(width);
 
             Debug.Log("Generation Done");
         }
 
+        //--------------------------------------------------utility functions
         private bool[,] ExtractArray(bool[,] baseArray, int start0, int start1, int radius)
         {
             bool[,] extract = new bool[radius, radius];
@@ -168,7 +153,7 @@ namespace MapGeneration.VillageGeneration
                     for (int j = 0; j < size; j++)
                     {
                         color = buildingConditionalArrays[i, j] ? Color.white : Color.black;
-                        origin = new Vector3((i) * width, 0, (j) * width) + transform.position;
+                        origin = new Vector3((i) * width - ((size-1) * width / 2), 0, (j) * width - ((size-1) * width / 2));
                         Gizmos.color = color;
                         Gizmos.DrawLine(origin, origin + Vector3.up * 5);
                     }
@@ -177,10 +162,9 @@ namespace MapGeneration.VillageGeneration
         }
 
         //-------------------------------------------------------generating methods
+
         private void GenerateBuildingConditionalArrayRandom()
         {
-            if (density == 0) return;
-
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -247,7 +231,6 @@ namespace MapGeneration.VillageGeneration
             //this is meant to ensure that the objectives are linked to the rest of the corridors
             foreach(Vector3Int position in objectivePositions)
             {
-                Debug.Log(position);
                 //we try to send a corridor somewhat in the center to connect the objectives to it
                 if (halfSize - position.x < 0)
                 {
@@ -262,7 +245,67 @@ namespace MapGeneration.VillageGeneration
                     position.x-(int)Mathf.Floor(objectiveRadius/2), position.y-(int)Mathf.Floor(objectiveRadius / 2), objectiveRadius, false);
             }
         }
+        
+        //-------------------------------------------generation steps
 
+        /// <summary>
+        /// Places the objectives
+        /// Does not need the conditional bool array
+        /// </summary>
+        private void PlaceObjectives()
+        {
+            Debug.Log("Objective Placement");
+            float tempAngle = 0;
+            float tempDistance;
+
+            int tempX;
+            int tempY;
+
+            Vector2 angleRange = new(2 * Mathf.PI / (numberOfObjectives + 1), 2 * Mathf.PI / (numberOfObjectives - 1));
+            Vector2 distanceRange = new(size / 4, size / 2.5f);
+
+            GameObject objective;
+
+            for (int i = 0; i < numberOfObjectives; i++)
+            {
+                tempAngle += Random.Range(angleRange.x, angleRange.y);
+                tempDistance = Random.Range(distanceRange.x, distanceRange.y);
+                tempX = (int)(tempDistance * Mathf.Cos(tempAngle)) + size / 2;
+                tempY = (int)(tempDistance * Mathf.Sin(tempAngle)) + size / 2;
+
+                objective = possibleObjectives[Random.Range(0, possibleObjectives.Length)].Pull(false);
+                objective.transform.position = transform.position + new Vector3(tempX * width - ((size - 1) * width / 2), 0, tempY * width - ((size - 1) * width / 2));
+                objective.SetActive(true);
+
+                objectivePositions.Add(new(tempX, tempY));
+            }
+        }
+
+        /// <summary>
+        /// Chooses which generation method to use and uses it
+        /// </summary>
+        private void GenerateConditionalBoolArray()
+        {
+            Debug.Log("Bool map setup");
+            //generate random bool map
+
+            switch (generationMethod)
+            {
+                case GenerationMethod.Corridors:
+                    GenerateBuildingConditionalArrayCorridors();
+                    break;
+
+                default:
+
+                    GenerateBuildingConditionalArrayRandom();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// generates the borders if there are any to generate
+        /// should be called after the generation methods
+        /// </summary>
         private void GenerateBorders()
         {
             buildingConditionalArrays[0, 0] = borderConditionalArray[0];
@@ -276,6 +319,24 @@ namespace MapGeneration.VillageGeneration
                 buildingConditionalArrays[0, i] = borderConditionalArray[3];
                 buildingConditionalArrays[i, size - 1] = borderConditionalArray[7];
                 buildingConditionalArrays[size - 1, i] = borderConditionalArray[5];
+            }
+        }
+
+        /// <summary>
+        /// places all the building
+        /// </summary>
+        private void PlaceBuildings()
+        {
+            Debug.Log("Building placement");
+            //convert bool map to buildings using buildings collection
+
+            for (int i = 0; i < size - 2; i++)
+            {
+                for (int j = 0; j < size - 2; j++)
+                {
+                    villageBuildingsCollection.Place(
+                        ExtractArray(buildingConditionalArrays, i, j, 3), width, size, i, j);
+                }
             }
         }
 
@@ -294,6 +355,20 @@ namespace MapGeneration.VillageGeneration
         public void SetBuildingConditionalArrays(bool[,] newArray)
         {
             buildingConditionalArrays = newArray.Clone() as bool[,];
+        }
+
+        /// <summary>
+        /// The mask tells which area should be empty and which shouldn't
+        /// empty being filled with false
+        /// This function only sets an area to true
+        /// </summary>
+        /// <param name="size">size of the upper gen, only used if the mask wasn't created</param>
+        /// <param name="i">row of the mask</param>
+        /// <param name="j">column of the mask</param>
+        public void SetMask(int size, int i, int j)
+        {
+            if (mask == null) mask = new bool[size, size];
+            mask[i, j] = true;
         }
     }
 }

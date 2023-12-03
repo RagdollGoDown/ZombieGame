@@ -43,8 +43,8 @@ namespace MapGeneration.VillageGeneration
         private const string vbcPath = "villageBuildingsCollection";
         private SerializedProperty vbc;
 
-        private const string hasBordersPath = "hasBorders";
-        private SerializedProperty hasBorders;
+        private const string generateOnEnablePath = "generateOnEnable";
+        private SerializedProperty generateOnEnable;
 
         private void OnEnable()
         {
@@ -63,8 +63,6 @@ namespace MapGeneration.VillageGeneration
             forwardProbability = serializedObject.FindProperty(forwardProbaPath);
 
             vbc = serializedObject.FindProperty(vbcPath);
-
-            hasBorders = serializedObject.FindProperty(hasBordersPath);
         }
 
         public override void OnInspectorGUI()
@@ -104,11 +102,7 @@ namespace MapGeneration.VillageGeneration
 
             EditorGUILayout.PropertyField(vbc);
 
-            EditorGUILayout.PropertyField(hasBorders);
-            if (hasBorders.boolValue)
-            {
-                ShowBorderConditionalArray(target);
-            }
+            ShowBorderConditionalArray(target);
 
             if (GUILayout.Button("Generate Village"))
             {
