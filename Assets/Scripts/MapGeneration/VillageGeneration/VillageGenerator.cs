@@ -75,7 +75,6 @@ namespace MapGeneration.VillageGeneration
             foreach(ObjectPool pool in possibleObjectives)
             {
                 if (!pool) { throw new System.Exception("Null pool in possible objectives"); }
-                pool.ReadyInitialObjects(numberOfObjectives);
             }
 
             objectivePositions = new();

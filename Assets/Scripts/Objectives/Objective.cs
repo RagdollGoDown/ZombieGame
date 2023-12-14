@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Utility.Observable;
 
 namespace Objectives
 {
@@ -10,16 +11,17 @@ namespace Objectives
         private readonly UnityEvent _onComplete;
         private readonly UnityEvent _onStarted;
 
-        public List<ObjectiveObject> objectiveObjects;
+        private readonly List<ObjectiveObject> objectiveObjects;
 
-        private string _objectiveText;
+        private readonly ObservableObject<string> objectiveText;
 
         public Objective(UnityEvent completeEvent, string objectiveText)
         {
             objectiveObjects = new();
             _onComplete = completeEvent;
             _onStarted = new();
-            _objectiveText = objectiveText;
+            objectiveText = new("");
+            this.objectiveText.SetValue(objectiveText);
         }
 
         public Objective(UnityEvent completeEvent, string objectiveText,
@@ -91,7 +93,7 @@ namespace Objectives
         /// the text describing what need to be done to complete the objective
         /// </summary>
         /// <returns>the text</returns>
-        public string GetObjectiveText() { return _objectiveText; }
+        public ObservableObject<string> GetObjectiveText() { return objectiveText; }
     }
 
     public abstract class ObjectiveObject : MonoBehaviour

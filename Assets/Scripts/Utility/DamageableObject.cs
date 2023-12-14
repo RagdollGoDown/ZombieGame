@@ -10,8 +10,8 @@ namespace Utility
 
     public class DamageableObject : MonoBehaviour
     {
-        private static float TIME_BEFORE_PARTICLE_DESTRUCTION = 10;
-        private static float PARTICLE_FORCE_TO_FORCE_PROPORTION = 50;
+        private readonly static float TIME_BEFORE_PARTICLE_DESTRUCTION = 10;
+        private readonly static float DAMAGE_TO_FORCE_PROPORTION = 20;
 
         private bool _isDestroyed;
 
@@ -26,11 +26,16 @@ namespace Utility
 
         private Vector3 initialScale;
 
+        private Rigidbody possibleRigidbody;
+        private CharacterController possibleCharacterController;
+
         //--------------------------to do on destruction
-        [SerializeField] private List<GameObject> destructionParticleGameObjectPrefabs;
+        [SerializeField] private List<string> destructionParticlePrefabsPoolNames;
+        private ObjectPool[] destructionParticlePrefabsPool;
         public UnityEvent destructionCalls;
 
         [SerializeField] private bool shrinkOnDeath;
+        [SerializeField] private bool disableCollidersOnDeath = true;
 
         [SerializeField] private bool destroyChildrenOnDeath;
         private List<DamageableObject> _damageableChildren;
@@ -47,7 +52,12 @@ namespace Utility
 
             initialScale = transform.localScale;
 
+            destructionParticlePrefabsPool = destructionParticlePrefabsPoolNames.Select(dpp => GameObject.Find(dpp).GetComponent<ObjectPool>()).ToArray();
+
             _damageableChildren = new List<DamageableObject>();
+
+            possibleRigidbody = GetComponent<Rigidbody>();
+            possibleCharacterController = GetComponent<CharacterController>();
 
             for (int i = 0; i < transform.childCount; i++)
             {
@@ -60,9 +70,12 @@ namespace Utility
             _health = maxHealth;
             transform.localScale = initialScale;
 
-            foreach (Collider col in _colliders)
+            if (disableCollidersOnDeath)
             {
-                col.enabled = true;
+                foreach (Collider col in _colliders)
+                {
+                    col.enabled = true;
+                }
             }
 
             if (destroyChildrenOnDeath)
@@ -84,11 +97,13 @@ namespace Utility
 
             _health -= damage.GetDamageDone();
 
-            if (shrinkOnDeath && _health <= 0)
+            if (_health <= 0)
             {
                 Destroy(damage);
             }
         }
+
+        //---------------------------------------------------------getters setters
 
         public float GetHealthRatio()
         {
@@ -100,37 +115,65 @@ namespace Utility
             return _lastDamageDealer;
         }
 
+        /// <summary>
+        /// A rigidbody that the object might have
+        /// </summary>
+        /// <returns>the component if it has it or null</returns>
+        public Rigidbody GetPossibleRigidbody()
+        {
+            if (possibleRigidbody != null) { return possibleRigidbody; }
+            else { return GetComponent<Rigidbody>(); }
+        }
+
+        /// <summary>
+        /// A CharacterController that the object might have
+        /// </summary>
+        /// <returns>the component if it has it or null</returns>
+        public CharacterController GetPossibleCharacterController()
+        {
+            if (possibleCharacterController != null) { return possibleCharacterController; }
+            else { return GetComponent<CharacterController>(); }
+        }
+
+        // dsetroying commands
         private void Destroy(Damage damage)
         {
             if (_isDestroyed) { return; }
 
             if (destroyChildrenOnDeath) { DestroyChildren(damage); }
 
-            foreach (GameObject destructionParticleGamObjectPrefab in destructionParticleGameObjectPrefabs)
+            foreach (ObjectPool op in destructionParticlePrefabsPool)
             {
-                Transform dpg = Instantiate(destructionParticleGamObjectPrefab).transform;
+                Transform dpg = op.Pull(false).transform;
                 dpg.position += transform.position;
                 dpg.Rotate(transform.rotation.eulerAngles);
 
                 if (dpg.TryGetComponent(out Rigidbody rigidbody))
                 {
                     rigidbody.AddForce(
-                        damage.GetDamageDirection() * PARTICLE_FORCE_TO_FORCE_PROPORTION * damage.GetDamageDone());
+                        damage.GetDamageDone() * DAMAGE_TO_FORCE_PROPORTION * damage.GetDamageDirection());
                 }
 
+                dpg.gameObject.SetActive(true);
                 Destroy(dpg.gameObject, TIME_BEFORE_PARTICLE_DESTRUCTION);
             }
 
             destructionCalls.Invoke();
 
-            foreach (Collider col in _colliders)
+            if (disableCollidersOnDeath)
             {
-                col.enabled = false;
+                foreach (Collider col in _colliders)
+                {
+                    col.enabled = false;
+                }
             }
 
             _isDestroyed = true;
+
             //this needs to be done last
-            transform.localScale = Vector3.zero;
+            if (shrinkOnDeath) {
+                transform.localScale = Vector3.zero;
+            }
         }
 
         private void DestroyChildren(Damage damage)

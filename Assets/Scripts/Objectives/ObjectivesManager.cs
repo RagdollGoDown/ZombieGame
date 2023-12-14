@@ -42,6 +42,7 @@ namespace Objectives
             List<Objective> _objsList = new();
             foreach(ObjectiveHolder oh in transform.GetComponentsInChildren<ObjectiveHolder>())
             {
+                Debug.Log(oh.name);
                 _objsList.Add(oh.Build(_onObjectiveComplete));
             }
             _objs = _objsList.ToArray();
@@ -49,7 +50,6 @@ namespace Objectives
             _lastObjs = new();
 
             necessaryConditionsToStartNextObjective = new();
-
             Invoke(nameof(CheckIfShouldStartObjective), timeBetweenChecks);
         }
 

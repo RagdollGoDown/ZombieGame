@@ -7,39 +7,45 @@ public class ZombieSpawner : MonoBehaviour
 {
     [SerializeField] private float timeBetweenSpawns = 1;
 
-    [SerializeField] private GameObject zombiePrefab;
-
     private int _zombiesToSpawn;
     private DamageableObject _zombieTargetOnSpawn;
     private bool _isSpawning;
-
     private ObjectPool zombiePool;
-
-    private bool _canSpawn;
 
     //these positions are offsets from the gameobject's position
     [SerializeField] private Vector3[] spawnPositionsOffset;
 
+    //----------------------------------unity events
     private void Awake()
     {
-        _canSpawn = (zombiePrefab != null) || (zombiePool != null);
-
-        if (_canSpawn && zombiePrefab != null)
-        {
-            zombiePrefab.SetActive(false);
-        }
-
         if (spawnPositionsOffset.Length == 0)
         {
             spawnPositionsOffset = new Vector3[] { Vector3.zero };
         }
     }
 
-    public int AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget)
+    private void OnEnable()
     {
-        if (zombiePool == null) throw new System.NullReferenceException("No object pool to take zombies from");
+        ZombieSpawnerManager.AddSpawner(this);
+    }
 
-        if (!_canSpawn) { return 0; }
+    private void OnDisable()
+    {
+        ZombieSpawnerManager.RemoveSpawner(this);
+    }
+
+    //-------------------------------------------spawning functions
+
+    /// <summary>
+    /// This adds zombie to be spawned. It will then spawn them with an interval of time between.
+    /// </summary>
+    /// <param name="amountOfZombies"> the number of total zombies to spawn</param>
+    /// <param name="zombieTarget"> the target to be followed by the zombies</param>
+    /// <param name="zombiePool"> the pool the zombies should be taken from</param>
+    /// <returns></returns>
+    public int AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget, ObjectPool zombiePool)
+    {
+        if (this.zombiePool != zombiePool) this.zombiePool = zombiePool;
 
         _zombiesToSpawn += amountOfZombies;
         _zombieTargetOnSpawn = zombieTarget;
@@ -75,12 +81,9 @@ public class ZombieSpawner : MonoBehaviour
 
     //-----------------------------------------------get/setters
 
-    public void SetZombiePool(ObjectPool zombiePool)
-    {
-        this.zombiePool = zombiePool;
-    }
-
-    public bool CanSpawn() { return _canSpawn; }
-
+    /// <summary>
+    /// Whether it is currently spawning zombies or not.
+    /// </summary>
+    /// <returns>true if it is</returns>
     public bool IsSpawning() { return _zombiesToSpawn > 0; }
 }

@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\Utility\BloodSpillOnCollide.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableBool.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\LogicAndCondition.cs" />
+    <Compile Include="Assets\Scripts\Utility\Timer.cs" />
     <Compile Include="Assets\Scripts\Utility\DamageableObject.cs" />
     <Compile Include="Assets\Scripts\Utility\GPUInstancing\GPUInstanceManager.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\MultipleConditions.cs" />

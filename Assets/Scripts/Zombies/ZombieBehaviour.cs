@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
-using Debug = UnityEngine.Debug;
 using Utility;
 
 public enum ZombieState
@@ -17,8 +16,6 @@ public enum ZombieState
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
-//the boxcollider used so that it can get detected by other objects
-[RequireComponent(typeof(BoxCollider))]
 public class ZombieBehaviour : MonoBehaviour
 {
     private static readonly float TIME_BEFORE_BODY_DISINTEGRATES = 20;
@@ -27,19 +24,25 @@ public class ZombieBehaviour : MonoBehaviour
     private static readonly int JUMP_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Jump");
 
     //we don't want the zombie to look at the damageable object but at the head
-    private static readonly Vector3 OFFSET_FOR_HEAD_CONSTRAINT = new Vector3(0,1.7f,0);
+    private static readonly Vector3 OFFSET_FOR_HEAD_CONSTRAINT = new(0,1.7f,0);
+
+    //used for the chase direction
+    private static readonly float DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION = 0.01f;
+    private static readonly float DISTANCE_BEFORE_VELOCITY_IS_CLAMPED = 1;
 
     private ZombieState _currentState;
     
     //TODO unserialize
     [SerializeField]private Transform _headTransform;
-    
+
+    [Header("Navigation")]
     //-------------------navigation
     private NavMeshAgent _navMeshAgent;
     [SerializeField] private float minRunningSpeed;
     [SerializeField] private float maxRunningSpeed;
     private float runningSpeed;
     [SerializeField] private float crawlingSpeed;
+    [SerializeField] private float targetVelocityBias = 1;
     private DamageableObject _zombieTarget;
 
     //--------------------animation
@@ -55,6 +58,7 @@ public class ZombieBehaviour : MonoBehaviour
     private Rigidbody[] rigidBodys;
     private DamageableObject mainDamageableObject;
 
+    [Header("Attacking")]
     //--------------------attacking
     [SerializeField]private float attackDamage;
     [SerializeField]private float attackDamageWithHeads;
@@ -63,6 +67,7 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField]private float distanceBeforeAttack;
     [SerializeField]private float MaxNavMeshSpeedRequieredAttack= 0.2f;
 
+    [Header("Mesh")]
     //--------------------mesh
     //we enable these transforms to choose which skinned skeleton is rendered 
     [SerializeField] List<GameObject> differentZombieMeshsGameObject;
@@ -174,24 +179,38 @@ public class ZombieBehaviour : MonoBehaviour
         _zombieAnimator.enabled = false;
         _rigBuilder.Build();
         _zombieAnimator.enabled = true;
+
+        StartCoroutine(nameof(Chase));
     }
 
-    private void Chase()
+    private IEnumerator Chase()
     {
-        Vector3 lookingPosition = _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT;
+        Vector3 lookingPosition;
 
-        _navMeshAgent.SetDestination(lookingPosition);
+        float distanceFromPlayer;
 
-        //-------------------------------------attack
-        float distanceFromPLayer = Vector3.Distance(lookingPosition,transform.position);
+        while(_currentState == ZombieState.Chasing)
+        {
+            distanceFromPlayer = Vector3.Distance(_zombieTarget.transform.position, transform.position);
 
-        if (distanceFromPLayer <= distanceBeforeAttack 
-            && _navMeshAgent.velocity.magnitude <= MaxNavMeshSpeedRequieredAttack
-            && _timeBetweenAttackCounter <= 0) { 
-            StartCoroutine(Attack());
+            lookingPosition = _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT;
+                //+ MathF.Min(distanceFromPlayer, DISTANCE_BEFORE_VELOCITY_IS_CLAMPED) * targetVelocityBias
+                //* _zombieTarget.GetPossibleCharacterController().velocity;
+
+
+            _navMeshAgent.SetDestination(lookingPosition);
+
+            if (distanceFromPlayer <= distanceBeforeAttack
+                && _navMeshAgent.velocity.magnitude <= MaxNavMeshSpeedRequieredAttack
+                && _timeBetweenAttackCounter <= 0)
+            {
+                StartCoroutine(Attack());
+            }
+
+            _timeBetweenAttackCounter -= (_timeBetweenAttackCounter > 0) ? Time.fixedDeltaTime : 0;
+
+            yield return new WaitForSeconds(distanceFromPlayer * DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION);
         }
-
-        _timeBetweenAttackCounter -= (_timeBetweenAttackCounter > 0) ? Time.fixedDeltaTime : 0;
     }
 
     private IEnumerator Attack()

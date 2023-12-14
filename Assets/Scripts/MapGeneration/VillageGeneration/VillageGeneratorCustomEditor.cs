@@ -43,9 +43,6 @@ namespace MapGeneration.VillageGeneration
         private const string vbcPath = "villageBuildingsCollection";
         private SerializedProperty vbc;
 
-        private const string generateOnEnablePath = "generateOnEnable";
-        private SerializedProperty generateOnEnable;
-
         private void OnEnable()
         {
             target = ((VillageGenerator)serializedObject.targetObject);

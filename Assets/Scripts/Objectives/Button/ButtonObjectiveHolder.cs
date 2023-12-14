@@ -9,21 +9,21 @@ namespace Objectives.Button
     {
         protected override Objective BuildPureObjective(UnityEvent onComplete, string objectiveText)
         {
-            List<ButtonsObjectiveObject> objects = new();
+            List<ButtonObjectiveObject> objects = new();
 
             foreach (ObjectiveObject oo in GetObjects())
             {
-                if (oo is not ButtonsObjectiveObject)
+                if (oo is not ButtonObjectiveObject)
                     throw new System.ArgumentException("Wrong Objective object type given to " + name
                         + " given in : " + oo.name);
 
-                objects.Add((ButtonsObjectiveObject)oo);
+                objects.Add((ButtonObjectiveObject)oo);
             }
 
             if (objects.Count == 0)
                 throw new System.ArgumentException("No objective objects in : " + name);
 
-            return new ButtonsObjective(onComplete, objectiveText, objects.ToArray());
+            return new ButtonObjective(onComplete, objectiveText, objects.ToArray());
         }
     }
 

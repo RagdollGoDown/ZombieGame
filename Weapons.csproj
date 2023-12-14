@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Weapons\ChunkReloaderAndRayCastWeaponBehaviour.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\MultiKillBoostCondition.cs" />
+    <Compile Include="Assets\Scripts\Weapons\Explosiv.cs" />
     <Compile Include="Assets\Scripts\Weapons\WeaponBehaviour.cs" />
     <Compile Include="Assets\Scripts\Weapons\Boosts\HighlightBoosts.cs" />
     <Compile Include="Assets\Scripts\Weapons\RayCastGunBehaviour.cs" />
