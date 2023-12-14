@@ -34,12 +34,12 @@ namespace Utility
                 }
             }
 
-            int possibleIndex = possibleObjects.Count > 1 ? Random.Range(1, possibleObjects.Count - 1) : 0;
+            int possibleIndex = Random.Range(0, possibleObjects.Count);
 
             objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
 
-            if (enabled) objects[objects.Count - 1].SetActive(true);
-            return objects[objects.Count - 1];
+            if (enabled) objects[^1].SetActive(true);
+            return objects[^1];
         }
 
         //----------------------------------------editor methods

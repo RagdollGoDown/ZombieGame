@@ -40,10 +40,9 @@ namespace Objectives
             Invoke(nameof(FindNextRandomObjective),1f);
 
             List<Objective> _objsList = new();
-            foreach(ObjectiveHolder oh in transform.GetComponentsInChildren<ObjectiveHolder>())
+            foreach(Objective oh in transform.GetComponentsInChildren<Objective>())
             {
-                Debug.Log(oh.name);
-                _objsList.Add(oh.Build(_onObjectiveComplete));
+                _objsList.Add(oh);
             }
             _objs = _objsList.ToArray();
 

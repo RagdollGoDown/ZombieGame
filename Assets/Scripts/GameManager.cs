@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        objectivesManager = transform.Find("ObjectivesManager").GetComponent<ObjectivesManager>();
+        //objectivesManager = transform.Find("ObjectivesManager").GetComponent<ObjectivesManager>();
 
         zombieSpawnerManager = transform.Find("ZombieSpawnManager").GetComponent<ZombieSpawnerManager>();
     }

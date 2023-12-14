@@ -58,14 +58,12 @@
     <Analyzer Include="D:\Unity\2022.2.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Objectives\ObjectiveHolder.cs" />
-    <Compile Include="Assets\Scripts\Objectives\Area\AreaObjectiveHolder.cs" />
-    <Compile Include="Assets\Scripts\Objectives\Selectable\SelectableObjectiveObject.cs" />
+    <Compile Include="Assets\Scripts\Objectives\Button\ButtonObjective.cs" />
+    <Compile Include="Assets\Scripts\Objectives\ObjectiveObject.cs" />
     <Compile Include="Assets\Scripts\Objectives\Objective.cs" />
     <Compile Include="Assets\Scripts\Objectives\Button\ButtonObjectiveObject.cs" />
-    <Compile Include="Assets\Scripts\Objectives\Selectable\SelectableObjectiveHolder.cs" />
-    <Compile Include="Assets\Scripts\Objectives\Button\ButtonObjectiveHolder.cs" />
     <Compile Include="Assets\Scripts\Objectives\Area\AreaObjectiveObject.cs" />
+    <Compile Include="Assets\Scripts\Objectives\Area\AreaObjective.cs" />
     <Compile Include="Assets\Scripts\Objectives\ObjectivesManager.cs" />
   </ItemGroup>
   <ItemGroup>

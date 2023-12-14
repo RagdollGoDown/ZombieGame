@@ -54,41 +54,4 @@ namespace Objectives.Button
             SwitchInteractable();
         }
     }
-    public class ButtonObjective : Objective
-    {
-        private readonly int _totalButtonsToPress;
-        private int _buttonsToPress;
-
-        public ButtonObjective(UnityEvent onComplete, string objectiveText,
-            ButtonObjectiveObject[] buttons) :
-            base(onComplete, objectiveText)
-        {
-            _totalButtonsToPress = buttons.Length;
-
-            foreach (ButtonObjectiveObject button in buttons)
-            {
-                AddObjectiveObject(button);
-                button.GetObjectEvent().AddListener(PressButton);
-            }
-        }
-
-        public override void Begin()
-        {
-            base.Begin();
-
-            _buttonsToPress = _totalButtonsToPress;
-        }
-
-        private void PressButton()
-        {
-            _buttonsToPress -= 1;
-
-            if (_buttonsToPress <= 0) { Complete(); }
-        }
-
-        public override float GetCompletenessRatio()
-        {
-            return _buttonsToPress / _totalButtonsToPress;
-        }
-    }
 }
