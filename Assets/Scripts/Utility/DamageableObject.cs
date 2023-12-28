@@ -30,8 +30,8 @@ namespace Utility
         private CharacterController possibleCharacterController;
 
         //--------------------------to do on destruction
-        [SerializeField] private List<string> destructionParticlePrefabsPoolNames;
-        private ObjectPool[] destructionParticlePrefabsPool;
+        [SerializeField] private List<string> destructionParticlePoolNames;
+        private ObjectPool[] destructionParticlePool;
         public UnityEvent destructionCalls;
 
         [SerializeField] private bool shrinkOnDeath;
@@ -52,7 +52,26 @@ namespace Utility
 
             initialScale = transform.localScale;
 
-            destructionParticlePrefabsPool = destructionParticlePrefabsPoolNames.Select(dpp => GameObject.Find(dpp).GetComponent<ObjectPool>()).ToArray();
+            destructionParticlePool = 
+                destructionParticlePoolNames.Select(dpp =>
+                {
+                    GameObject poolGameObject = GameObject.Find(dpp);
+
+                    if (poolGameObject == null)
+                    {
+                        Debug.Log("Pool not found : " + dpp);
+                        return null;
+                    }
+
+                    ObjectPool pool = poolGameObject.GetComponent<ObjectPool>();
+                    if (pool == null)
+                    {
+                        Debug.Log("Pool not on object found : " + dpp);
+                        return null;
+                    }
+
+                    return pool;
+                }).Where(dpp => dpp != null).ToArray();
 
             _damageableChildren = new List<DamageableObject>();
 
@@ -135,17 +154,17 @@ namespace Utility
             else { return GetComponent<CharacterController>(); }
         }
 
-        // dsetroying commands
+        // -----------------------------------------------------------destroying commands
         private void Destroy(Damage damage)
         {
             if (_isDestroyed) { return; }
 
             if (destroyChildrenOnDeath) { DestroyChildren(damage); }
 
-            foreach (ObjectPool op in destructionParticlePrefabsPool)
+            foreach (ObjectPool op in destructionParticlePool)
             {
                 Transform dpg = op.Pull(false).transform;
-                dpg.position += transform.position;
+                dpg.position = transform.position;
                 dpg.Rotate(transform.rotation.eulerAngles);
 
                 if (dpg.TryGetComponent(out Rigidbody rigidbody))
@@ -155,7 +174,8 @@ namespace Utility
                 }
 
                 dpg.gameObject.SetActive(true);
-                Destroy(dpg.gameObject, TIME_BEFORE_PARTICLE_DESTRUCTION);
+
+                StartCoroutine(nameof(DisableParticle), dpg.gameObject);
             }
 
             destructionCalls.Invoke();
@@ -182,6 +202,13 @@ namespace Utility
             {
                 dc.Destroy(damage);
             }
+        }
+
+        private IEnumerator DisableParticle(GameObject particle)
+        {
+            yield return new WaitForSeconds(TIME_BEFORE_PARTICLE_DESTRUCTION);
+
+            particle.SetActive(false);
         }
     }
 

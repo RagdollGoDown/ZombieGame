@@ -4,32 +4,34 @@ using UnityEngine;
 using UnityEngine.Events;
 using Utility;
 using Utility.Observable;
+using System.Linq;
 
 namespace Weapons
 {
     public class RayCastGunBehaviour : WeaponBehaviour, CrossHaired
     {
-        private static readonly int BULLETHOLE_RECIPIENTS_LAYERMASK = 0;
+        protected static readonly int BULLETHOLE_RECIPIENTS_LAYERMASK = 0;
 
         private static readonly string POOL_HEADER_OBJECT_NAME = "Pools";
 
         private static readonly float BULLETHOLE_LIFETIME = 10;
         private static readonly float HITMARKER_LIFETIME = .1f;
 
-        private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
+        protected static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
 
         [Header("General Stats")]
         [SerializeField] private float fireRateForShots;
         private float _lastTimeShot;
-        [SerializeField] private float damage;
-        [SerializeField] private int pelletsPerShot = 1;
-        [SerializeField] private float range = 100;
+        [SerializeField] protected float damage;
+        [SerializeField] protected int pelletsPerShot = 1;
+        [SerializeField] protected int penetration = 1;
+        [SerializeField] protected float range = 100;
 
         [Header("Spread Stats")]
         //the spread origin is the player camera that we keep to get it's forward vector
-        private Transform raycastOrigin;
+        protected Transform raycastOrigin;
 
-        private ObservableFloat spread;
+        protected ObservableFloat spread;
         private ReadOnlyObservableFloat Spread;
         private float _spreadPositionInLerp;
         [SerializeField] private float _maxSpread;
@@ -54,7 +56,7 @@ namespace Weapons
         [SerializeField] protected int maxBulletsOnPlayer;
         protected int _bulletsOnPlayer;
         [SerializeField] private int shotsPerTriggerPress = 100;
-        private int _remainingShots;
+        protected int _remainingShots;
 
 
         private void Awake()
@@ -134,16 +136,7 @@ namespace Weapons
             //add spread when shooting
             _spreadPositionInLerp = Mathf.Clamp01(_spreadPositionInLerp + _spreadIncreasePerShot);
 
-            //raycast shot
-            Vector3 cameraPosition = raycastOrigin.position;
-
-            for (int i = 0; i < pelletsPerShot; i++)
-            {
-                RaycastHit pointShot = GetRaycastHitFromOrigin();
-
-                HandleRayCastShot(pointShot, cameraPosition);
-            }
-            if (muzzleFlash) muzzleFlash.Play();
+            TakeShot();
 
             _lastTimeShot = Time.time;
 
@@ -151,6 +144,64 @@ namespace Weapons
             _ammoRemainingInMag--;
             _remainingShots--;
             UpdateAmmoText();
+        }
+
+        protected virtual void TakeShot()
+        {
+            for (int i = 0; i < pelletsPerShot; i++)
+            {
+                RaycastHit[] pointsShot = GetRaycastHitsFromOrigin();
+
+                for (int j = 0; j < pointsShot.Length; j++)
+                {
+                    HandleRayCastShot(pointsShot[j], raycastOrigin.position);
+                }
+            }
+            if (muzzleFlash) muzzleFlash.Play();
+        }
+        
+        /// <summary>
+        /// Shoots the ray and gets all the hits by this ray then ordering them and return the first of number penetration
+        /// </summary>
+        /// <returns>an ordered array of the hits of number penetration</returns>
+        protected RaycastHit[] GetRaycastHitsFromOrigin()
+        {
+            float randomAngle = Random.Range(0, 2 * Mathf.PI);
+
+            Vector3 spreadDiff = raycastOrigin.up * Mathf.Cos(randomAngle) + raycastOrigin.right * Mathf.Sin(randomAngle);
+            spreadDiff *= spread.GetValue() * Random.value;
+            
+            return Physics.RaycastAll(raycastOrigin.position + spreadDiff, raycastOrigin.forward + spreadDiff, range, SHOOTABLE_LAYERMASK_VALUE)
+                .OrderBy(p => p.distance).Take(penetration).ToArray();
+        }
+
+        //-----------------------------------------------------reacting to shot
+
+        protected IEnumerator BulletTrailHandler(Vector3 target)
+        {
+            if (bulletTrailPool == null) yield break;
+
+            Vector3 barrelPosition = barrelExit.position;
+
+            TrailRenderer bulletTrail = bulletTrailPool.Pull(false).GetComponent<TrailRenderer>();
+            bulletTrail.Clear();
+
+            bulletTrail.gameObject.SetActive(true);
+
+            float adaptedSpeed = bulletLerpSpeed / Vector3.Distance(barrelPosition, target);
+
+            float lerpPosition = 0;
+
+            while (lerpPosition < 1)
+            {
+                bulletTrail.transform.position = Vector3.Lerp(barrelPosition, target, lerpPosition);
+
+                lerpPosition += Time.deltaTime * adaptedSpeed;
+
+                yield return null;
+            }
+
+            bulletTrail.gameObject.SetActive(false);
         }
 
         private void HandleRayCastShot(RaycastHit pointShot, Vector3 cameraPosition)
@@ -186,42 +237,7 @@ namespace Weapons
             }
         }
 
-        protected RaycastHit GetRaycastHitFromOrigin()
-        {
-            float randomAngle = Random.Range(0, 2 * Mathf.PI);
-
-            Vector3 spreadDiff = raycastOrigin.up * Mathf.Cos(randomAngle) + raycastOrigin.right * Mathf.Sin(randomAngle);
-            spreadDiff *= spread.GetValue() * Random.value;
-
-            Physics.Raycast(raycastOrigin.position + spreadDiff, raycastOrigin.forward + spreadDiff, out RaycastHit hit, 1000, SHOOTABLE_LAYERMASK_VALUE);
-            return hit;
-        }
-
-        protected IEnumerator BulletTrailHandler(Vector3 target)
-        {
-            Vector3 barrelPosition = barrelExit.position;
-
-            TrailRenderer bulletTrail = bulletTrailPool.Pull(false).GetComponent<TrailRenderer>();
-            bulletTrail.Clear();
-
-            bulletTrail.gameObject.SetActive(true);
-
-            float adaptedSpeed = bulletLerpSpeed / Vector3.Distance(barrelPosition, target);
-
-            float lerpPosition = 0;
-
-            while (lerpPosition < 1)
-            {
-                bulletTrail.transform.position = Vector3.Lerp(barrelPosition, target, lerpPosition);
-
-                lerpPosition += Time.deltaTime * adaptedSpeed;
-
-                yield return null;
-            }
-
-            bulletTrail.gameObject.SetActive(false);
-        }
-
+        //-----------------------------------------------------------using gun
         protected override void StartUsing()
         {
             if (_lastTimeShot + fireRateForShots <= Time.time && _ammoRemainingInMag != 0)
