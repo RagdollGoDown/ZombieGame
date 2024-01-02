@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour,Interactor
     //----------------------------shooting
     //temporarily a serialize field to check the guns
     private int _currentWeaponIndex;
+    [SerializeField] private int maxWeaponsHeld = 2;
     [SerializeField] private WeaponBehaviour[] _weaponsHeld;
 
     private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
@@ -92,6 +93,8 @@ public class PlayerController : MonoBehaviour,Interactor
     {
         _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
         _currentWeaponIndex = 0;
+
+        if (_weaponsHeld.Length > maxWeaponsHeld) throw new System.ArgumentException("Too many weapons held on the player!");
 
         foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
         {
@@ -271,15 +274,9 @@ public class PlayerController : MonoBehaviour,Interactor
     private void Switch()
     {
         UnequipCurrentWeapon();
-
-        if (_currentWeaponIndex == 0)
-        {
-            _currentWeaponIndex = 1;
-        }
-        else
-        {
-            _currentWeaponIndex = 0;
-        }
+        print(_currentWeaponIndex + 1);
+        print((_currentWeaponIndex + 1) % _weaponsHeld.Length);
+        _currentWeaponIndex = (_currentWeaponIndex + 1) % _weaponsHeld.Length;
 
         EquipCurrentWeapon();
     }
@@ -341,7 +338,8 @@ public class PlayerController : MonoBehaviour,Interactor
         }
     }
 
-    /*
+    /* DEPRECATED does not support for when there are more than 2 weapons on the player
+     * 
      * returns false if the player didn't pick up the weapon
      * 
      * replaces the weapon currently equipped with the weapon given, identified by it's name

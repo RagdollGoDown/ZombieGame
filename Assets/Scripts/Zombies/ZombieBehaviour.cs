@@ -101,13 +101,6 @@ public class ZombieBehaviour : MonoBehaviour
         _zombieAnimator.SetFloat(SPEED_ANIMATOR_PARAMETER_ID, _navMeshAgent.velocity.magnitude);
 
         _zombieAnimator.SetBool(JUMP_ANIMATOR_PARAMETER_ID, _navMeshAgent.isOnOffMeshLink);
-        
-        switch (_currentState)
-        {
-            case ZombieState.Chasing:
-                Chase();
-                break;
-        }
     }
 
     private void OnEnable()

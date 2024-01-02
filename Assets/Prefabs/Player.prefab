@@ -2181,10 +2181,11 @@ MonoBehaviour:
   movementSpeed: 10
   movementSpeedWhenAiming: 5
   mouseSensitivity: 20
+  maxWeaponsHeld: 3
   _weaponsHeld:
   - {fileID: 1051864591873449496}
   - {fileID: 6284672778376349908}
-  - {fileID: 5847717264853021304}
+  - {fileID: 9040535435785125949}
   timeBetweenWeaponSwitches: 0.5
   kickDamage: 40
   kickRange: 3
@@ -5029,6 +5030,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1956161118473648932}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9040535435785125949 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7373449462057843481, guid: 851d85646f2cd9d46aaa8441c6cda36d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1956161118473648932}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66313582b6c6c754cbe1274ad4fc7276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6115947898909038039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5338,18 +5351,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8805151709175910296}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5847717264853021304 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3104507421895245280, guid: 00a647f83c496a74a9e3385544584e66,
-    type: 3}
-  m_PrefabInstance: {fileID: 8805151709175910296}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &9191886103263137390
 PrefabInstance:
   m_ObjectHideFlags: 0

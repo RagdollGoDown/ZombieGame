@@ -5001,8 +5001,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _headTransform: {fileID: 9033788945885389925}
-  minRunningSpeed: 6
-  maxRunningSpeed: 10
+  minRunningSpeed: 9
+  maxRunningSpeed: 11
   crawlingSpeed: 3
   targetVelocityBias: 0.1
   attackDamage: 5

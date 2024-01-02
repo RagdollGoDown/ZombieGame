@@ -125,6 +125,9 @@ namespace MapGeneration.VillageGeneration
             generator.SetMask(size-2,posX, posY);
         }
 
-        public override void Ready(int size) { }
+        public override void Ready(int size) 
+        {
+            generator.GetCollection().ReadyCollection(size);
+        }
     }
 }
