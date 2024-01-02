@@ -13,7 +13,15 @@ namespace Utility
         private readonly static float TIME_BEFORE_PARTICLE_DESTRUCTION = 10;
         private readonly static float DAMAGE_TO_FORCE_PROPORTION = 20;
 
-        private bool _isDestroyed;
+        private bool isDead;
+
+        public bool IsDead
+        {
+            get
+            {
+                return isDead;
+            }
+        }
 
         private Object _lastDamageDealer;
 
@@ -32,12 +40,12 @@ namespace Utility
         //--------------------------to do on destruction
         [SerializeField] private List<string> destructionParticlePoolNames;
         private ObjectPool[] destructionParticlePool;
-        public UnityEvent destructionCalls;
+        public UnityEvent deathCalls;
 
         [SerializeField] private bool shrinkOnDeath;
         [SerializeField] private bool disableCollidersOnDeath = true;
 
-        [SerializeField] private bool destroyChildrenOnDeath;
+        [SerializeField] private bool killChildrenOnDeath = true;
         private List<DamageableObject> _damageableChildren;
 
 
@@ -75,13 +83,14 @@ namespace Utility
 
             _damageableChildren = new List<DamageableObject>();
 
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).TryGetComponent(out DamageableObject damageableObject)) _damageableChildren.Add(damageableObject);
+            }
+
             possibleRigidbody = GetComponent<Rigidbody>();
             possibleCharacterController = GetComponent<CharacterController>();
 
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                _damageableChildren.Add(transform.GetChild(i).GetComponent<DamageableObject>());
-            }
         }
 
         public void Revive()
@@ -91,21 +100,15 @@ namespace Utility
 
             if (disableCollidersOnDeath)
             {
-                foreach (Collider col in _colliders)
-                {
-                    col.enabled = true;
-                }
+                _colliders.Select(c => c.enabled = true);
             }
 
-            if (destroyChildrenOnDeath)
+            if (killChildrenOnDeath)
             {
-                foreach (var dc in _damageableChildren)
-                {
-                    dc.Revive();
-                }
+                _damageableChildren?.ForEach(d => d.Revive());
             }
-            
-            _isDestroyed = false;
+
+            isDead = false;
         }
 
         private void TakeDamage(Damage damage)
@@ -118,7 +121,7 @@ namespace Utility
 
             if (_health <= 0)
             {
-                Destroy(damage);
+                Die(damage);
             }
         }
 
@@ -155,11 +158,11 @@ namespace Utility
         }
 
         // -----------------------------------------------------------destroying commands
-        private void Destroy(Damage damage)
+        private void Die(Damage damage)
         {
-            if (_isDestroyed) { return; }
+            if (isDead) { return; }
 
-            if (destroyChildrenOnDeath) { DestroyChildren(damage); }
+            if (killChildrenOnDeath) { KillChildren(damage); }
 
             foreach (ObjectPool op in destructionParticlePool)
             {
@@ -178,17 +181,14 @@ namespace Utility
                 StartCoroutine(nameof(DisableParticle), dpg.gameObject);
             }
 
-            destructionCalls.Invoke();
+            deathCalls.Invoke();
 
             if (disableCollidersOnDeath)
             {
-                foreach (Collider col in _colliders)
-                {
-                    col.enabled = false;
-                }
+                _colliders.Select(c => c.enabled = false);
             }
 
-            _isDestroyed = true;
+            isDead = true;
 
             //this needs to be done last
             if (shrinkOnDeath) {
@@ -196,12 +196,9 @@ namespace Utility
             }
         }
 
-        private void DestroyChildren(Damage damage)
+        private void KillChildren(Damage damage)
         {
-            foreach (var dc in _damageableChildren)
-            {
-                dc.Destroy(damage);
-            }
+            _damageableChildren?.ForEach(d => d.Die(damage));
         }
 
         private IEnumerator DisableParticle(GameObject particle)

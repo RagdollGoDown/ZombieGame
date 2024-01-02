@@ -274,8 +274,6 @@ public class PlayerController : MonoBehaviour,Interactor
     private void Switch()
     {
         UnequipCurrentWeapon();
-        print(_currentWeaponIndex + 1);
-        print((_currentWeaponIndex + 1) % _weaponsHeld.Length);
         _currentWeaponIndex = (_currentWeaponIndex + 1) % _weaponsHeld.Length;
 
         EquipCurrentWeapon();

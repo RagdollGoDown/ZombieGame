@@ -11,7 +11,6 @@ public enum ZombieState
 {
     Chasing,
     Idle,
-    Jump,
     Dead
 }
 
@@ -30,6 +29,10 @@ public class ZombieBehaviour : MonoBehaviour
     private static readonly float DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION = 0.01f;
     private static readonly float DISTANCE_BEFORE_VELOCITY_IS_CLAMPED = 1;
 
+    private static readonly float IDLING_MAX_DISTANCE = 10;
+    private static readonly float IDLING_MAX_WAIT_BETWEEN_WANDERS = 20;
+    private static readonly float IDLING_MIN_WAIT_BETWEEN_WANDERS = 5;
+
     private ZombieState _currentState;
     
     //TODO unserialize
@@ -38,8 +41,10 @@ public class ZombieBehaviour : MonoBehaviour
     [Header("Navigation")]
     //-------------------navigation
     private NavMeshAgent _navMeshAgent;
-    [SerializeField] private float minRunningSpeed;
-    [SerializeField] private float maxRunningSpeed;
+    [SerializeField] private float walkingSpeed = 2;
+    [SerializeField] private float minRunningSpeed = 9;
+    [SerializeField] private float maxRunningSpeed = 11;
+    [SerializeField] private float distanceForMaxSpeed = 5;
     private float runningSpeed;
     [SerializeField] private float crawlingSpeed;
     [SerializeField] private float targetVelocityBias = 1;
@@ -80,9 +85,8 @@ public class ZombieBehaviour : MonoBehaviour
     {
         if (!_headTransform) throw new System.NullReferenceException("Head transform is null");
         
-        runningSpeed = UnityEngine.Random.Range(minRunningSpeed, maxRunningSpeed);
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-        _navMeshAgent.speed = runningSpeed;
+        runningSpeed = UnityEngine.Random.Range(minRunningSpeed, maxRunningSpeed);
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;
 
         _currentState = ZombieState.Idle;
@@ -90,10 +94,11 @@ public class ZombieBehaviour : MonoBehaviour
         mainDamageableObject = GetComponentInChildren<DamageableObject>();
 
         _zombieAnimator = GetComponent<Animator>();
-        _headConstraint = transform.Find("HeadRig/HeadAimConstraint").GetComponent<MultiAimConstraint>();
+        _headConstraint = transform.Find("ChasingRig/HeadAimConstraint").GetComponent<MultiAimConstraint>();
         _rigBuilder = GetComponent<RigBuilder>();
 
         ChooseRandomMesh();
+        StartIdle();
     }
 
     private void FixedUpdate()
@@ -154,7 +159,41 @@ public class ZombieBehaviour : MonoBehaviour
         }
     }
 
-    //------------------------------chasing
+    //------------------------------Idle
+
+    private void StartIdle()
+    {
+        _currentState = ZombieState.Idle;
+        _zombieTarget = null;
+
+        _navMeshAgent.speed = walkingSpeed;
+
+        WeightedTransformArray sources = new();
+        _headConstraint.data.sourceObjects = sources;
+
+        _zombieAnimator.enabled = false;
+        _rigBuilder.Build();
+        _zombieAnimator.enabled = true;
+
+        StartCoroutine(nameof(Idling));
+    }
+
+    private IEnumerator Idling()
+    {
+        while(_currentState == ZombieState.Idle)
+        {
+            Vector3 nextPositionToWanderTo = new Vector3(
+                transform.position.x + UnityEngine.Random.Range(-IDLING_MAX_DISTANCE,IDLING_MAX_DISTANCE),
+                transform.position.y,
+                transform.position.z + UnityEngine.Random.Range(-IDLING_MAX_DISTANCE, IDLING_MAX_DISTANCE));
+
+            _navMeshAgent.SetDestination(nextPositionToWanderTo);
+
+            yield return new WaitForSeconds(UnityEngine.Random.Range(IDLING_MIN_WAIT_BETWEEN_WANDERS, IDLING_MAX_WAIT_BETWEEN_WANDERS));
+        }
+    }
+
+    //------------------------------Chasing
 
     public void StartChase(DamageableObject target)
     {
@@ -163,9 +202,11 @@ public class ZombieBehaviour : MonoBehaviour
         _currentState = ZombieState.Chasing;
         _zombieTarget = target;
 
+        _navMeshAgent.speed = runningSpeed;
+
         _timeBetweenAttackCounter = timeBetweenAttacks;
 
-        WeightedTransformArray sources = new WeightedTransformArray();
+        WeightedTransformArray sources = new();
         sources.Add(new WeightedTransform(_zombieTarget.transform,1));
         _headConstraint.data.sourceObjects = sources;
 
@@ -187,10 +228,13 @@ public class ZombieBehaviour : MonoBehaviour
             distanceFromPlayer = Vector3.Distance(_zombieTarget.transform.position, transform.position);
 
             lookingPosition = _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT;
-                //+ MathF.Min(distanceFromPlayer, DISTANCE_BEFORE_VELOCITY_IS_CLAMPED) * targetVelocityBias
-                //* _zombieTarget.GetPossibleCharacterController().velocity;
+            //+ MathF.Min(distanceFromPlayer, DISTANCE_BEFORE_VELOCITY_IS_CLAMPED) * targetVelocityBias
+            //* _zombieTarget.GetPossibleCharacterController().velocity;
 
-
+            //the speed gets linearly smaller when the zombie gets closer to the player
+            _navMeshAgent.speed = distanceFromPlayer >= distanceForMaxSpeed ? maxRunningSpeed : 
+                minRunningSpeed + (maxRunningSpeed - minRunningSpeed) * distanceFromPlayer / distanceForMaxSpeed;
+            
             _navMeshAgent.SetDestination(lookingPosition);
 
             if (distanceFromPlayer <= distanceBeforeAttack
@@ -203,6 +247,11 @@ public class ZombieBehaviour : MonoBehaviour
             _timeBetweenAttackCounter -= (_timeBetweenAttackCounter > 0) ? Time.fixedDeltaTime : 0;
 
             yield return new WaitForSeconds(distanceFromPlayer * DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION);
+
+            if (_zombieTarget == null || _zombieTarget.IsDead)
+            {
+                StartIdle();
+            }
         }
     }
 
