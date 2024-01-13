@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations.Rigging;
 using Utility;
+using UnityEngine.Events;
 
 public enum ZombieState
 {
@@ -27,7 +27,9 @@ public class ZombieBehaviour : MonoBehaviour
 
     //used for the chase direction
     private static readonly float DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION = 0.01f;
-    private static readonly float DISTANCE_BEFORE_VELOCITY_IS_CLAMPED = 1;
+
+    private static readonly float DISTANCE_OF_DISPLACEMENT = 4;
+    private static readonly float DISTANCE_FOR_DISPLACEMENT_ACTIVATION = 8;
 
     private static readonly float IDLING_MAX_DISTANCE = 10;
     private static readonly float IDLING_MAX_WAIT_BETWEEN_WANDERS = 20;
@@ -36,7 +38,7 @@ public class ZombieBehaviour : MonoBehaviour
     private ZombieState _currentState;
     
     //TODO unserialize
-    [SerializeField]private Transform _headTransform;
+    [SerializeField] private Transform _headTransform;
 
     [Header("Navigation")]
     //-------------------navigation
@@ -47,7 +49,8 @@ public class ZombieBehaviour : MonoBehaviour
     [SerializeField] private float distanceForMaxSpeed = 5;
     private float runningSpeed;
     [SerializeField] private float crawlingSpeed;
-    [SerializeField] private float targetVelocityBias = 1;
+    private Vector3 displacementVector;
+
     private DamageableObject _zombieTarget;
 
     //--------------------animation
@@ -62,6 +65,8 @@ public class ZombieBehaviour : MonoBehaviour
     private bool _rightLegBroken;
     private Rigidbody[] rigidBodys;
     private DamageableObject mainDamageableObject;
+
+    public UnityEvent<ZombieBehaviour> OnDeath;
 
     [Header("Attacking")]
     //--------------------attacking
@@ -88,6 +93,10 @@ public class ZombieBehaviour : MonoBehaviour
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         runningSpeed = UnityEngine.Random.Range(minRunningSpeed, maxRunningSpeed);
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;
+
+        float angle = UnityEngine.Random.Range(0, 2 * MathF.PI);
+
+        displacementVector = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * DISTANCE_OF_DISPLACEMENT;
 
         _currentState = ZombieState.Idle;
         rigidBodys = GetComponentsInChildren<Rigidbody>();
@@ -228,8 +237,11 @@ public class ZombieBehaviour : MonoBehaviour
             distanceFromPlayer = Vector3.Distance(_zombieTarget.transform.position, transform.position);
 
             lookingPosition = _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT;
-            //+ MathF.Min(distanceFromPlayer, DISTANCE_BEFORE_VELOCITY_IS_CLAMPED) * targetVelocityBias
-            //* _zombieTarget.GetPossibleCharacterController().velocity;
+
+            if (distanceFromPlayer >= DISTANCE_FOR_DISPLACEMENT_ACTIVATION)
+            {
+                lookingPosition += displacementVector;
+            }
 
             //the speed gets linearly smaller when the zombie gets closer to the player
             _navMeshAgent.speed = distanceFromPlayer >= distanceForMaxSpeed ? maxRunningSpeed : 
@@ -347,7 +359,8 @@ public class ZombieBehaviour : MonoBehaviour
         _currentState = ZombieState.Dead;
         _zombieAnimator.enabled = false;
 
-        ZombieSpawnerManager.RemoveZombie();
+        OnDeath.Invoke(this);
+
         ReadyRagdoll();
 
         Invoke(nameof(DisableSelf), TIME_BEFORE_BODY_DISINTEGRATES);
@@ -363,5 +376,10 @@ public class ZombieBehaviour : MonoBehaviour
     public NavMeshAgent GetNavMeshAgent()
     {
         return _navMeshAgent;
+    }
+
+    public DamageableObject GetMainDamageableObject()
+    {
+        return mainDamageableObject;
     }
 }

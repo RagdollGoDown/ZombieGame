@@ -13,6 +13,7 @@ namespace MapGeneration.VillageGeneration
         [SerializeField] private float buildingWidth;
 
         private bool[][,] tempArrayAndAllRotations = new bool[4][,];
+        private List<(VillageBuilding, int)> tempPossibleBuildings = new();
 
         public void Place(bool[,] conditionArray, float width, int size, int posX, int posY)
         {
@@ -22,16 +23,24 @@ namespace MapGeneration.VillageGeneration
             tempArrayAndAllRotations[2] = Rotate(tempArrayAndAllRotations[1]);
             tempArrayAndAllRotations[3] = Rotate(tempArrayAndAllRotations[2]);
 
+            tempPossibleBuildings.Clear();
+
             foreach (VillageBuilding vb in buildings)
             {
                 for (int i = 0; i < tempArrayAndAllRotations.Length; i++)
                 {
                     if (vb.Satisfies(tempArrayAndAllRotations[i]))
                     {
-                        vb.Place(width, size, posX, posY, i * 90);
-                        return;
+                        tempPossibleBuildings.Add((vb, i));
                     }
                 }
+            }
+
+            if (tempPossibleBuildings.Count > 0)
+            {
+                var selected = tempPossibleBuildings[Random.Range(0, tempPossibleBuildings.Count)];
+
+                selected.Item1.Place(width, size, posX, posY, selected.Item2 * 90);
             }
         }
 

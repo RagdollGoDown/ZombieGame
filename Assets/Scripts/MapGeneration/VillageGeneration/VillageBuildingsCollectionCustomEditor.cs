@@ -106,10 +106,10 @@ namespace MapGeneration.VillageGeneration
                     switch (v)
                     {
                         case ObjectPoolBuilding opb:
-                        buildingsList.Add(new ObjectPoolBuilding(opb));
+                        buildingsList.Insert(buildingsList.IndexOf(opb), new ObjectPoolBuilding(opb));
                         break;
                         case GeneratorProxyBuilding gpb:
-                        buildingsList.Add(new GeneratorProxyBuilding(gpb));
+                        buildingsList.Insert(buildingsList.IndexOf(gpb), new GeneratorProxyBuilding(gpb));
                         break;
                     }
                 }

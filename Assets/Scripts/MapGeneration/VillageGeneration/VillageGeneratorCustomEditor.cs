@@ -15,16 +15,6 @@ namespace MapGeneration.VillageGeneration
         private SerializedProperty size;
         private readonly static int BASE_SIZE = 10;
 
-        //objectives
-        private const string numberOfObjectivesPath = "numberOfObjectives";
-        private SerializedProperty numberOfObjectives;
-
-        private const string objectiveRadiusPath = "objectiveRadius";
-        private SerializedProperty objectiveRadius;
-
-        private const string possibleObjectivesPath = "possibleObjectives";
-        private SerializedProperty possibleObjectives;
-
         //generation
         private const string generationMethodPath = "generationMethod";
         private SerializedProperty generationMethod;
@@ -50,10 +40,6 @@ namespace MapGeneration.VillageGeneration
             size = serializedObject.FindProperty(sizePath);
             density = serializedObject.FindProperty(densityPath);
 
-            numberOfObjectives = serializedObject.FindProperty(numberOfObjectivesPath);
-            objectiveRadius = serializedObject.FindProperty(objectiveRadiusPath);
-            possibleObjectives = serializedObject.FindProperty(possibleObjectivesPath);
-
             generationMethod = serializedObject.FindProperty(generationMethodPath);
 
             turnProbability = serializedObject.FindProperty(turnProbaPath);
@@ -75,15 +61,6 @@ namespace MapGeneration.VillageGeneration
             }
 
             EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Objectives");
-
-            EditorGUILayout.PropertyField(numberOfObjectives);
-            EditorGUILayout.PropertyField(objectiveRadius);
-            EditorGUILayout.PropertyField(possibleObjectives);
-            EditorGUILayout.EndVertical();
-
 
             EditorGUILayout.PropertyField(generationMethod);
 

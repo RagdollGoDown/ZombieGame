@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,7 +46,7 @@ namespace Utility
         //----------------------------------------editor methods
 
         /// <summary>
-        /// Put all initial objects
+        /// empty then Instantiate all initial objects
         /// </summary>
         public void ReadyInitialObjects()
         {
@@ -66,7 +67,30 @@ namespace Utility
         }
 
         /// <summary>
-        /// Put all initial objects
+        /// empty then Instantiate all initial objects, but asynchronously
+        /// </summary>
+        public async void ReadyInitialObjectsAsync()
+        {
+            if (possibleObjects.Count == 0 || initialNumber == 0) { return; }
+
+            EmptyObjects();
+
+            int possibleIndex;
+
+            objects = new();
+
+            for (int i = 0; i < initialNumber; i++)
+            {
+                possibleIndex = Random.Range(0, possibleObjects.Count);
+                objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
+                objects[^1].SetActive(false);
+
+                await Task.Yield(); 
+            }
+        }
+
+        /// <summary>
+        /// empty then Instantiate all initial objects
         /// </summary>
         /// <param name="numberOfObjects">the number of objects to ready</param>
         public void ReadyInitialObjects(int numberOfObjects)
@@ -74,6 +98,17 @@ namespace Utility
             initialNumber = numberOfObjects;
 
             ReadyInitialObjects();
+        }
+
+        /// <summary>
+        /// empty then Instantiate all initial objects, but asynchronously
+        /// </summary>
+        /// <param name="numberOfObjects">the number of objects to ready</param>
+        public void ReadyInitialObjectsAsync(int numberOfObjects)
+        {
+            initialNumber = numberOfObjects;
+
+            ReadyInitialObjectsAsync();
         }
 
         /// <summary>

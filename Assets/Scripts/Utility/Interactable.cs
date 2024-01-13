@@ -26,7 +26,7 @@ namespace Utility
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag == "Player" && other.TryGetComponent(out Interactor interactor))
+            if (other.CompareTag("Player") && other.TryGetComponent(out Interactor interactor))
             {
                 if (enabled) interactor.OnInteractableEntered(_interaction);
 

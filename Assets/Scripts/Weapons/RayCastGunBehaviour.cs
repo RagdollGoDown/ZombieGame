@@ -225,7 +225,7 @@ namespace Weapons
                 }
 
                 //-----------------------------------------------bullet hole
-                if (pointShot.transform.gameObject.layer == BULLETHOLE_RECIPIENTS_LAYERMASK)
+                else if (pointShot.transform.gameObject.layer == BULLETHOLE_RECIPIENTS_LAYERMASK)
                 {
                     GPUInstanceManager.AddInstance(new GPUInstanceStatic(
                         pointShot.point + pointShot.normal * 0.03f,

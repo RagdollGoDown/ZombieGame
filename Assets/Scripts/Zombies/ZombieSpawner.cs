@@ -1,15 +1,15 @@
 using System.Collections;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using Utility;
 
 public class ZombieSpawner : MonoBehaviour
 {
-    [SerializeField] private float timeBetweenSpawns = 1;
+    [SerializeField] private int timeBetweenSpawnsMilliSec = 1000;
 
     private int _zombiesToSpawn;
     private DamageableObject _zombieTargetOnSpawn;
-    private bool _isSpawning;
     private ObjectPool zombiePool;
 
     //these positions are offsets from the gameobject's position
@@ -42,43 +42,42 @@ public class ZombieSpawner : MonoBehaviour
     /// <param name="amountOfZombies"> the number of total zombies to spawn</param>
     /// <param name="zombieTarget"> the target to be followed by the zombies</param>
     /// <param name="zombiePool"> the pool the zombies should be taken from</param>
+    /// <param name="zombieReaper"> the reaper to inform upon the zombies death</param>
     /// <returns></returns>
-    public int AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget, ObjectPool zombiePool)
+    public async void AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget, ObjectPool zombiePool, 
+        Reaper zombieReaper = null)
     {
         if (this.zombiePool != zombiePool) this.zombiePool = zombiePool;
 
         _zombiesToSpawn += amountOfZombies;
         _zombieTargetOnSpawn = zombieTarget;
 
-        ZombieSpawnerManager.AddZombie(amountOfZombies);
-
-        if (!_isSpawning && _zombiesToSpawn > 0)
+        while (_zombiesToSpawn > 0)
         {
-            SpawnZombie();
+            SpawnZombie(zombieReaper);
+            await Task.Delay(timeBetweenSpawnsMilliSec);
         }
-
-        return amountOfZombies;
     }
 
-    private void SpawnZombie()
+    private void SpawnZombie(Reaper zombieReaper = null)
     {
-        _isSpawning = true;
-
-        if (_zombiesToSpawn <= 0)
-        {
-            _isSpawning = false;
-            return;
-        }
-
         ZombieBehaviour zb = zombiePool.Pull(enabled:false).GetComponent<ZombieBehaviour>();
+
         zb.transform.position =
             spawnPositionsOffset[_zombiesToSpawn % spawnPositionsOffset.Length] + transform.position;
         zb.gameObject.SetActive(true);
         zb.StartChase(_zombieTargetOnSpawn);
         _zombiesToSpawn--;
-        Invoke(nameof(SpawnZombie), timeBetweenSpawns);
+
+        if (zombieReaper != null) ReapToZombieOnDeathEvent(zb, zombieReaper);
     }
 
+    private void ReapToZombieOnDeathEvent(ZombieBehaviour zb, Reaper zombieReaper)
+    {
+        if (zombieReaper == null || zb == null) return;
+        zb.OnDeath.RemoveListener(z => zombieReaper.Reap(z.GetMainDamageableObject()));
+        zb.OnDeath.AddListener(z => zombieReaper.Reap(z.GetMainDamageableObject()));
+    }
     //-----------------------------------------------get/setters
 
     /// <summary>

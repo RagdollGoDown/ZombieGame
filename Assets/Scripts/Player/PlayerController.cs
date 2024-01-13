@@ -283,10 +283,8 @@ public class PlayerController : MonoBehaviour,Interactor
     {
         _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
         _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += _playerUI.SetAmmoText;
-        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
+        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired c)
         {
-            CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
-
             c.GetSpread().onValueChange += _playerUI.SetCrosshairScale;
         }
         _playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
@@ -311,6 +309,7 @@ public class PlayerController : MonoBehaviour,Interactor
         {
             _interactions.Add(interaction);
         }
+
 
         UpdateCurrentInteraction();
     }

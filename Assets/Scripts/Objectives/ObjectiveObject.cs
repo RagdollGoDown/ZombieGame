@@ -9,20 +9,20 @@ namespace Objectives
     {
         private bool isOn;
 
-        private Animator _anim;
-
         private UnityEvent _objectEvent = new UnityEvent();
+        private Animator animator;
 
-        private UnityEvent _onTurnedOn = new UnityEvent();
-        private UnityEvent _onTurnedOff = new UnityEvent();
+        public UnityEvent onTurnedOn;
+        public UnityEvent onTurnedOff;
 
         private void Awake()
         {
-            _anim = GetComponent<Animator>();
-
             ReadyOnAwake();
         }
-        protected virtual void ReadyOnAwake() { }
+        protected virtual void ReadyOnAwake() 
+        {
+            animator = GetComponent<Animator>();
+        }
 
         /// <summary>
         /// Gets the object event, the event activated 
@@ -34,27 +34,14 @@ namespace Objectives
             return _objectEvent;
         }
 
-        protected UnityEvent GetOnTurnedOnEvent()
-        {
-            return _onTurnedOn;
-        }
-
-        protected UnityEvent GetOnTurnedOffEvent()
-        {
-            return _onTurnedOff;
-        }
-
         /// <summary>
         /// get the object ready to be interacted with
         /// </summary>
         public void turnOn()
         {
             isOn = true;
-
-            if (_anim != null)
-            { _anim.SetBool("isOn", isOn); }
-
-            _onTurnedOn.Invoke();
+            
+            onTurnedOn.Invoke();
         }
 
         /// <summary>
@@ -64,10 +51,7 @@ namespace Objectives
         {
             isOn = false;
 
-            if (_anim != null)
-            { _anim.SetBool("isOn", isOn); }
-
-            _onTurnedOff.Invoke();
+            onTurnedOff.Invoke();
         }
 
         /// <summary>
@@ -75,5 +59,27 @@ namespace Objectives
         /// </summary>
         /// <returns> the isOn bool</returns>
         public bool getIsOn() { return isOn; }
+
+        //-----------------------------------utility
+
+        /// <summary>
+        /// Sets a bool in the animator to true
+        /// a bit of a cope for the lack of an event function of this
+        /// </summary>
+        /// <param name="parameterName">the name of the parameter</param>
+        public void SetBoolTrueInAnimator(string parameterName)
+        {
+            if (animator != null) animator.SetBool(parameterName, true);
+        }
+
+        /// <summary>
+        /// Sets a bool in the animator to false
+        /// a bit of a cope for the lack of an event function of this
+        /// </summary>
+        /// <param name="parameterName">the name of the parameter</param>
+        public void SetBoolFalseInAnimator(string parameterName)
+        {
+            if (animator != null) animator.SetBool(parameterName, false);
+        }
     }
 }

@@ -64,9 +64,11 @@
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableBool.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\LogicAndCondition.cs" />
     <Compile Include="Assets\Scripts\Utility\Timer.cs" />
+    <Compile Include="Assets\Scripts\Utility\Reaping\Reapable.cs" />
     <Compile Include="Assets\Scripts\Utility\DamageableObject.cs" />
     <Compile Include="Assets\Scripts\Utility\GPUInstancing\GPUInstanceManager.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\MultipleConditions.cs" />
+    <Compile Include="Assets\Scripts\Utility\Reaping\Reaper.cs" />
     <Compile Include="Assets\Scripts\Utility\GPUInstancing\GPUInstance.cs" />
     <Compile Include="Assets\Scripts\Utility\ObjectPool\ObjectPoolEditor.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\Condition.cs" />

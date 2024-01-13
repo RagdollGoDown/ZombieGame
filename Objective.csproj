@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{41CC9D9D-F743-2EB3-8F33-69613750FE04}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -60,11 +61,13 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Objectives\Button\ButtonObjective.cs" />
     <Compile Include="Assets\Scripts\Objectives\ObjectiveObject.cs" />
+    <Compile Include="Assets\Scripts\Objectives\Mission.cs" />
     <Compile Include="Assets\Scripts\Objectives\Objective.cs" />
     <Compile Include="Assets\Scripts\Objectives\Button\ButtonObjectiveObject.cs" />
     <Compile Include="Assets\Scripts\Objectives\Area\AreaObjectiveObject.cs" />
     <Compile Include="Assets\Scripts\Objectives\Area\AreaObjective.cs" />
     <Compile Include="Assets\Scripts\Objectives\ObjectivesManager.cs" />
+    <Compile Include="Assets\Scripts\Objectives\Wait\NewBehaviourScript1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\Objectives\Objective.asmdef" />
@@ -740,6 +743,7 @@
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

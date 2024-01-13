@@ -23,7 +23,8 @@ namespace Utility
             }
         }
 
-        private Object _lastDamageDealer;
+        private Object lastDamageDealer;
+        private Damage lastDamageRecieved;
 
         [SerializeField] private float _health;
         [SerializeField] private float maxHealth = 10;
@@ -115,7 +116,8 @@ namespace Utility
         {
             OnDamageTaken.Invoke();
 
-            _lastDamageDealer = damage.GetDamageDealer();
+            lastDamageDealer = damage.GetDamageDealer();
+            lastDamageRecieved = damage;
 
             _health -= damage.GetDamageDone();
 
@@ -124,6 +126,8 @@ namespace Utility
                 Die(damage);
             }
         }
+
+
 
         //---------------------------------------------------------getters setters
 
@@ -134,7 +138,12 @@ namespace Utility
 
         public Object GetLastDamageDealer()
         {
-            return _lastDamageDealer;
+            return lastDamageDealer;
+        }
+
+        public Damage GetLastDamageDone()
+        {
+            return lastDamageRecieved;
         }
 
         /// <summary>

@@ -10,17 +10,15 @@ namespace Objectives.Button
         private int totalButtonsToPress;
         private int _buttonsToPress;
 
-        [SerializeField] ButtonObjectiveObject[] buttons;
-
         protected override void Awake()
         {
             base.Awake();
 
-            totalButtonsToPress = buttons.Length;
+            totalButtonsToPress = GetObjectiveObjects().Count;
 
-            foreach (ButtonObjectiveObject button in buttons)
+
+            foreach (ObjectiveObject button in GetObjectiveObjects())
             {
-                AddObjectiveObject(button);
                 button.GetObjectEvent().AddListener(PressButton);
             }
         }
