@@ -17,8 +17,6 @@ namespace Utility
 
         private Interactor interactorInArea;
 
-        private UnityEvent<Interaction> _onPlayerEnter;
-
         private void Awake()
         {
             _interaction = new Interaction(interactEvent, interactionText);
