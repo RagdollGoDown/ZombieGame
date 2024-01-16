@@ -41,7 +41,7 @@ namespace Utility
         //--------------------------to do on destruction
         [SerializeField] private List<string> destructionParticlePoolNames;
         private ObjectPool[] destructionParticlePool;
-        public UnityEvent<Damage> deathCalls;
+        public UnityEvent<DamageableObject> deathCalls;
 
         [SerializeField] private bool shrinkOnDeath;
         [SerializeField] private bool disableCollidersOnDeath = true;
@@ -190,7 +190,7 @@ namespace Utility
                 StartCoroutine(nameof(DisableParticle), dpg.gameObject);
             }
 
-            deathCalls.Invoke(damage);
+            deathCalls.Invoke(this);
 
             if (disableCollidersOnDeath)
             {
