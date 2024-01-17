@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 8783243ccc87a314b909ab81b3cc747d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - bloodSpillPrefab: {fileID: 643517796497277911, guid: 1ffb05dc191acf24d81fe559ac649a05,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
