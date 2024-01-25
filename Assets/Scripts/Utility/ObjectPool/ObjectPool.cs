@@ -7,6 +7,8 @@ namespace Utility
 {
     public class ObjectPool : MonoBehaviour
     {
+        private static Dictionary<string, ObjectPool> availableObjectPools;
+
         [SerializeField] private List<GameObject> objects;
 
         [SerializeField] private int initialNumber = 5;
@@ -17,6 +19,8 @@ namespace Utility
 
         /// <summary>
         /// Gets the first disabled object in the pool
+        /// It's often better to pull disabled and then enable it, 
+        /// as some manipulations can't be done when the object is already enabled
         /// </summary>
         /// <param name="enabled">if we return the object enabled or disabled</param>
         /// <returns>the pulled object</returns>
@@ -30,7 +34,7 @@ namespace Utility
                     objects.Remove(obj);
                     objects.Insert(objects.Count - 1, obj);
 
-                    if (enabled) obj.SetActive(true);
+                    obj.SetActive(enabled);
                     return obj;
                 }
             }
@@ -39,7 +43,7 @@ namespace Utility
 
             objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
 
-            if (enabled) objects[^1].SetActive(true);
+            objects[^1].SetActive(enabled);
             return objects[^1];
         }
 
@@ -133,6 +137,44 @@ namespace Utility
                 children.RemoveAt(0);
                 DestroyImmediate(current);
             }
+        }
+
+        //-------------------------------unity events
+
+        private void OnEnable()
+        {
+            if (availableObjectPools == null) availableObjectPools = new();
+
+            availableObjectPools.Add(name, this);
+        }
+
+        private void OnDisable()
+        {
+            availableObjectPools.Remove(name);
+        }
+
+        //-----------------------------getters and setters
+
+        public static ObjectPool GetPool(string name)
+        {
+            ObjectPool pool;
+            
+            availableObjectPools.TryGetValue(name, out pool);
+            
+            try
+            {
+
+                if (pool == null)
+                {
+                    pool = GameObject.Find(name).GetComponent<ObjectPool>();
+                }
+            }
+            catch
+            {
+                Debug.Log("Pool " + name + " " + " is unfound");
+            }
+
+            return pool;
         }
     }
 }

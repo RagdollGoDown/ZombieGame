@@ -47,13 +47,13 @@ namespace Utility
 
         private float probabilityOfHighlight = 1 / 2;
         private int numberOfKillsToPossiblyGetHighlight = 3;
-        private float maxTimeBetweenKillsToGetHighlight = 0.1f;
+        private float maxTimeBetweenKillsToGetHighlight = 0.5f;
         private int numberOfReapedCheckedForHighlight = 10;
 
         public Reaper(
             float probabilityOfHighlight = 1/2,
             int numberOfKillsToPossiblyGetHighlight = 3,
-            float maxTimeBetweenKillsToGetHighlight = 0.1f,
+            float maxTimeBetweenKillsToGetHighlight = 0.5f,
             int numberOfReapedCheckedForHighlight = 10
             )
         {
@@ -76,14 +76,9 @@ namespace Utility
         {
             int killsNeeded = numberOfKillsToPossiblyGetHighlight;
             float maxAcceptableTime = Time.time - maxTimeBetweenKillsToGetHighlight;
-
             for (int i = reapedObjects.Count - 2;
-                i > reapedObjects.Count - numberOfReapedCheckedForHighlight - 1 && i > 0; i++)
+                i > reapedObjects.Count - numberOfReapedCheckedForHighlight - 1 && i > 0; i--)
             {
-                Debug.Log("i : " + i + " kills: " + killsNeeded);
-                Debug.Log(reapedObjects[i].GetTimeOfDeath() - maxAcceptableTime);
-                Debug.Log(reapedObjects[i].GetKiller().name + " : " + killer.name);
-
                 if (reapedObjects[i].GetTimeOfDeath() > maxAcceptableTime)
                 {
                     if (killer.Equals(reapedObjects[i].GetKiller()))
@@ -93,11 +88,13 @@ namespace Utility
                         if (killsNeeded <= 0)
                         {
                             Highlight(killer);
+                            break;
                         }
                     }
                 }
                 else
                 {
+                    //too much time between the kills to get a highlight
                     break;
                 }
 

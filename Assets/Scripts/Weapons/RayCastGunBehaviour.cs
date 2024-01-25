@@ -215,7 +215,8 @@ namespace Weapons
 
                 if (pointShot.transform.TryGetComponent(out DamageableObject DO))
                 {
-                    DO.getHit.Invoke(new Damage(damage, pointShot.point - transform.position, this));
+                    Damage damageToDO = new(damage, pointShot.point - transform.position, this);
+                    DO.getHit.Invoke(damageToDO);
 
                     //--------------------------hitmarker
                     Transform HM = Instantiate(hitMarker, pointShot.point, Quaternion.identity).transform;

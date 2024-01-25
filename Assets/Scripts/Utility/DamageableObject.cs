@@ -61,25 +61,10 @@ namespace Utility
 
             initialScale = transform.localScale;
 
-            destructionParticlePool = 
+            destructionParticlePool =
                 destructionParticlePoolNames.Select(dpp =>
                 {
-                    GameObject poolGameObject = GameObject.Find(dpp);
-
-                    if (poolGameObject == null)
-                    {
-                        Debug.Log("Pool not found : " + dpp);
-                        return null;
-                    }
-
-                    ObjectPool pool = poolGameObject.GetComponent<ObjectPool>();
-                    if (pool == null)
-                    {
-                        Debug.Log("Pool not on object found : " + dpp);
-                        return null;
-                    }
-
-                    return pool;
+                    return ObjectPool.GetPool(dpp);
                 }).Where(dpp => dpp != null).ToArray();
 
             _damageableChildren = new List<DamageableObject>();

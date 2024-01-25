@@ -1500,7 +1500,19 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: Die
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: BreakRightLeg
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1905,6 +1917,18 @@ MonoBehaviour:
   deathCalls:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: BreakLeftLeg
@@ -3034,6 +3058,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   shrinkOnDeath: 1
   disableCollidersOnDeath: 1
   killChildrenOnDeath: 1
@@ -3491,6 +3527,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   shrinkOnDeath: 1
   disableCollidersOnDeath: 1
   killChildrenOnDeath: 1
@@ -3808,6 +3856,18 @@ MonoBehaviour:
   deathCalls:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: Die
@@ -5003,7 +5063,7 @@ MonoBehaviour:
   _headTransform: {fileID: 9033788945885389925}
   walkingSpeed: 2
   minRunningSpeed: 4
-  maxRunningSpeed: 15
+  maxRunningSpeed: 10
   distanceForMaxSpeed: 30
   crawlingSpeed: 3
   OnDeath:
@@ -5700,7 +5760,19 @@ MonoBehaviour:
   destructionParticlePoolNames: []
   deathCalls:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 0
   shrinkOnDeath: 1
   disableCollidersOnDeath: 1
   killChildrenOnDeath: 1
@@ -7244,7 +7316,19 @@ MonoBehaviour:
   destructionParticlePoolNames: []
   deathCalls:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 0
   shrinkOnDeath: 1
   disableCollidersOnDeath: 1
   killChildrenOnDeath: 1
@@ -10681,6 +10765,18 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: Die
         m_Mode: 1
         m_Arguments:
@@ -11215,8 +11311,20 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: Die
+        m_MethodName: BreakRightLeg
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11682,6 +11790,18 @@ MonoBehaviour:
   deathCalls:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDeadBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: Die

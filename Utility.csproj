@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Utility\Conditions\Condition.cs" />
     <Compile Include="Assets\Scripts\Utility\Conditions\SimpleCondition.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ObservableFloat.cs" />
+    <Compile Include="Assets\Scripts\Utility\ObjectPool\RandomObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\Utility\Interactor.cs" />
     <Compile Include="Assets\Scripts\Utility\Observable\ReadOnly\ReadOnlyObservableObject.cs" />
     <Compile Include="Assets\Scripts\Utility\Interactable.cs" />

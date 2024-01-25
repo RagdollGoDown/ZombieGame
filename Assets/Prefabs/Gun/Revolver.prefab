@@ -2913,7 +2913,7 @@ GameObject:
   - component: {fileID: 7038368421035574632}
   - component: {fileID: 2950480441368900733}
   m_Layer: 7
-  m_Name: BulletTrailPool
+  m_Name: BulletTrailPoolRevolver
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -91,10 +91,17 @@ namespace MapGeneration.VillageGeneration
         {
             if (possibleObjects == null) { return; }
 
-            tempGameObject = possibleObjects.Pull(true);
+            tempGameObject = possibleObjects.Pull(false);
 
             tempGameObject.transform.position = new Vector3((posX + 1) * width - ((size - 1) * width / 2), 0, (posY + 1) * width - ((size - 1) * width / 2));
             tempGameObject.transform.Rotate(Vector3.up, rotation);
+
+            tempGameObject.SetActive(true);
+
+            if (tempGameObject.TryGetComponent(out PlacableBuilding placable))
+            {
+                placable.onPlaced.Invoke();
+            }
         }
 
         public override void Ready(int size)

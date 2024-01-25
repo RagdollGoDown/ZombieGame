@@ -23,7 +23,7 @@ public class ZombieBehaviour : MonoBehaviour
     private static readonly int JUMP_ANIMATOR_PARAMETER_ID = Animator.StringToHash("Jump");
 
     //we don't want the zombie to look at the damageable object but at the head
-    private static readonly Vector3 OFFSET_FOR_HEAD_CONSTRAINT = new(0,1.7f,0);
+    private static readonly Vector3 OFFSET_FOR_HEAD_CONSTRAINT = new(0, 1.7f, 0);
 
     //used for the chase direction
     private static readonly float DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION = 0.01f;
@@ -36,7 +36,7 @@ public class ZombieBehaviour : MonoBehaviour
     private static readonly float IDLING_MIN_WAIT_BETWEEN_WANDERS = 5;
 
     private ZombieState _currentState;
-    
+
     //TODO unserialize
     [SerializeField] private Transform _headTransform;
 
@@ -57,7 +57,7 @@ public class ZombieBehaviour : MonoBehaviour
     private MultiAimConstraint _headConstraint;
     private RigBuilder _rigBuilder;
     private Animator _zombieAnimator;
-    
+
     //--------------------body state
     private bool _leftArmBroken;
     private bool _rightArmBroken;
@@ -65,17 +65,18 @@ public class ZombieBehaviour : MonoBehaviour
     private bool _rightLegBroken;
     private Rigidbody[] rigidBodys;
     private DamageableObject mainDamageableObject;
+    private DamageableObject lastDeadBodyPart;
 
     public UnityEvent<ZombieBehaviour> OnDeath;
 
     [Header("Attacking")]
     //--------------------attacking
-    [SerializeField]private float attackDamage;
-    [SerializeField]private float attackDamageWithHeads;
-    [SerializeField]private float timeBetweenAttacks;
+    [SerializeField] private float attackDamage;
+    [SerializeField] private float attackDamageWithHeads;
+    [SerializeField] private float timeBetweenAttacks;
     private float _timeBetweenAttackCounter;
-    [SerializeField]private float distanceBeforeAttack;
-    [SerializeField]private float MaxNavMeshSpeedRequieredAttack= 0.2f;
+    [SerializeField] private float distanceBeforeAttack;
+    [SerializeField] private float MaxNavMeshSpeedRequieredAttack = 0.2f;
 
     [Header("Mesh")]
     //--------------------mesh
@@ -89,7 +90,7 @@ public class ZombieBehaviour : MonoBehaviour
     private void Awake()
     {
         if (!_headTransform) throw new System.NullReferenceException("Head transform is null");
-        
+
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         runningSpeed = UnityEngine.Random.Range(minRunningSpeed, maxRunningSpeed);
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;
@@ -128,7 +129,7 @@ public class ZombieBehaviour : MonoBehaviour
 
         _currentState = ZombieState.Idle;
 
-        Invoke(nameof(UnReadyRagdoll),Time.fixedDeltaTime);
+        Invoke(nameof(UnReadyRagdoll), Time.fixedDeltaTime);
     }
 
     //--------------------------------------general
@@ -148,7 +149,7 @@ public class ZombieBehaviour : MonoBehaviour
             _selectedZombieMesh = differentZombieMeshsGameObject[selectedMeshIndex];
 
             SkinnedMeshRenderer zombieSkinnedMesh = _selectedZombieMesh.GetComponent<SkinnedMeshRenderer>();
-            
+
             if (zombieSkinnedMesh != null)
             {
                 zombieSkinnedMesh.material =
@@ -189,10 +190,10 @@ public class ZombieBehaviour : MonoBehaviour
 
     private IEnumerator Idling()
     {
-        while(_currentState == ZombieState.Idle)
+        while (_currentState == ZombieState.Idle)
         {
             Vector3 nextPositionToWanderTo = new Vector3(
-                transform.position.x + UnityEngine.Random.Range(-IDLING_MAX_DISTANCE,IDLING_MAX_DISTANCE),
+                transform.position.x + UnityEngine.Random.Range(-IDLING_MAX_DISTANCE, IDLING_MAX_DISTANCE),
                 transform.position.y,
                 transform.position.z + UnityEngine.Random.Range(-IDLING_MAX_DISTANCE, IDLING_MAX_DISTANCE));
 
@@ -216,7 +217,7 @@ public class ZombieBehaviour : MonoBehaviour
         _timeBetweenAttackCounter = timeBetweenAttacks;
 
         WeightedTransformArray sources = new();
-        sources.Add(new WeightedTransform(_zombieTarget.transform,1));
+        sources.Add(new WeightedTransform(_zombieTarget.transform, 1));
         _headConstraint.data.sourceObjects = sources;
 
         _zombieAnimator.enabled = false;
@@ -232,7 +233,7 @@ public class ZombieBehaviour : MonoBehaviour
 
         float distanceFromPlayer;
 
-        while(_currentState == ZombieState.Chasing)
+        while (_currentState == ZombieState.Chasing)
         {
             distanceFromPlayer = Vector3.Distance(_zombieTarget.transform.position, transform.position);
 
@@ -244,9 +245,9 @@ public class ZombieBehaviour : MonoBehaviour
             }
 
             //the speed gets linearly smaller when the zombie gets closer to the player
-            _navMeshAgent.speed = distanceFromPlayer >= distanceForMaxSpeed ? maxRunningSpeed : 
+            _navMeshAgent.speed = distanceFromPlayer >= distanceForMaxSpeed ? maxRunningSpeed :
                 minRunningSpeed + (maxRunningSpeed - minRunningSpeed) * distanceFromPlayer / distanceForMaxSpeed;
-            
+
             _navMeshAgent.SetDestination(lookingPosition);
 
             if (distanceFromPlayer <= distanceBeforeAttack
@@ -298,7 +299,7 @@ public class ZombieBehaviour : MonoBehaviour
         _leftArmBroken = true;
         CheckBodyIntegrity();
     }
-    
+
     public void BreakRightArm()
     {
         _rightArmBroken = true;
@@ -378,8 +379,21 @@ public class ZombieBehaviour : MonoBehaviour
         return _navMeshAgent;
     }
 
-    public DamageableObject GetMainDamageableObject()
+
+    /// <summary>
+    /// This should only be used by the zombies body parts in damageable objectives
+    /// </summary>
+    public void SetLastDeadBodyPart(DamageableObject damageableObject)
     {
-        return mainDamageableObject;
+        lastDeadBodyPart = damageableObject;
+    }
+
+    /// <summary>
+    /// This is the last part that was damaged, we need this for the reaper
+    /// </summary>
+    /// <returns>The last damageable object that was damaged</returns>
+    public DamageableObject GetLastDeadBodyPart()
+    {
+        return lastDeadBodyPart;
     }
 }

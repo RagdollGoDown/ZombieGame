@@ -1952,7 +1952,7 @@ GameObject:
   - component: {fileID: 6677249055974738575}
   - component: {fileID: 6401259249079594959}
   m_Layer: 0
-  m_Name: BulletTrailPool
+  m_Name: BulletTrailPoolShotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2998,7 +2998,8 @@ MonoBehaviour:
   reloadAnimationTime: 1
   fireRateForShots: 2.1
   damage: 10
-  pelletsPerShot: 20
+  pelletsPerShot: 30
+  penetration: 1
   range: 100
   _maxSpread: 0.2
   _restingSpread: 0.1

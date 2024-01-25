@@ -33,24 +33,8 @@ public class GameManager : MonoBehaviour
         villageGenerator.Generate(necessaryBuildingsToPlace: mainMission.ObjectiveObjects().Select(obj => obj.gameObject).ToList());
         zombieSpawnerManager.SetTarget(playerInput.GetComponent<DamageableObject>());
 
-        //UnityEditor.AI.NavMeshBuilder.BuildNavMeshAsync();
         navMesh.BuildNavMesh();
 
-        //UpdateNavMeshSurface();
         zombieSpawnerManager.BeginToSpawn();
-    }
-
-    private void UpdateNavMeshSurface()
-    {
-        var data = navMesh.navMeshData;
-
-        List<NavMeshBuildSource> sources = new();
-
-        NavMeshBuilder.CollectSources(navMesh.navMeshData.sourceBounds, navMesh.layerMask, navMesh.useGeometry,
-            navMesh.defaultArea, generateLinksByDefault: true, new List<NavMeshBuildMarkup>(),
-            includeOnlyMarkedObjects:false, sources);
-
-        NavMeshBuilder.UpdateNavMeshDataAsync(data, navMesh.GetBuildSettings(), sources, navMesh.navMeshData.sourceBounds);
-        navMesh.UpdateNavMesh(data);
     }
 }

@@ -59,12 +59,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageBuildingsCollectionCustomEditor.cs" />
+    <Compile Include="Assets\Scripts\MapGeneration\PlacableBuilding.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageGenerator.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageBuildingsCollection.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageBuildings.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\BunkerGenerator.cs" />
     <Compile Include="Assets\Scripts\MapGeneration\VillageGeneration\VillageGeneratorCustomEditor.cs" />
-    <Compile Include="Assets\Scripts\MapGeneration\BunkerGeneratorCustomEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\MapGeneration\MapGeneration.asmdef" />
