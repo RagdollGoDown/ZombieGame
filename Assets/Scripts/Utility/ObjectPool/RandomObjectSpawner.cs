@@ -26,9 +26,9 @@ namespace Utility
 
             GameObject obj = pool.Pull(false);
 
-            Vector3 offset = Random.Range(-AreaCovered.x, AreaCovered.x) * transform.forward +
+            Vector3 offset = Random.Range(-AreaCovered.x, AreaCovered.x) * transform.right +
                 Random.Range(-AreaCovered.y, AreaCovered.y) * transform.up +
-                Random.Range(-AreaCovered.z, AreaCovered.z) * transform.right;
+                Random.Range(-AreaCovered.z, AreaCovered.z) * transform.forward;
 
             obj.transform.SetPositionAndRotation(transform.position + offset, transform.rotation);
             obj.SetActive(true);
