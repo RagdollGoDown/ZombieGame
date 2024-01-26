@@ -1,18 +1,22 @@
 using System.Linq;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility.Observable;
+using System;
 
 namespace Utility
 { 
-    public class Reaper
-    {
-        private struct ReapedDamageableObject
+    /// <summary>
+    /// This struct is used to store information about a damageable object that has been reaped.
+    /// It should only be used by the Reaper class.
+    /// </summary>
+    public struct ReapedDamageableObject
         {
             private readonly DamageableObject killed;
             private readonly Damage killingBlow;
             private readonly float timeOfDeath;
-            private readonly Object killer;
+            private readonly UnityEngine.Object killer;
 
             public ReapedDamageableObject(DamageableObject killed, float timeOfDeath)
             {
@@ -32,7 +36,7 @@ namespace Utility
                 return timeOfDeath;
             }
 
-            public Object GetKiller()
+            public UnityEngine.Object GetKiller()
             {
                 return killer;
             }
@@ -43,36 +47,24 @@ namespace Utility
             }
         }
 
-        private List<ReapedDamageableObject> reapedObjects;
+    /// <summary>
+    /// Is meant to collect dead damageable objects and store them in a list.
+    /// It's goal was to keep a record of the enemies killed by the player.
+    /// </summary>
+    public class Reaper
+    {
+        private readonly List<ReapedDamageableObject> reapedObjects;
 
-        private float probabilityOfHighlight = 1 / 2;
-        private int numberOfKillsToPossiblyGetHighlight = 3;
-        private float maxTimeBetweenKillsToGetHighlight = 0.5f;
-        private int numberOfReapedCheckedForHighlight = 10;
-
-        public Reaper(
-            float probabilityOfHighlight = 1/2,
-            int numberOfKillsToPossiblyGetHighlight = 3,
-            float maxTimeBetweenKillsToGetHighlight = 0.5f,
-            int numberOfReapedCheckedForHighlight = 10
-            )
-        {
-            this.probabilityOfHighlight = probabilityOfHighlight;
-            this.numberOfKillsToPossiblyGetHighlight = numberOfKillsToPossiblyGetHighlight;
-            this.maxTimeBetweenKillsToGetHighlight = maxTimeBetweenKillsToGetHighlight;
-            this.numberOfReapedCheckedForHighlight = numberOfReapedCheckedForHighlight;
-
+        public Reaper(){
             reapedObjects = new();
         }
 
         public void Reap(DamageableObject killed)
         {
             reapedObjects.Add(new ReapedDamageableObject(killed,Time.time));
-
-            CheckHighlight(killed.GetLastDamageDealer());
         }
 
-        private async void CheckHighlight(Object killer)
+        /*private async void CheckHighlight(Object killer)
         {
             int killsNeeded = numberOfKillsToPossiblyGetHighlight;
             float maxAcceptableTime = Time.time - maxTimeBetweenKillsToGetHighlight;
@@ -105,6 +97,13 @@ namespace Utility
         private void Highlight(Object killer)
         {
             Debug.Log("highlight : " + killer.name);
+        }*/
+
+        //---------------------------getters
+
+        public ReadOnlyCollection<ReapedDamageableObject> GetReapedObjects()
+        {
+            return reapedObjects.AsReadOnly();
         }
     }
 }

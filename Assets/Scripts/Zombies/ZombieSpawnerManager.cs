@@ -8,13 +8,21 @@ using System.Linq;
 
 public class ZombieSpawnerManager : MonoBehaviour
 {
+    private static Vector3 SPAWNER_SECTOR_WIDTH = new(40, 40, 40);
+
     private static ZombieSpawnerManager CURRENT_SPAWNER;
 
-    private static List<ZombieSpawner> worldSpawnersAvailable;
+    private static ObservableCollection<ZombieSpawner> worldSpawnersAvailable;
+    private static SectorCollection<ZombieSpawner> worldSpawnersAvailableSectors;
 
     [SerializeField] private ObjectPool zombiePool;
-    [SerializeField] private int baseQuantityPerRound = 10;
-    [SerializeField] private int finalQuantityPerRound = 100;
+    [SerializeField] private int minQuantity = 10;
+    [SerializeField] private int maxQuantity = 100;
+    
+    private int quantitySpawned;
+
+    private int currentLivingQuantity;
+
     [SerializeField] private float timeFromStartToEndOfEscalationCurveSec = 240;
     private float currentEscalationCurveTimeSec = 0;
     [SerializeField] private AnimationCurve initialSpawnQuantityEscalationCurve;
@@ -40,7 +48,7 @@ public class ZombieSpawnerManager : MonoBehaviour
         if (timeBetweenRounds <= 0) throw new System.ArgumentException("Time before first round not strictly positiv");
 
         if (zombiePool == null) throw new System.NullReferenceException("No object pool to take zombies from");
-        zombiePool.ReadyInitialObjectsAsync(finalQuantityPerRound);
+        zombiePool.ReadyInitialObjectsAsync(maxQuantity);
 
         CURRENT_SPAWNER = this;
         zombieReaper = new();
@@ -51,6 +59,7 @@ public class ZombieSpawnerManager : MonoBehaviour
         if (CURRENT_SPAWNER == this) CURRENT_SPAWNER = null;
     }
 
+    //--------------------------------------------spawning methods
     public void BeginToSpawn()
     {
         if (CURRENT_SPAWNER != this) 
@@ -59,6 +68,17 @@ public class ZombieSpawnerManager : MonoBehaviour
         }
         else if (worldSpawnersAvailable.Count > 0)
         {
+            Debug.Log("Started Spawning");
+            Debug.Log(worldSpawnersAvailableSectors.Count);
+
+            worldSpawnersAvailableSectors.TryGetValueRange(target.transform.position, out List<ZombieSpawner> value, 3);
+            foreach (var key in value)
+            {
+                if (key != null){
+
+                //Debug.Log(key.transform.position);
+                }
+            }
             Debug.Log("Started Spawning");
             currentEscalationCurveTimeSec = 0;
             currentSpawnQuantityEscalationCurve = initialSpawnQuantityEscalationCurve;
@@ -88,6 +108,7 @@ public class ZombieSpawnerManager : MonoBehaviour
 
             tempAmount = Random.Range(1, Mathf.Min(MaxZombiesGivenPerSpawner, zombiesToSpawn + 1));
             zombiesToSpawn -= tempAmount;
+            quantitySpawned += tempAmount;
 
             worldSpawnersAvailable[Random.Range(0, worldSpawnersAvailable.Count - 1)]
                 .AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper); ;
@@ -121,7 +142,9 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         float lerpTime = initialSpawnQuantityEscalationCurve.Evaluate(currentEscalationCurveTimeSec / timeFromStartToEndOfEscalationCurveSec);
 
-        return ((int)Mathf.Lerp(baseQuantityPerRound, finalQuantityPerRound, lerpTime));
+        int currentLivingQuantity = quantitySpawned - zombieReaper.GetReapedObjects().Count;
+        
+        return Mathf.Max(Mathf.RoundToInt(Mathf.Lerp(minQuantity, maxQuantity, lerpTime)) - currentLivingQuantity,0);
     }
 
     //-------------------------------set/getters
@@ -132,9 +155,11 @@ public class ZombieSpawnerManager : MonoBehaviour
     /// <param name="newZombieSpawner">the spawner to be added</param>
     public static void AddSpawner(ZombieSpawner newZombieSpawner)
     {
-        if (worldSpawnersAvailable == null) worldSpawnersAvailable = new();
+        worldSpawnersAvailable ??= new();
+        worldSpawnersAvailableSectors ??= new(SPAWNER_SECTOR_WIDTH);
 
         worldSpawnersAvailable.Add(newZombieSpawner);
+        worldSpawnersAvailableSectors.Add(newZombieSpawner);
     }
 
     /// <summary>
