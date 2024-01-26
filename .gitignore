@@ -6,12 +6,5 @@
 [Pp]ackages/
 [Pp]roject[Ss]ettings
 .vs
-Zombies.csproj
-ZombieGame.sln
-Weapons.csproj
-Utility.csproj
-UI.csproj
-Player.csproj
-Objective.csproj
-MapGeneration.csproj
-Assembly-CSharp.csproj
+.sln
+*.csproj
