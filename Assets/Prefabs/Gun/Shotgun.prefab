@@ -2997,15 +2997,15 @@ MonoBehaviour:
   shootingAnimationLength: 2.042
   reloadAnimationTime: 1
   fireRateForShots: 2.1
-  damage: 10
-  pelletsPerShot: 30
+  damage: 20
+  pelletsPerShot: 50
   penetration: 1
   range: 100
-  _maxSpread: 0.2
-  _restingSpread: 0.1
-  _spreadDecreaseSpeed: 0.5
-  _spreadDecreaseSpeedWhenAiming: 1
-  _spreadIncreasePerShot: 0
+  _maxSpread: 0.4
+  _restingSpread: 0.2
+  _spreadDecreaseSpeed: 1
+  _spreadDecreaseSpeedWhenAiming: 3
+  _spreadIncreasePerShot: 1
   muzzleFlash: {fileID: 67332670061989990}
   hitMarker: {fileID: 7249987246175168379, guid: 0839edb0d63e9854ba386eede01a3423,
     type: 3}

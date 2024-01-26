@@ -17,7 +17,6 @@ namespace Weapons
 
         [SerializeField] private float reloadSpeed = 1;
         [SerializeField] private int chunk = 1;
-        private bool _wantsToReload;
 
         private Animator animator;
 
@@ -35,6 +34,11 @@ namespace Weapons
             AwakeWeapon();
         }
 
+        protected override void UpdateWeapon()
+        {
+            base.UpdateWeapon();
+        }
+
         protected override void ReadyAnimationLengths(Animator animator)
         {
             base.ReadyAnimationLengths(animator);
@@ -44,15 +48,11 @@ namespace Weapons
 
         public override void UseWeaponInput(InputAction.CallbackContext context)
         {
-            _wantsToReload = false;
-
             base.UseWeaponInput(context);
         }
 
         public override void ReloadInput(InputAction.CallbackContext context)
         {
-            if (context.started) _wantsToReload = true;
-
             base.ReloadInput(context);
         }
 
@@ -91,11 +91,6 @@ namespace Weapons
             yield return _reloadExitWait;
 
             SetIsReloading(false);
-        }
-
-        protected override bool ReloadConditions()
-        {
-            return base.ReloadConditions() && _wantsToReload;
         }
     }
 }

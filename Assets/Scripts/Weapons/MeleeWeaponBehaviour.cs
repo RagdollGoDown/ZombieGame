@@ -43,5 +43,10 @@ namespace Weapons
         {
             throw new System.NotImplementedException();
         }
+
+        public override int GetAmmoInMag()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

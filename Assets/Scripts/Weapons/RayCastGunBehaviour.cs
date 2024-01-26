@@ -102,17 +102,20 @@ namespace Weapons
             {
                 if (_lastTimeShot + fireRateForShots <= Time.time)
                 {
-                    UseWeapon();
-                }
+                    if (_remainingShots == 0 || _ammoRemainingInMag == 0)
+                    {
+                        //we need to stop it next frame or else the animation for the shot won't start
+                        StopUsing();
 
-                if (_ammoRemainingInMag == 0 || _remainingShots == 0)
-                {
-                    //we need to stop it next frame or else the animation for the shot won't start
-                    Invoke(nameof(StopUsing), Time.deltaTime);
-                }
-                else if (_ammoRemainingInMag == 0)
-                {
-                    Invoke(nameof(StartReload), Time.deltaTime);
+                        if (_ammoRemainingInMag == 0)
+                        {
+                            StartReload();
+                        }
+                    }
+                    else{
+                        UseWeapon();
+                    }
+
                 }
             }
 
@@ -252,7 +255,7 @@ namespace Weapons
             {
                 StartReload();
             }
-        }
+        } 
 
         //--------------------------------reload
         protected override bool ReloadConditions()
@@ -294,6 +297,11 @@ namespace Weapons
         public override float GetAmmoFillRatio()
         {
             return _bulletsOnPlayer / maxBulletsOnPlayer;
+        }
+
+        public override int GetAmmoInMag()
+        {
+            return _ammoRemainingInMag;
         }
 
         protected override void UpdateAmmoText()

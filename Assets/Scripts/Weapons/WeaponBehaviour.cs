@@ -114,8 +114,6 @@ namespace Weapons
             if (_gunAnimator) _gunAnimator.SetBool("IsShooting", false);
         }
 
-        protected virtual void ValidateKill() { }
-
         //----------------------------------------reloading
         protected abstract bool ReloadConditions();
 
@@ -189,5 +187,10 @@ namespace Weapons
          * Give the current bullets left on player divided by the max bullets on player
          */
         public abstract float GetAmmoFillRatio();
+
+        /*
+         * Give the current bullets left in the players mag
+         */
+        public abstract int GetAmmoInMag();
     }
 }
