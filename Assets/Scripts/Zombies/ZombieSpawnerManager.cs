@@ -8,11 +8,9 @@ using System.Linq;
 
 public class ZombieSpawnerManager : MonoBehaviour
 {
-    private static Vector3 SPAWNER_SECTOR_WIDTH = new(40, 40, 40);
+    private static Vector3 SPAWNER_SECTOR_WIDTH = new(20, 100, 20);
 
     private static ZombieSpawnerManager CURRENT_SPAWNER;
-
-    private static ObservableCollection<ZombieSpawner> worldSpawnersAvailable;
     private static SectorCollection<ZombieSpawner> worldSpawnersAvailableSectors;
 
     [SerializeField] private ObjectPool zombiePool;
@@ -66,20 +64,10 @@ public class ZombieSpawnerManager : MonoBehaviour
         {
             Debug.Log("There are two zombie spawners or none enabled");
         }
-        else if (worldSpawnersAvailable.Count > 0)
+        else if (worldSpawnersAvailableSectors.Count > 0)
         {
             Debug.Log("Started Spawning");
-            Debug.Log(worldSpawnersAvailableSectors.Count);
 
-            worldSpawnersAvailableSectors.TryGetValueRange(target.transform.position, out List<ZombieSpawner> value, 3);
-            foreach (var key in value)
-            {
-                if (key != null){
-
-                //Debug.Log(key.transform.position);
-                }
-            }
-            Debug.Log("Started Spawning");
             currentEscalationCurveTimeSec = 0;
             currentSpawnQuantityEscalationCurve = initialSpawnQuantityEscalationCurve;
             InvokeRepeating(nameof(SpawnZombies), timeBetweenRounds, timeBetweenRounds);
@@ -92,7 +80,7 @@ public class ZombieSpawnerManager : MonoBehaviour
 
     private async void SpawnZombies()
     {
-        if (worldSpawnersAvailable.Count == 0)
+        if (worldSpawnersAvailableSectors.Count == 0)
         {
             Debug.Log("No active Spawners");
             return;
@@ -103,6 +91,19 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         if (zombiesToSpawn < 1 && target != null) { return; }
 
+        //find spawners near the sector
+        List<ZombieSpawner> spawnersInSector;
+        int radius = 1;
+        while(!worldSpawnersAvailableSectors.TryGetValue(target.transform.position, out spawnersInSector, new Vector3(radius,1,radius++)))
+        {
+            if (radius > 10)
+            {
+                Debug.Log(spawnersInSector.Count + " spawners found in the sector");
+                Debug.Log("No spawners found in the sector");
+                return;
+            }
+        }
+
         while (zombiesToSpawn > 0)
         {
 
@@ -110,8 +111,8 @@ public class ZombieSpawnerManager : MonoBehaviour
             zombiesToSpawn -= tempAmount;
             quantitySpawned += tempAmount;
 
-            worldSpawnersAvailable[Random.Range(0, worldSpawnersAvailable.Count - 1)]
-                .AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper); ;
+            spawnersInSector[Random.Range(0, spawnersInSector.Count - 1)]
+                .AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
 
             await Task.Delay(timeBetweenSpawnsMilliSec);
         }
@@ -121,7 +122,7 @@ public class ZombieSpawnerManager : MonoBehaviour
     {
         bool b = false;
 
-        foreach(ZombieSpawner zs in worldSpawnersAvailable)
+        foreach(ZombieSpawner zs in worldSpawnersAvailableSectors.Values.SelectMany(x => x))
         {
             b = zs.IsSpawning() || b;
         }
@@ -155,10 +156,8 @@ public class ZombieSpawnerManager : MonoBehaviour
     /// <param name="newZombieSpawner">the spawner to be added</param>
     public static void AddSpawner(ZombieSpawner newZombieSpawner)
     {
-        worldSpawnersAvailable ??= new();
         worldSpawnersAvailableSectors ??= new(SPAWNER_SECTOR_WIDTH);
 
-        worldSpawnersAvailable.Add(newZombieSpawner);
         worldSpawnersAvailableSectors.Add(newZombieSpawner);
     }
 
@@ -168,7 +167,7 @@ public class ZombieSpawnerManager : MonoBehaviour
     /// <param name="newZombieSpawner"></param>
     public static void RemoveSpawner(ZombieSpawner newZombieSpawner)
     {
-        worldSpawnersAvailable?.Remove(newZombieSpawner);
+        worldSpawnersAvailableSectors?.Remove(newZombieSpawner);
     }
 
     /// <summary>
