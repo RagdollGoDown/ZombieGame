@@ -15,6 +15,11 @@ public class ZombieSpawner : MonoBehaviour
     //these positions are offsets from the gameobject's position
     [SerializeField] private Vector3[] spawnPositionsOffset;
 
+    [SerializeField] private bool limitNumberOfSpawns = false; 
+    [SerializeField] private int numberOfSpawns = 10; 
+    [SerializeField] private bool limitZombiesPerSpawn = false; 
+    [SerializeField] private int zombiesPerSpawnLimit = 10; 
+
     //----------------------------------unity events
     private void Awake()
     {
@@ -44,18 +49,34 @@ public class ZombieSpawner : MonoBehaviour
     /// <param name="zombiePool"> the pool the zombies should be taken from</param>
     /// <param name="zombieReaper"> the reaper to inform upon the zombies death</param>
     /// <returns></returns>
-    public async void AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget, ObjectPool zombiePool, 
+    public int AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget, ObjectPool zombiePool, 
         Reaper zombieReaper = null)
     {
         if (this.zombiePool != zombiePool) this.zombiePool = zombiePool;
 
+        if (limitNumberOfSpawns){
+            numberOfSpawns--;
+            if (numberOfSpawns < 0) return 0;
+        }
+
+        if (limitZombiesPerSpawn){
+            amountOfZombies = Mathf.Min(amountOfZombies, zombiesPerSpawnLimit);
+        }
+
         _zombiesToSpawn += amountOfZombies;
         _zombieTargetOnSpawn = zombieTarget;
 
+        SpawnZombiesAsync(zombieReaper);
+
+        return amountOfZombies;
+    }
+
+    private async void SpawnZombiesAsync(Reaper zombieReaper = null)
+    {
         while (_zombiesToSpawn > 0)
         {
-            SpawnZombie(zombieReaper);
             await Task.Delay(timeBetweenSpawnsMilliSec);
+            SpawnZombie(zombieReaper);
         }
     }
 

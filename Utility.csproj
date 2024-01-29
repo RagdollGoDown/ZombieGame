@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\Utility\SectorCollection.cs" />
      <Compile Include="Assets\Scripts\Utility\Conditions\LogicAndCondition.cs" />
      <Compile Include="Assets\Scripts\Utility\DamageableObject.cs" />
+     <Compile Include="Assets\Scripts\Utility\Events\InvokeTriggerEvents.cs" />
      <Compile Include="Assets\Scripts\Utility\Interactable.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ObservableRatio.cs" />
      <Compile Include="Assets\Scripts\Utility\GPUInstancing\GPUInstanceManager.cs" />
@@ -57,6 +58,7 @@
      <Compile Include="Assets\Scripts\Utility\Reaping\Reaper.cs" />
      <Compile Include="Assets\Scripts\Utility\GPUInstancing\GPUInstance.cs" />
      <Compile Include="Assets\Scripts\Utility\ObjectPool\ObjectPoolEditor.cs" />
+     <Compile Include="Assets\Scripts\Utility\Events\InvokeEnablingEvents.cs" />
      <Compile Include="Assets\Scripts\Utility\Conditions\Condition.cs" />
      <Compile Include="Assets\Scripts\Utility\Conditions\SimpleCondition.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ObservableFloat.cs" />

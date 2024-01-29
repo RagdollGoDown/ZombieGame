@@ -37,9 +37,6 @@ public class ZombieBehaviour : MonoBehaviour
 
     private ZombieState _currentState;
 
-    //TODO unserialize
-    [SerializeField] private Transform _headTransform;
-
     [Header("Navigation")]
     //-------------------navigation
     private NavMeshAgent _navMeshAgent;
@@ -89,8 +86,6 @@ public class ZombieBehaviour : MonoBehaviour
     //------------------------------------unity events
     private void Awake()
     {
-        if (!_headTransform) throw new System.NullReferenceException("Head transform is null");
-
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         runningSpeed = UnityEngine.Random.Range(minRunningSpeed, maxRunningSpeed);
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;

@@ -16,15 +16,15 @@ AvatarMask:
   - m_Path: Armature/Root
     m_Weight: 0
   - m_Path: Armature/Root/ArmsIKTarget_L
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Armature/Root/ArmsIKTarget_L/ArmsIKPole_L
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Armature/Root/ArmsIKTarget_L/ArmsIKPole_L/ArmsIKPole_L_end
     m_Weight: 0
   - m_Path: Armature/Root/ArmsIKTarget_R
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Armature/Root/ArmsIKTarget_R/ArmsIKPole_R
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: Armature/Root/ArmsIKTarget_R/ArmsIKPole_R/ArmsIKPole_R_end
     m_Weight: 0
   - m_Path: Armature/Root/Hips

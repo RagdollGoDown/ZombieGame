@@ -108,11 +108,10 @@ public class ZombieSpawnerManager : MonoBehaviour
         {
 
             tempAmount = Random.Range(1, Mathf.Min(MaxZombiesGivenPerSpawner, zombiesToSpawn + 1));
+            tempAmount = spawnersInSector[Random.Range(0, spawnersInSector.Count - 1)].AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
             zombiesToSpawn -= tempAmount;
             quantitySpawned += tempAmount;
 
-            spawnersInSector[Random.Range(0, spawnersInSector.Count - 1)]
-                .AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
 
             await Task.Delay(timeBetweenSpawnsMilliSec);
         }

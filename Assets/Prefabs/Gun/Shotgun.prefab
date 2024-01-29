@@ -3001,8 +3001,8 @@ MonoBehaviour:
   pelletsPerShot: 50
   penetration: 1
   range: 100
-  _maxSpread: 0.4
-  _restingSpread: 0.2
+  _maxSpread: 0.3
+  _restingSpread: 0.1
   _spreadDecreaseSpeed: 1
   _spreadDecreaseSpeedWhenAiming: 3
   _spreadIncreasePerShot: 1
@@ -3370,7 +3370,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0.05
+      - m_Value: 0.1
         m_Name: Lifetime
         m_Overridden: 1
       - m_Value: 7
@@ -3382,7 +3382,7 @@ VisualEffect:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 3.7321317, y: 3.7321317, z: 3.7321317, w: 1}
+      - m_Value: {x: 1.2323078, y: 1.0941048, z: 0.76147324, w: 1}
         m_Name: FlashColor
         m_Overridden: 1
     m_Uint:

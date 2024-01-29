@@ -707,17 +707,17 @@
     <Reference Include="Unity.Sysroot.Linux_x86_64">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.Sysroot.Linux_x86_64.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Animation.Rigging">
-        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.Animation.Rigging.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
-        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+    <Reference Include="Unity.VSCode.Editor">
+        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualEffectGraph.Runtime">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.VisualEffectGraph.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Animation.Rigging">
+        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.Animation.Rigging.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
@@ -731,11 +731,11 @@
     <Reference Include="Unity.Burst">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Animation.Rigging.Editor">
-        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.Animation.Rigging.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.ProBuilder">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.ProBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Animation.Rigging.Editor">
+        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.Animation.Rigging.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ShaderGraph.Editor">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
@@ -776,11 +776,11 @@
     <Reference Include="Unity.AI.Navigation.Updater">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.AI.Navigation.Updater.dll</HintPath>
     </Reference>
-    <Reference Include="PPv2URPConverters">
-        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\PPv2URPConverters.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Mathematics">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="PPv2URPConverters">
+        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\PPv2URPConverters.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
@@ -797,8 +797,8 @@
     <Reference Include="Unity.AI.Navigation.Editor">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.AI.Navigation.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.VSCode.Editor">
-        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+    <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
+        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
     </Reference>
     <Reference Include="Unity.AI.Navigation.Editor.ConversionSystem">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\ScriptAssemblies\Unity.AI.Navigation.Editor.ConversionSystem.dll</HintPath>
