@@ -61,8 +61,8 @@ public class ZombieBehaviour : MonoBehaviour
     private bool _leftLegBroken;
     private bool _rightLegBroken;
     private Rigidbody[] rigidBodys;
-    private DamageableObject mainDamageableObject;
-    private DamageableObject lastDeadBodyPart;
+    private DamageableObject rootDamageableObject;
+    private DamageableObject lastDamagedBodyPart;
 
     public UnityEvent<ZombieBehaviour> OnDeath;
 
@@ -96,7 +96,7 @@ public class ZombieBehaviour : MonoBehaviour
 
         _currentState = ZombieState.Idle;
         rigidBodys = GetComponentsInChildren<Rigidbody>();
-        mainDamageableObject = GetComponentInChildren<DamageableObject>();
+        rootDamageableObject = GetComponentInChildren<DamageableObject>();
 
         _zombieAnimator = GetComponent<Animator>();
         _headConstraint = transform.Find("ChasingRig/HeadAimConstraint").GetComponent<MultiAimConstraint>();
@@ -345,7 +345,7 @@ public class ZombieBehaviour : MonoBehaviour
             rb.useGravity = false;
         }
 
-        mainDamageableObject.Revive();
+        rootDamageableObject.Revive();
     }
 
     public void Die()
@@ -374,13 +374,14 @@ public class ZombieBehaviour : MonoBehaviour
         return _navMeshAgent;
     }
 
-
     /// <summary>
     /// This should only be used by the zombies body parts in damageable objectives
     /// </summary>
-    public void SetLastDeadBodyPart(DamageableObject damageableObject)
+    public void SetLastDamagedBodyPart(DamageableObject damageableObject)
     {
-        lastDeadBodyPart = damageableObject;
+        lastDamagedBodyPart = damageableObject;
+
+        _zombieAnimator.SetTrigger("Damage");
     }
 
     /// <summary>
@@ -389,6 +390,6 @@ public class ZombieBehaviour : MonoBehaviour
     /// <returns>The last damageable object that was damaged</returns>
     public DamageableObject GetLastDeadBodyPart()
     {
-        return lastDeadBodyPart;
+        return lastDamagedBodyPart;
     }
 }

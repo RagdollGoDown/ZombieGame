@@ -149,7 +149,7 @@ namespace Weapons
             UpdateAmmoText();
         }
 
-        protected virtual void TakeShot()
+        protected virtual void TakeShot(DamageableObject DO = null)
         {
             for (int i = 0; i < pelletsPerShot; i++)
             {

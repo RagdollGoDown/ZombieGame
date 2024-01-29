@@ -19,7 +19,7 @@ namespace Weapons
             AwakeWeapon();
         }
 
-        protected override void TakeShot()
+        protected override void TakeShot(DamageableObject DO = null)
         {
             for (int i = 0; i < pelletsPerShot; i++)
             {

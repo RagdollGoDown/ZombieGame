@@ -1653,7 +1653,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.000000072641676, y: 0.3998098, z: 0}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -1703,15 +1703,10 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
-  destructionParticlePoolNames:
-  - ZombieGibFootR
-  deathCalls:
-    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: SetLastDeadBodyPart
+        m_MethodName: SetLastDamagedBodyPart
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1721,6 +1716,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieGibFootR
+  deathCalls:
+    m_PersistentCalls:
+      m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: BreakRightLeg
@@ -2072,7 +2072,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: -0.000000040979813, y: 0.39980987, z: -0.000000027939787}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -2122,15 +2122,10 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
-  destructionParticlePoolNames:
-  - ZombieGibFootL
-  deathCalls:
-    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: SetLastDeadBodyPart
+        m_MethodName: SetLastDamagedBodyPart
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2140,6 +2135,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieGibFootL
+  deathCalls:
+    m_PersistentCalls:
+      m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: BreakLeftLeg
@@ -3176,7 +3176,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: -1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.049013935, y: 0.20501113, z: 0.16190167}
+  m_ConnectedAnchor: {x: 0.04901383, y: 0.205011, z: 0.16190168}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -3226,7 +3226,19 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDamagedBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticlePoolNames:
   - ZombieGibUpperArmR
   deathCalls:
@@ -3345,7 +3357,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: -1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.032064866, y: 0.19463006, z: -0.1594411}
+  m_ConnectedAnchor: {x: 0.032064904, y: 0.19463012, z: -0.15944108}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: -1}
   m_TwistLimitSpring:
@@ -3395,7 +3407,19 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDamagedBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticlePoolNames:
   - ZombieGibUpperArmL
   deathCalls:
@@ -3405,18 +3429,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: BreakLeftArm
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3860554693412282760}
-        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: SetLastDeadBodyPart
-        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3814,7 +3826,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: 0.026920743, y: -0.041157957, z: -0.0989671}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -3864,7 +3876,19 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDamagedBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticlePoolNames:
   - ZombieGibUpperLegL
   deathCalls:
@@ -3874,18 +3898,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: BreakLeftLeg
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3860554693412282760}
-        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: SetLastDeadBodyPart
-        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4205,15 +4217,10 @@ MonoBehaviour:
   maxHealth: 20
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
-  destructionParticlePoolNames:
-  - ZombieGibHips
-  deathCalls:
-    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: SetLastDeadBodyPart
+        m_MethodName: SetLastDamagedBodyPart
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4223,6 +4230,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieGibHips
+  deathCalls:
+    m_PersistentCalls:
+      m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: Die
@@ -5958,7 +5970,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.00000007823112, y: 0.3394815, z: -0.00000014901153}
+  m_ConnectedAnchor: {x: 0.000000011175874, y: 0.3394816, z: -0.00000020861614}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: -1, z: 0}
   m_TwistLimitSpring:
@@ -6008,7 +6020,19 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDamagedBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticlePoolNames:
   - ZombieGibHandR
   deathCalls:
@@ -9388,7 +9412,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.00000027567154, y: 0.33948058, z: -0.00000008940695}
+  m_ConnectedAnchor: {x: -0.00000013411048, y: 0.33948055, z: -0.0000001490116}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: -1, z: 0}
   m_TwistLimitSpring:
@@ -9438,7 +9462,19 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDamagedBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticlePoolNames:
   - ZombieGibHandL
   deathCalls:
@@ -11555,7 +11591,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.10581328, y: 0.37952277, z: -0.0040545966}
+  m_ConnectedAnchor: {x: -0.10581328, y: 0.37952262, z: -0.0040545417}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 1, z: 0}
   m_TwistLimitSpring:
@@ -11605,7 +11641,19 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDamagedBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticlePoolNames:
   - ZombieGibHead
   deathCalls:
@@ -12101,7 +12149,7 @@ CharacterJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_ConnectedAnchor: {x: 0.026920686, y: -0.041157838, z: 0.09896705}
   serializedVersion: 2
   m_SwingAxis: {x: 0, y: 0, z: 1}
   m_TwistLimitSpring:
@@ -12151,7 +12199,19 @@ MonoBehaviour:
   maxHealth: 10
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3860554693412282760}
+        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
+        m_MethodName: SetLastDamagedBodyPart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   destructionParticlePoolNames:
   - ZombieGibUpperLegR
   deathCalls:
@@ -12161,18 +12221,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: BreakRightLeg
         m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 3860554693412282760}
-        m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: SetLastDeadBodyPart
-        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -12632,15 +12680,10 @@ MonoBehaviour:
   maxHealth: 20
   OnDamageTaken:
     m_PersistentCalls:
-      m_Calls: []
-  destructionParticlePoolNames:
-  - ZombieGibChest
-  deathCalls:
-    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
-        m_MethodName: SetLastDeadBodyPart
+        m_MethodName: SetLastDamagedBodyPart
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12650,6 +12693,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieGibChest
+  deathCalls:
+    m_PersistentCalls:
+      m_Calls:
       - m_Target: {fileID: 3860554693412282760}
         m_TargetAssemblyTypeName: ZombieBehaviour, Zombies
         m_MethodName: Die

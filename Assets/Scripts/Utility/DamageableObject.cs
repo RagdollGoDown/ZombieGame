@@ -29,7 +29,7 @@ namespace Utility
         [SerializeField] private float _health;
         [SerializeField] private float maxHealth = 10;
         public UnityEventRecieveDamage getHit;
-        public UnityEvent OnDamageTaken;
+        public UnityEvent<DamageableObject> OnDamageTaken;
 
         private Collider[] _colliders;
 
@@ -99,7 +99,7 @@ namespace Utility
 
         private void TakeDamage(Damage damage)
         {
-            OnDamageTaken.Invoke();
+            OnDamageTaken.Invoke(this);
 
             lastDamageDealer = damage.GetDamageDealer();
             lastDamageRecieved = damage;
