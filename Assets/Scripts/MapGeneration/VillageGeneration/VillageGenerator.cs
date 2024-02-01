@@ -18,6 +18,7 @@ namespace MapGeneration.VillageGeneration
 
         public bool[] borderConditionalArray;
 
+        //This sais where the buildings can be placed
         private bool[,] mask;
 
         public enum GenerationMethod
@@ -183,6 +184,11 @@ namespace MapGeneration.VillageGeneration
                     return;
                 }
 
+                if (x <= 2 || y <= 2 || x >= size - 3 || y >= size - 3)
+                {
+                    continueCorridor(x + y - fromy, y + x - fromx, x, y);
+                }
+
                 buildingConditionalArrays[x, y] = false;
 
                 rand = Random.Range(0,1.0f);
@@ -332,8 +338,11 @@ namespace MapGeneration.VillageGeneration
             {
                 for (int j = 0; j < size - 2; j++)
                 {
-                    villageBuildingsCollection.Place(
-                        ExtractArray(buildingConditionalArrays, i, j, 3), width, size, i, j);
+                    if (mask == null || mask[i, j])
+                    {
+                        villageBuildingsCollection.Place(
+                            ExtractArray(buildingConditionalArrays, i, j, 3), width, size, i, j);
+                    }
                 }
             }
         }

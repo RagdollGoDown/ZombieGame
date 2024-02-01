@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ namespace Utility
         [SerializeField] private List<GameObject> objects;
 
         [SerializeField] private int initialNumber = 5;
+        private CancellationTokenSource readyInitialAsyncCancelTokenSource;
+        private CancellationToken readyInitialAsyncCancelToken;
         [SerializeField] private List<GameObject> possibleObjects;
 
 
@@ -75,6 +78,9 @@ namespace Utility
         /// </summary>
         public async void ReadyInitialObjectsAsync()
         {
+            readyInitialAsyncCancelTokenSource = new();
+            readyInitialAsyncCancelToken = readyInitialAsyncCancelTokenSource.Token;
+
             if (possibleObjects.Count == 0 || initialNumber == 0) { return; }
 
             EmptyObjects();
@@ -83,7 +89,7 @@ namespace Utility
 
             objects = new();
 
-            for (int i = 0; i < initialNumber; i++)
+            for (int i = 0; i < initialNumber && !readyInitialAsyncCancelToken.IsCancellationRequested; i++)
             {
                 possibleIndex = Random.Range(0, possibleObjects.Count);
                 objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
@@ -151,6 +157,11 @@ namespace Utility
         private void OnDisable()
         {
             availableObjectPools.Remove(name);
+        }
+
+        private void OnDestroy()
+        {
+            readyInitialAsyncCancelTokenSource?.Cancel();
         }
 
         //-----------------------------getters and setters
