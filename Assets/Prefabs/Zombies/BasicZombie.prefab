@@ -5573,7 +5573,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkingSpeed: 2
   minRunningSpeed: 6
-  maxRunningSpeed: 10
+  maxRunningSpeed: 14
   distanceForMaxSpeed: 30
   crawlingSpeed: 3
   OnDeath:

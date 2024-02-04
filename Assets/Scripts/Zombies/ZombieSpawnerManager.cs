@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,6 @@ public class ZombieSpawnerManager : MonoBehaviour
 {
     private static Vector3 SPAWNER_SECTOR_WIDTH = new(20, 100, 20);
 
-    private static ZombieSpawnerManager CURRENT_SPAWNER;
     private static SectorCollection<ZombieSpawner> worldSpawnersAvailableSectors;
 
     [SerializeField] private ObjectPool zombiePool;
@@ -29,9 +29,13 @@ public class ZombieSpawnerManager : MonoBehaviour
 
 
     //it's good to have this low so that the zombies are spread out
-    [SerializeField] private int MaxZombiesGivenPerSpawner = 5;
+    [SerializeField] private int maxZombiesGivenPerSpawner = 5;
     [SerializeField] private int timeBetweenSpawnsMilliSec = 50;
     [SerializeField] private float timeBetweenRounds = 2;
+    [SerializeField] private int radiusOfSectorsTaken = 1;
+
+    private CancellationTokenSource spawnZombiesAsyncCancelTokenSource;
+    private CancellationToken spawnZombiesAsyncCancelToken;
 
     private DamageableObject target;
     private Reaper zombieReaper;
@@ -48,35 +52,40 @@ public class ZombieSpawnerManager : MonoBehaviour
         if (zombiePool == null) throw new System.NullReferenceException("No object pool to take zombies from");
         zombiePool.ReadyInitialObjectsAsync(maxQuantity);
 
-        CURRENT_SPAWNER = this;
         zombieReaper = new();
     }
 
     private void OnDisable()
     {
-        if (CURRENT_SPAWNER == this) CURRENT_SPAWNER = null;
+        spawnZombiesAsyncCancelTokenSource?.Cancel();
     }
 
     //--------------------------------------------spawning methods
     public void BeginToSpawn()
     {
-        if (CURRENT_SPAWNER != this) 
+        if (worldSpawnersAvailableSectors.Count > 0)
         {
-            Debug.Log("There are two zombie spawners or none enabled");
-        }
-        else if (worldSpawnersAvailableSectors.Count > 0)
-        {
-            Debug.Log("Started Spawning");
+            Debug.Log("Started Spawning " + name);
 
+            spawnZombiesAsyncCancelTokenSource = new();
+            spawnZombiesAsyncCancelToken = spawnZombiesAsyncCancelTokenSource.Token;
             currentEscalationCurveTimeSec = 0;
             currentSpawnQuantityEscalationCurve = initialSpawnQuantityEscalationCurve;
-            InvokeRepeating(nameof(SpawnZombies), timeBetweenRounds, timeBetweenRounds);
+            RepeatZombieSpawning();
         }
         else
         {
             Debug.Log("No spawners created spawners");
         }
     }
+
+    private async void RepeatZombieSpawning()
+    {
+        while(!spawnZombiesAsyncCancelToken.IsCancellationRequested){
+            SpawnZombies();
+            await Task.Delay((int)(timeBetweenRounds * 1000));
+        }
+    } 
 
     private async void SpawnZombies()
     {
@@ -93,12 +102,11 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         //find spawners near the sector
         List<ZombieSpawner> spawnersInSector;
-        int radius = 1;
+        int radius = radiusOfSectorsTaken;
         while(!worldSpawnersAvailableSectors.TryGetValue(target.transform.position, out spawnersInSector, new Vector3(radius,1,radius++)))
         {
-            if (radius > 10)
+            if (radius > 10 + radiusOfSectorsTaken)
             {
-                Debug.Log(spawnersInSector.Count + " spawners found in the sector");
                 Debug.Log("No spawners found in the sector");
                 return;
             }
@@ -106,8 +114,7 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         while (zombiesToSpawn > 0)
         {
-
-            tempAmount = Random.Range(1, Mathf.Min(MaxZombiesGivenPerSpawner, zombiesToSpawn + 1));
+            tempAmount = Random.Range(1, Mathf.Min(maxZombiesGivenPerSpawner, zombiesToSpawn + 1));
             tempAmount = spawnersInSector[Random.Range(0, spawnersInSector.Count - 1)].AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
             zombiesToSpawn -= tempAmount;
             quantitySpawned += tempAmount;

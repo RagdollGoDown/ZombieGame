@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,9 @@ public class ZombieSpawner : MonoBehaviour
     private int _zombiesToSpawn;
     private DamageableObject _zombieTargetOnSpawn;
     private ObjectPool zombiePool;
+
+    private CancellationTokenSource spawnZombiesAsyncCancelTokenSource;
+    private CancellationToken spawnZombiesAsyncCancelToken;
 
     //these positions are offsets from the gameobject's position
     [SerializeField] private Vector3[] spawnPositionsOffset;
@@ -36,6 +40,7 @@ public class ZombieSpawner : MonoBehaviour
 
     private void OnDisable()
     {
+        spawnZombiesAsyncCancelTokenSource?.Cancel();
         ZombieSpawnerManager.RemoveSpawner(this);
     }
 
@@ -52,6 +57,9 @@ public class ZombieSpawner : MonoBehaviour
     public int AddZombiesToSpawn(int amountOfZombies, DamageableObject zombieTarget, ObjectPool zombiePool, 
         Reaper zombieReaper = null)
     {
+        spawnZombiesAsyncCancelTokenSource = new();
+        spawnZombiesAsyncCancelToken = spawnZombiesAsyncCancelTokenSource.Token;
+
         if (this.zombiePool != zombiePool) this.zombiePool = zombiePool;
 
         if (limitNumberOfSpawns){
@@ -73,7 +81,7 @@ public class ZombieSpawner : MonoBehaviour
 
     private async void SpawnZombiesAsync(Reaper zombieReaper = null)
     {
-        while (_zombiesToSpawn > 0)
+        while (_zombiesToSpawn > 0  && !spawnZombiesAsyncCancelToken.IsCancellationRequested)
         {
             await Task.Delay(timeBetweenSpawnsMilliSec);
             SpawnZombie(zombieReaper);

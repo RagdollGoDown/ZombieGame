@@ -41,5 +41,6 @@ public class GameManager : MonoBehaviour
         await Task.Delay(500);
 
         player.SetMission(mainMission);
+        onStartGame.Invoke();
     }
 }

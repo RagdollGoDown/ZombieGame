@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,6 +38,9 @@ public class ZombieBehaviour : MonoBehaviour
     private static readonly float IDLING_MIN_WAIT_BETWEEN_WANDERS = 5;
 
     private ZombieState _currentState;
+
+    private CancellationTokenSource chasingCancellationTokenSource;
+    private CancellationToken chasingCancellationToken;
 
     [Header("Navigation")]
     //-------------------navigation
@@ -125,6 +130,11 @@ public class ZombieBehaviour : MonoBehaviour
         _currentState = ZombieState.Idle;
 
         Invoke(nameof(UnReadyRagdoll), Time.fixedDeltaTime);
+    }
+
+    private void OnDisable()
+    {
+        chasingCancellationTokenSource?.Cancel();
     }
 
     //--------------------------------------general
@@ -219,16 +229,19 @@ public class ZombieBehaviour : MonoBehaviour
         _rigBuilder.Build();
         _zombieAnimator.enabled = true;
 
-        StartCoroutine(nameof(Chase));
+        chasingCancellationTokenSource = new();
+        chasingCancellationToken = chasingCancellationTokenSource.Token;
+
+        Chase();
     }
 
-    private IEnumerator Chase()
+    private async void Chase()
     {
         Vector3 lookingPosition;
 
         float distanceFromPlayer;
 
-        while (_currentState == ZombieState.Chasing)
+        while (_currentState == ZombieState.Chasing && !chasingCancellationToken.IsCancellationRequested)
         {
             distanceFromPlayer = Vector3.Distance(_zombieTarget.transform.position, transform.position);
 
@@ -254,7 +267,7 @@ public class ZombieBehaviour : MonoBehaviour
 
             _timeBetweenAttackCounter -= (_timeBetweenAttackCounter > 0) ? Time.fixedDeltaTime : 0;
 
-            yield return new WaitForSeconds(distanceFromPlayer * DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION);
+            await Task.Delay((int)(distanceFromPlayer * DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION * 1000));
 
             if (_zombieTarget == null || _zombieTarget.IsDead)
             {
