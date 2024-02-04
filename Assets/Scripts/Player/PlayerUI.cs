@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utility;
 using Utility.Observable;
+using Objectives;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -41,10 +42,12 @@ public class PlayerUI : MonoBehaviour
 
     private struct ObjectiveUI
     {
+        public Objective currentObjective;
+
         public MovePointToPointNonUI talkieWalkieMover;
         public MovePointToPoint backgroundAndTextMover;
         public Slider completenessSlider;
-        public TextMeshProUGUI tmp;
+        public TextMeshProUGUI objectiveText;
     }
     private ObjectiveUI _objectiveUI;
 
@@ -82,8 +85,8 @@ public class PlayerUI : MonoBehaviour
         _objectiveUI.talkieWalkieMover = transform.parent.Find("GunCamera/WalkieTalkie").GetComponent<MovePointToPointNonUI>();
         _objectiveUI.backgroundAndTextMover = _playScreen.transform.Find("Objective").GetComponent<MovePointToPoint>();
         _objectiveUI.completenessSlider = _objectiveUI.backgroundAndTextMover.transform.Find("Slider").GetComponent<Slider>();
-        _objectiveUI.tmp = _objectiveUI.backgroundAndTextMover.transform.Find("Text").GetComponent<TextMeshProUGUI>();
-        _objectiveUI.tmp.text = string.Empty;
+        _objectiveUI.objectiveText = _objectiveUI.backgroundAndTextMover.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+        _objectiveUI.objectiveText.text = string.Empty;
 
         _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
@@ -126,6 +129,34 @@ public class PlayerUI : MonoBehaviour
         if (_healthUI.slider.value == 1) { Die(); }
     }
 
+    private void UpdateCurrentObjective(Objective objective)
+    {
+        _objectiveUI.talkieWalkieMover.Point2to1();
+        _objectiveUI.backgroundAndTextMover.Point2to1();
+        UpdateObjectiveText(objective.GetObjectiveText().GetValue());
+        objective.GetObjectiveText().onValueChange += UpdateObjectiveText;
+    }
+
+    private void UpdateObjectiveText(string text)
+    {
+        _objectiveUI.objectiveText.text = text;
+    }
+
+    public void UpdateUIScale()
+    {
+        uiScale = canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView;
+    }
+
+    public void ActivatePauseUI()
+    {
+
+    }
+
+    public void DeactivatePauseUI()
+    {
+
+    }
+
     //----------------------------------------Setters
     public void SetInteractionText(string newText)
     {
@@ -137,30 +168,11 @@ public class PlayerUI : MonoBehaviour
         _currentRoundText.text = round.ToString();
     }
 
-    public void SetObjectiveText(string text)
+    public void SetMission(Mission mission)
     {
-        if (text == null)
-        {
-            _objectiveUI.talkieWalkieMover.Point1to2();
-            _objectiveUI.backgroundAndTextMover.Point1to2();
-            _objectiveUI.tmp.text = string.Empty;
-        }
-        else
-        {
-            _objectiveUI.talkieWalkieMover.Point2to1();
-            _objectiveUI.backgroundAndTextMover.Point2to1();
-            _objectiveUI.tmp.text = text;
-        }
+        UpdateCurrentObjective(mission.GetCurrentObjective().GetValue());
+        mission.GetCurrentObjective().onValueChange += UpdateCurrentObjective;
     }
-
-    //------------------------------------getters
-
-    public void UpdateUIScale()
-    {
-        uiScale = canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView;
-    }
-
-    //------------------------------------setters
 
     public void SetWeaponName(string name)
     {

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine.InputSystem;
 using Weapons;
-using System.Collections;
+using Utility.Observable;
+using Objectives;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(DamageableObject))]
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour,Interactor
     private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
     private static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
 
+    private static float TIME_SLOWDOWN_ON_PAUSE = 1;
     private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
     private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour,Interactor
     public enum PlayerState
     {
         Normal,
+        Paused,
         Dead
     }
 
@@ -401,21 +404,21 @@ public class PlayerController : MonoBehaviour,Interactor
 
     public void UseWeaponInput(InputAction.CallbackContext context)
     {
-        if (_playerState == PlayerState.Dead) return;
+        if (_playerState != PlayerState.Normal) return;
 
         _weaponsHeld[_currentWeaponIndex].UseWeaponInput(context);
     }
     
     public void ReloadCurrentGun(InputAction.CallbackContext context)
     {
-        if (_playerState == PlayerState.Dead) return;
+        if (_playerState != PlayerState.Normal) return;
 
         _weaponsHeld[_currentWeaponIndex].ReloadInput(context);
     }
 
     public void AimCurrentGun(InputAction.CallbackContext context)
     {
-        if (_playerState == PlayerState.Dead) return;
+        if (_playerState != PlayerState.Normal) return;
         _weaponsHeld[_currentWeaponIndex].AimInputAction(context);
 
         if (context.started) { _currentMovementSpeed = movementSpeedWhenAiming; }
@@ -424,7 +427,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     public void SwitchWeaponsInput(InputAction.CallbackContext context)
     {
-        if (_playerState == PlayerState.Dead) return;
+        if (_playerState != PlayerState.Normal) return;
 
         if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
         {
@@ -444,7 +447,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     public void KickInput(InputAction.CallbackContext context)
     {
-        if (_playerState == PlayerState.Dead) return;
+        if (_playerState != PlayerState.Normal) return;
 
         if (context.started && Time.time - _lastTimeKicked > kickDuration)
         {
@@ -453,6 +456,23 @@ public class PlayerController : MonoBehaviour,Interactor
             _lastTimeKicked = Time.time;
 
             HandleKickDamageAndRayCast();
+        }
+    }
+
+    public void Pause(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (_playerState != PlayerState.Paused)
+            {
+                _playerUI.ActivatePauseUI();
+
+                
+            }
+            else
+            {
+                _playerUI.DeactivatePauseUI();
+            }
         }
     }
 
@@ -479,9 +499,9 @@ public class PlayerController : MonoBehaviour,Interactor
         _playerUI.SetRoundText(round);
     }
 
-    public void SetObjectiveText(string text)
+    public void SetMission(Mission mission)
     {
-        _playerUI.SetObjectiveText(text);
+        _playerUI.SetMission(mission);
     }
 }
 
