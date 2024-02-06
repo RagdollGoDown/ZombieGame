@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour,Interactor
     private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
     private static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
 
-    private static float TIME_SLOWDOWN_ON_PAUSE = 1;
     private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
     private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
