@@ -19,8 +19,9 @@ public class PlayerUI : MonoBehaviour
     private CanvasScaler canvasScaler;
     private float uiScale;
 
-    private GameObject _playScreen;
-    private GameObject _deathScreen;
+    private GameObject playScreen;
+    private GameObject deathScreen;
+    private GameObject pauseScreen;
 
     private struct WeaponUI
     {
@@ -67,31 +68,33 @@ public class PlayerUI : MonoBehaviour
         uiScale = new();
         UpdateUIScale();
 
-        _playScreen = transform.Find("PlayScreen").gameObject;
-        _deathScreen = transform.Find("DeathScreen").gameObject;
-        _deathScreen.SetActive(false);
+        playScreen = transform.Find("PlayScreen").gameObject;
+        deathScreen = transform.Find("DeathScreen").gameObject;
+        deathScreen.SetActive(false);
+        pauseScreen = transform.Find("PauseScreen").gameObject;
+        pauseScreen.SetActive(false);
 
-        weaponUI.ammoTextHolder = _playScreen.transform.Find("Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>();
-        weaponUI.weaponNameTextHolder = _playScreen.transform.Find("Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>();
-        weaponUI.crosshairTransform = _playScreen.transform.Find("Crosshair").GetComponent<RectTransform>();
+        weaponUI.ammoTextHolder = playScreen.transform.Find("Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>();
+        weaponUI.weaponNameTextHolder = playScreen.transform.Find("Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>();
+        weaponUI.crosshairTransform = playScreen.transform.Find("Crosshair").GetComponent<RectTransform>();
 
         _healthUI = new();
-        _healthUI.slider = _playScreen.transform.Find("HealthBar").GetComponent<Slider>();
+        _healthUI.slider = playScreen.transform.Find("HealthBar").GetComponent<Slider>();
         _healthUI.tmp = _healthUI.slider.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
 
-        _currentRoundText = _playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
+        _currentRoundText = playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
 
         _objectiveUI = new();
         _objectiveUI.talkieWalkieMover = transform.parent.Find("GunCamera/WalkieTalkie").GetComponent<MovePointToPointNonUI>();
-        _objectiveUI.backgroundAndTextMover = _playScreen.transform.Find("Objective").GetComponent<MovePointToPoint>();
+        _objectiveUI.backgroundAndTextMover = playScreen.transform.Find("Objective").GetComponent<MovePointToPoint>();
         _objectiveUI.completenessSlider = _objectiveUI.backgroundAndTextMover.transform.Find("Slider").GetComponent<Slider>();
         _objectiveUI.objectiveText = _objectiveUI.backgroundAndTextMover.transform.Find("Text").GetComponent<TextMeshProUGUI>();
         _objectiveUI.objectiveText.text = string.Empty;
 
-        _interactText = _playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
+        _interactText = playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
         _interactText.text = "";
 
-        _shakableUIElements = _playScreen.GetComponentsInChildren<ShakableUIElement>();
+        _shakableUIElements = playScreen.GetComponentsInChildren<ShakableUIElement>();
 
         foreach(ShakableUIElement shakable in _shakableUIElements)
         {
@@ -111,11 +114,11 @@ public class PlayerUI : MonoBehaviour
 
     public void Die()
     {
-        _deathScreen.SetActive(true);
-        _playScreen.SetActive(false);
+        deathScreen.SetActive(true);
+        playScreen.SetActive(false);
 
-        _deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetTime().ToString("N2");
-        _deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetKills().ToString();
+        deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetTime().ToString("N2");
+        deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetKills().ToString();
     }
 
     public void UpdateHealthBar(Damage damage)
@@ -149,12 +152,12 @@ public class PlayerUI : MonoBehaviour
 
     public void ActivatePauseUI()
     {
-
+        pauseScreen.SetActive(true);
     }
 
     public void DeactivatePauseUI()
     {
-
+        pauseScreen.SetActive(false);
     }
 
     //----------------------------------------Setters

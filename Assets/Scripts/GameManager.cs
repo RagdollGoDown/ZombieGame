@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Mission mainMission;
     [SerializeField] private NavMeshSurface navMesh;
     [SerializeField] private VillageGenerator villageGenerator;
+    [SerializeField] private GameObject spawn;
 
     private void Awake()
     {
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour
     public async void StartGame(PlayerInput playerInput)
     { 
         Debug.Log("Started Game");
-        villageGenerator.Generate(necessaryBuildingsToPlace: mainMission.ObjectiveObjects().Select(obj => obj.gameObject).ToList());
+        villageGenerator.Generate(necessaryBuildingsToPlace: mainMission.ObjectiveObjects().Select(obj => obj.gameObject).Append(spawn).ToList());
         zombieSpawnerManager.SetTarget(playerInput.GetComponent<DamageableObject>());
         player = playerInput.GetComponent<PlayerController>();
         mainMission.StartMission();

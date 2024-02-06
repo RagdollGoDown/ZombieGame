@@ -311,6 +311,9 @@
     <Reference Include="Unity.Burst.Cecil">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
     </Reference>
+    <Reference Include="LeanTween">
+        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Assets\LeanTween\Framework\LeanTween.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>
     </Reference>
@@ -816,6 +819,10 @@
       <Project>{3834dee7-292e-252a-d0ce-d472d29f0de1}</Project>
       <Name>MapGeneration</Name>
     </ProjectReference>
+    <ProjectReference Include="Objective.csproj">
+      <Project>{e8772cb3-2e79-19e3-a2cf-3084bcf1622e}</Project>
+      <Name>Objective</Name>
+    </ProjectReference>
     <ProjectReference Include="Utility.csproj">
       <Project>{9ea74b9c-2454-5f4b-d841-e72ab13eee23}</Project>
       <Name>Utility</Name>
@@ -831,10 +838,6 @@
     <ProjectReference Include="UI.csproj">
       <Project>{290af5d2-d0f5-7c0b-e2bd-ec2abd09a9bb}</Project>
       <Name>UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="Objective.csproj">
-      <Project>{e8772cb3-2e79-19e3-a2cf-3084bcf1622e}</Project>
-      <Name>Objective</Name>
     </ProjectReference>
     <ProjectReference Include="Player.csproj">
       <Project>{2af2feba-3411-254c-2d69-09ea00886cf3}</Project>

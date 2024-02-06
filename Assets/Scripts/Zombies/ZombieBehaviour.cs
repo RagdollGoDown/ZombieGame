@@ -28,7 +28,7 @@ public class ZombieBehaviour : MonoBehaviour
     private static readonly Vector3 OFFSET_FOR_HEAD_CONSTRAINT = new(0, 1.7f, 0);
 
     //used for the chase direction
-    private static readonly float DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION = 0.01f;
+    private static readonly int DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION_MILLISEC = 10;
 
     private static readonly float DISTANCE_OF_DISPLACEMENT = 4;
     private static readonly float DISTANCE_FOR_DISPLACEMENT_ACTIVATION = 8;
@@ -267,9 +267,9 @@ public class ZombieBehaviour : MonoBehaviour
 
             _timeBetweenAttackCounter -= (_timeBetweenAttackCounter > 0) ? Time.fixedDeltaTime : 0;
 
-            await Task.Delay((int)(distanceFromPlayer * DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION * 1000));
+        await Task.Delay((int)(distanceFromPlayer * DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION_MILLISEC));
 
-            if (_zombieTarget == null || _zombieTarget.IsDead)
+            if ((_zombieTarget == null || _zombieTarget.IsDead) && !chasingCancellationToken.IsCancellationRequested)
             {
                 StartIdle();
             }

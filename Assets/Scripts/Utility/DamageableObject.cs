@@ -11,7 +11,7 @@ namespace Utility
     public class DamageableObject : MonoBehaviour
     {
         private readonly static float TIME_BEFORE_PARTICLE_DESTRUCTION = 10;
-        private readonly static float DAMAGE_TO_FORCE_PROPORTION = 20;
+        private readonly static float DAMAGE_TO_VELOCITY_PROPORTION = .3f;
 
         private bool isDead;
 
@@ -166,8 +166,8 @@ namespace Utility
 
                 if (dpg.TryGetComponent(out Rigidbody rigidbody))
                 {
-                    rigidbody.AddForce(
-                        damage.GetDamageDone() * DAMAGE_TO_FORCE_PROPORTION * damage.GetDamageDirection());
+                    rigidbody.velocity = 
+                        damage.GetDamageDone() * DAMAGE_TO_VELOCITY_PROPORTION * damage.GetDamageDirection();
                 }
 
                 dpg.gameObject.SetActive(true);

@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour,Interactor
         Dead
     }
 
-    private PlayerState _playerState;
+    private PlayerState playerState;
 
     private CharacterController _characterController;
     private PlayerInput _playerInput;
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour,Interactor
     [SerializeField] float mouseSensitivity;
 
     //----------------------------ui
-    private PlayerUI _playerUI;
+    private PlayerUI playerUI;
 
     //----------------------------shooting
     //temporarily a serialize field to check the guns
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
         PLAYERS.Add(this);
 
-        _playerState = PlayerState.Normal;
+        playerState = PlayerState.Normal;
 
         _characterController = GetComponent<CharacterController>();
    
@@ -216,10 +216,10 @@ public class PlayerController : MonoBehaviour,Interactor
         _movementDirection = new Vector2();
         _currentMovementSpeed = movementSpeed;
 
-        _playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
+        playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
 
         _damageablePlayer = GetComponent<DamageableObject>();
-        _damageablePlayer.getHit.AddListener(_playerUI.UpdateHealthBar);
+        _damageablePlayer.getHit.AddListener(playerUI.UpdateHealthBar);
         
         GunSetup();
 
@@ -231,7 +231,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     private void FixedUpdate()
     {
-        if (_playerState == PlayerState.Normal)
+        if (playerState == PlayerState.Normal)
         {
             PlayerMovement(Time.fixedDeltaTime);
             PlayerScore.AddDeltaTimeToTimeSurvived(Time.fixedDeltaTime);
@@ -285,23 +285,23 @@ public class PlayerController : MonoBehaviour,Interactor
     private void EquipCurrentWeapon()
     {
         _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
-        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += _playerUI.SetAmmoText;
+        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += playerUI.SetAmmoText;
         if (_weaponsHeld[_currentWeaponIndex] is CrossHaired c)
         {
-            c.GetSpread().onValueChange += _playerUI.SetCrosshairScale;
+            c.GetSpread().onValueChange += playerUI.SetCrosshairScale;
         }
-        _playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
+        playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
     }
 
     private void UnequipCurrentWeapon()
     {
         _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
-        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= _playerUI.SetAmmoText;
+        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= playerUI.SetAmmoText;
         if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
         {
             CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
 
-            c.GetSpread().onValueChange -= _playerUI.SetCrosshairScale;
+            c.GetSpread().onValueChange -= playerUI.SetCrosshairScale;
         }
     }
 
@@ -328,12 +328,12 @@ public class PlayerController : MonoBehaviour,Interactor
     {
         if (_interactions.Count == 0) 
         {
-            _playerUI.SetInteractionText("");
+            playerUI.SetInteractionText("");
             _currentInteract = null;
         }
         else
         {
-            _playerUI.SetInteractionText("Press [E] to " + _interactions[0].GetInteractionText());
+            playerUI.SetInteractionText("Press [E] to " + _interactions[0].GetInteractionText());
             _currentInteract = _interactions[0];
         }
     }
@@ -388,7 +388,7 @@ public class PlayerController : MonoBehaviour,Interactor
     //-----------------------------------------player state
     public void Die()
     {
-        _playerState = PlayerState.Dead;
+        playerState = PlayerState.Dead;
     }
 
     //----------------------------input events
@@ -404,21 +404,21 @@ public class PlayerController : MonoBehaviour,Interactor
 
     public void UseWeaponInput(InputAction.CallbackContext context)
     {
-        if (_playerState != PlayerState.Normal) return;
+        if (playerState != PlayerState.Normal) return;
 
         _weaponsHeld[_currentWeaponIndex].UseWeaponInput(context);
     }
     
     public void ReloadCurrentGun(InputAction.CallbackContext context)
     {
-        if (_playerState != PlayerState.Normal) return;
+        if (playerState != PlayerState.Normal) return;
 
         _weaponsHeld[_currentWeaponIndex].ReloadInput(context);
     }
 
     public void AimCurrentGun(InputAction.CallbackContext context)
     {
-        if (_playerState != PlayerState.Normal) return;
+        if (playerState != PlayerState.Normal) return;
         _weaponsHeld[_currentWeaponIndex].AimInputAction(context);
 
         if (context.started) { _currentMovementSpeed = movementSpeedWhenAiming; }
@@ -427,7 +427,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     public void SwitchWeaponsInput(InputAction.CallbackContext context)
     {
-        if (_playerState != PlayerState.Normal) return;
+        if (playerState != PlayerState.Normal) return;
 
         if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
         {
@@ -447,7 +447,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     public void KickInput(InputAction.CallbackContext context)
     {
-        if (_playerState != PlayerState.Normal) return;
+        if (playerState != PlayerState.Normal) return;
 
         if (context.started && Time.time - _lastTimeKicked > kickDuration)
         {
@@ -463,15 +463,27 @@ public class PlayerController : MonoBehaviour,Interactor
     {
         if (context.started)
         {
-            if (_playerState != PlayerState.Paused)
+            if (playerState == PlayerState.Normal)
             {
-                _playerUI.ActivatePauseUI();
+                playerUI.ActivatePauseUI();
 
-                
+                playerState = PlayerState.Paused;
+
+                Time.timeScale = 0;
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
-            else
+            else if (playerState == PlayerState.Paused)
             {
-                _playerUI.DeactivatePauseUI();
+                playerUI.DeactivatePauseUI();
+
+                playerState = PlayerState.Normal;
+
+                Time.timeScale = 1;
+
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
             }
         }
     }
@@ -482,7 +494,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
     public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
 
-    public PlayerState GetPlayerState() { return _playerState; }
+    public PlayerState GetPlayerState() { return playerState; }
 
     public static ReadOnlyCollection<PlayerController> GetPlayers()
     {
@@ -496,12 +508,12 @@ public class PlayerController : MonoBehaviour,Interactor
      */
     public void SetRoundText(int round)
     {
-        _playerUI.SetRoundText(round);
+        playerUI.SetRoundText(round);
     }
 
     public void SetMission(Mission mission)
     {
-        _playerUI.SetMission(mission);
+        playerUI.SetMission(mission);
     }
 }
 

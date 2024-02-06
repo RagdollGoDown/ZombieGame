@@ -21,7 +21,7 @@ public class Explosiv : MonoBehaviour
 
         foreach (Collider col in cols)
         {
-            if (col.TryGetComponent<DamageableObject>(out DamageableObject d) && col.gameObject != gameObject)
+            if (col.TryGetComponent(out DamageableObject d) && col.gameObject != gameObject)
             {
                 Damage damageDone = new(damage, col.transform.position - position, this);
 
@@ -39,5 +39,10 @@ public class Explosiv : MonoBehaviour
         onTimerStart.Invoke();
         Debug.Log("start timer");
         Invoke(nameof(Explode), time);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position + offset, radius);
     }
 }

@@ -33,6 +33,7 @@ namespace MapGeneration.VillageGeneration
         //corridorsGeneration
         [SerializeField] private float turnProbability;
         [SerializeField] private float forwardProbability;
+        [SerializeField] private bool onlyCorridorsNoOpenSpaces = false;
 
         [SerializeField] private GenerationMethod generationMethod;
 
@@ -43,20 +44,20 @@ namespace MapGeneration.VillageGeneration
         /// meaning it's og size will overiden to make it fit in the bigger generator and the mask will make it
         /// go only in the places given by the bigger generator
         /// </summary>
-        /// <param name="UpperWidth"> the width of the upper generator</param>
-        public void Generate(float UpperWidth = 0, List<GameObject> necessaryBuildingsToPlace = null)
+        /// <param name="upperWidth"> the width of the upper generator</param>
+        public void Generate(float upperWidth = 0, List<GameObject> necessaryBuildingsToPlace = null)
         {
             //if the mask is null then it has already been used
-            if (UpperWidth != 0 && mask == null) return;
+            if (upperWidth != 0 && mask == null) return;
             if (villageBuildingsCollection == null) throw new System.Exception("Need to have a village collection component");
             if (size < 3) throw new System.ArgumentException("Size must be bigger than 2");
             if (density < 0 || density > 1) throw new System.ArgumentException("Density must be between 0 and 1");
             
             width = villageBuildingsCollection.GetWidth();
             
-            if (UpperWidth % width != 0) throw new System.Exception("Sub generator with width not divideable by upper generator width given");
+            if (upperWidth % width != 0) throw new System.Exception("Sub generator with width not divideable by upper generator width given");
 
-            size = UpperWidth == 0 ? size : mask.GetLength(0) * (int)(UpperWidth / width);
+            size = upperWidth == 0 ? size : mask.GetLength(0) * (int)(upperWidth / width);
 
             buildingConditionalArrays = new bool[size+2, size+2];
             villageBuildingsCollection.ReadyCollection(size);
@@ -65,23 +66,7 @@ namespace MapGeneration.VillageGeneration
 
             GenerateConditionalBoolArray(necessaryBuildingPositions);
 
-            if (mask != null)
-            {
-                int divide = (int)(UpperWidth / width);
-
-                for (int i = 0; i < mask.GetLength(0); i++)
-                {
-                    for (int j = 0; j < mask.GetLength(1); j++)
-                    {
-                        if (!mask[i, j])
-                        {
-                            FillExtract(buildingConditionalArrays, i * divide, j * divide, divide, false);
-                        }
-                    }
-                }
-
-                mask = null;
-            }
+            if (mask != null) FillMask(upperWidth);
 
             GenerateBorders();
 
@@ -117,6 +102,28 @@ namespace MapGeneration.VillageGeneration
                     baseArray[i2 + start0, j2 + start1] = fill;
                 }
             }
+        }
+
+        /// <summary>
+        /// This will apply the mask to the conditionalBoolArray and getting rid of it after
+        /// </summary>
+        /// <param name="upperWidth">the width of the generator applying the mask</param>
+        private void FillMask(float upperWidth){
+            
+            int divide = (int)(upperWidth / width);
+
+                for (int i = 0; i < mask.GetLength(0); i++)
+                {
+                    for (int j = 0; j < mask.GetLength(1); j++)
+                    {
+                        if (!mask[i, j])
+                        {
+                            FillExtract(buildingConditionalArrays, i * divide, j * divide, divide, false);
+                        }
+                    }
+                }
+
+            mask = null;
         }
 
         //-------------------------------------------------------------unity events
@@ -197,20 +204,27 @@ namespace MapGeneration.VillageGeneration
                 bool right = Random.Range(0, 1.0f) <= turnProbability;
                 bool left = Random.Range(0, 1.0f) <= turnProbability;
 
+                    
                 //go forward
-                if (forward)
+                if (forward && 
+                    (!onlyCorridorsNoOpenSpaces || 
+                    (buildingConditionalArrays[x + (y - fromy), y + (x - fromx)] && buildingConditionalArrays[x - (y - fromy), y - (x - fromx)])))
                 {
                     continueCorridor(2 * x - fromx, 2 * y - fromy, x, y);
                 }
 
                 //turn right
-                if (right)
+                if (right&& 
+                    (!onlyCorridorsNoOpenSpaces ||
+                    buildingConditionalArrays[x + (y - fromy) + (x - fromx), y + (y - fromy) - (x - fromx)]))
                 {
                     continueCorridor(x + y - fromy, y + x - fromx, x, y);
                 }
 
                 //turn left
-                if (left)
+                if (left&& 
+                    (!onlyCorridorsNoOpenSpaces ||
+                    buildingConditionalArrays[x - (y - fromy) + (x - fromx), y + (y - fromy) + (x - fromx)]))
                 {
                     continueCorridor(x - y + fromy, y - x + fromx, x, y);
                 }

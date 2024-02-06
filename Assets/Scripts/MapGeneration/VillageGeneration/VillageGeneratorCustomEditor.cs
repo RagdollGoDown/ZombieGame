@@ -30,12 +30,15 @@ namespace MapGeneration.VillageGeneration
         private const string turnProbaPath = "turnProbability";
         private SerializedProperty turnProbability;
 
+        private const string onlyCorridorsNoOpenSpacesPath = "onlyCorridorsNoOpenSpaces";
+        private SerializedProperty onlyCorridorsNoOpenSpaces;
+
         private const string vbcPath = "villageBuildingsCollection";
         private SerializedProperty vbc;
 
         private void OnEnable()
         {
-            target = ((VillageGenerator)serializedObject.targetObject);
+            target = (VillageGenerator)serializedObject.targetObject;
 
             size = serializedObject.FindProperty(sizePath);
             density = serializedObject.FindProperty(densityPath);
@@ -44,6 +47,7 @@ namespace MapGeneration.VillageGeneration
 
             turnProbability = serializedObject.FindProperty(turnProbaPath);
             forwardProbability = serializedObject.FindProperty(forwardProbaPath);
+            onlyCorridorsNoOpenSpaces = serializedObject.FindProperty(onlyCorridorsNoOpenSpacesPath);
 
             vbc = serializedObject.FindProperty(vbcPath);
         }
@@ -100,6 +104,7 @@ namespace MapGeneration.VillageGeneration
         {
             EditorGUILayout.PropertyField(turnProbability);
             EditorGUILayout.PropertyField(forwardProbability);
+            EditorGUILayout.PropertyField(onlyCorridorsNoOpenSpaces);
 
             if (turnProbability.floatValue < 0)
             {

@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\Utility\DamageableObject.cs" />
      <Compile Include="Assets\Scripts\Utility\Events\InvokeTriggerEvents.cs" />
      <Compile Include="Assets\Scripts\Utility\Interactable.cs" />
+     <Compile Include="Assets\Scripts\Utility\ClearArea.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ObservableRatio.cs" />
      <Compile Include="Assets\Scripts\Utility\GPUInstancing\GPUInstanceManager.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ReadOnly\ReadOnlyObservableFloat.cs" />

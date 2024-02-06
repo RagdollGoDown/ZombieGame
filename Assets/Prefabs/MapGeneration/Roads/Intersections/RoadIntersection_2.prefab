@@ -9,13 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4099753912365901747}
+  - component: {fileID: 485445806216556057}
   m_Layer: 0
   m_Name: RoadIntersection_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4099753912365901747
 Transform:
   m_ObjectHideFlags: 0
@@ -60,8 +61,29 @@ Transform:
   - {fileID: 7984354919093495315}
   - {fileID: 7984354918347871520}
   m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &485445806216556057
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4099753912365901708}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 20, y: 0, z: 20}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4099753911357244881
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1286,7 +1308,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 448996, guid: 0ba99da88f5077845b463335f529a335, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.83
+      value: -3.83
       objectReference: {fileID: 0}
     - target: {fileID: 448996, guid: 0ba99da88f5077845b463335f529a335, type: 3}
       propertyPath: m_LocalPosition.y
