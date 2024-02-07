@@ -25,7 +25,7 @@ public class Explosiv : MonoBehaviour
             {
                 Damage damageDone = new(damage, col.transform.position - position, this);
 
-                d.getHit.Invoke(damageDone);
+                d.GetHitEvent().Invoke(damageDone);
             }
         }
 

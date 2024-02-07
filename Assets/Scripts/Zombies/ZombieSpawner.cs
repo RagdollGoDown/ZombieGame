@@ -104,8 +104,8 @@ public class ZombieSpawner : MonoBehaviour
     private void ReapToZombieOnDeathEvent(ZombieBehaviour zb, Reaper zombieReaper)
     {
         if (zombieReaper == null || zb == null) return;
-        zb.OnDeath.RemoveListener(z => zombieReaper.Reap(z.GetLastDeadBodyPart()));
-        zb.OnDeath.AddListener(z => zombieReaper.Reap(z.GetLastDeadBodyPart()));
+        zb.OnDeath.RemoveListener(z => zombieReaper.Reap(z.GetLastDamagedBodyPart()));
+        zb.OnDeath.AddListener(z => zombieReaper.Reap(z.GetLastDamagedBodyPart()));
     }
     //-----------------------------------------------get/setters
 

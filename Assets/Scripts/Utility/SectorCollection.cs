@@ -189,11 +189,8 @@ namespace Utility {
         /// <param name="value">the list in which the items will be added (should be empty)</param>
         /// <param name="radius">the radius from which you take the items, the radius is in sectors</param>
         /// <returns>the items found in the radius of the center key</returns>
-        /// <exception cref="ArgumentException">If the radius is not strictly positive</exception>
         public bool TryGetValue(Vector3 key, out List<T> value, Vector3 radius)
         {
-            if (radius.x <= 0 || radius.y <= 0 || radius.z <= 0) throw new ArgumentException("Radius must be strictly positive.");
-
             key = GetCorrectedKey(key);
 
             List<T> values = new();

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Objectives.Button
 {
@@ -14,9 +11,6 @@ namespace Objectives.Button
         {
             base.Awake();
 
-            totalButtonsToPress = GetObjectiveObjects().Count;
-
-
             foreach (ObjectiveObject button in GetObjectiveObjects())
             {
                 button.GetObjectEvent().AddListener(PressButton);
@@ -27,13 +21,18 @@ namespace Objectives.Button
         {
             base.Begin();
 
-            _buttonsToPress = totalButtonsToPress;
+            _buttonsToPress =  GetObjectiveObjects().Count;
+            Debug.Log("began");
+            Debug.Log(_buttonsToPress);
         }
 
         private void PressButton()
         {
-            _buttonsToPress -= 1;
+            Debug.Log("Button Pressed");
+            Debug.Log(_buttonsToPress);
 
+            _buttonsToPress -= 1;
+            Debug.Log(_buttonsToPress);
             if (_buttonsToPress <= 0) { Complete(); }
         }
 

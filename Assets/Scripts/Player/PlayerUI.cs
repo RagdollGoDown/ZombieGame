@@ -98,6 +98,7 @@ public class PlayerUI : MonoBehaviour
 
         foreach(ShakableUIElement shakable in _shakableUIElements)
         {
+            shakable.Prepare();
             shakable.SetLengthAndStrength(shakingLength, shakingStrength);
         }
     }

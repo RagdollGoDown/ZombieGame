@@ -30,9 +30,11 @@ public class ZombieSpawnerManager : MonoBehaviour
 
     //it's good to have this low so that the zombies are spread out
     [SerializeField] private int maxZombiesGivenPerSpawner = 5;
+    [SerializeField] private int maxZombiesGivenPerRound = 5;
     [SerializeField] private int timeBetweenSpawnsMilliSec = 50;
     [SerializeField] private float timeBetweenRounds = 2;
     [SerializeField] private int radiusOfSectorsTaken = 1;
+    [SerializeField] private float velocityBias = 0;
 
     private CancellationTokenSource spawnZombiesAsyncCancelTokenSource;
     private CancellationToken spawnZombiesAsyncCancelToken;
@@ -103,7 +105,13 @@ public class ZombieSpawnerManager : MonoBehaviour
         //find spawners near the sector
         List<ZombieSpawner> spawnersInSector;
         int radius = radiusOfSectorsTaken;
-        while(!worldSpawnersAvailableSectors.TryGetValue(target.transform.position, out spawnersInSector, new Vector3(radius,1,radius++)))
+        Vector3 spawnedPosition = target.transform.position;
+
+        if (velocityBias != 0){
+            spawnedPosition += target.GetPossibleCharacterController().velocity * velocityBias;
+        }
+
+        while(!worldSpawnersAvailableSectors.TryGetValue(spawnedPosition, out spawnersInSector, new Vector3(radius,1,radius++)))
         {
             if (radius > 10 + radiusOfSectorsTaken)
             {
@@ -111,6 +119,7 @@ public class ZombieSpawnerManager : MonoBehaviour
                 return;
             }
         }
+        
 
         while (zombiesToSpawn > 0)
         {
@@ -118,7 +127,6 @@ public class ZombieSpawnerManager : MonoBehaviour
             tempAmount = spawnersInSector[Random.Range(0, spawnersInSector.Count - 1)].AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
             zombiesToSpawn -= tempAmount;
             quantitySpawned += tempAmount;
-
 
             await Task.Delay(timeBetweenSpawnsMilliSec);
         }
@@ -151,7 +159,7 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         int currentLivingQuantity = quantitySpawned - zombieReaper.GetReapedObjects().Count;
         
-        return Mathf.Max(Mathf.RoundToInt(Mathf.Lerp(minQuantity, maxQuantity, lerpTime)) - currentLivingQuantity,0);
+        return Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(minQuantity, maxQuantity, lerpTime)) - currentLivingQuantity,0,maxZombiesGivenPerRound);
     }
 
     //-------------------------------set/getters

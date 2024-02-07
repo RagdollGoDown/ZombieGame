@@ -28,7 +28,7 @@ namespace Utility
 
         [SerializeField] private float _health;
         [SerializeField] private float maxHealth = 10;
-        public UnityEventRecieveDamage getHit;
+        private UnityEventRecieveDamage getHit;
         public UnityEvent<DamageableObject> OnDamageTaken;
 
         private Collider[] _colliders;
@@ -54,7 +54,7 @@ namespace Utility
         {
             _health = maxHealth;
 
-            getHit = new UnityEventRecieveDamage();
+            getHit ??= new UnityEventRecieveDamage();
             getHit.AddListener(TakeDamage);
 
             _colliders = GetComponents<Collider>();
@@ -149,6 +149,13 @@ namespace Utility
         {
             if (possibleCharacterController != null) { return possibleCharacterController; }
             else { return GetComponent<CharacterController>(); }
+        }
+
+        public UnityEvent<Damage> GetHitEvent()
+        {
+            if (getHit == null) { getHit = new UnityEventRecieveDamage(); }
+
+            return getHit;
         }
 
         // -----------------------------------------------------------destroying commands

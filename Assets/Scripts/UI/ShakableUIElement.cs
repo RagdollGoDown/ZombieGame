@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
+using Utility;
 
-public class ShakableUIElement : MonoBehaviour
+public class ShakableUIElement : MonoBehaviour, Preparable
 {
     private static float LERP1 = 1f;
 
@@ -16,13 +15,13 @@ public class ShakableUIElement : MonoBehaviour
     private RectTransform _rectTransform;
     private Vector3 _basePosition;
 
-    private void Awake()
+    public void Prepare ()
     {
         _rectTransform = GetComponent<RectTransform>();
         _basePosition = _rectTransform.localPosition;
     }
 
-    private IEnumerator ShakeCoroutine()
+    private async void ShakeCoroutine()
     {
         _isShaking = true;
 
@@ -32,7 +31,7 @@ public class ShakableUIElement : MonoBehaviour
             _rectTransform.localPosition = _basePosition +
                 new Vector3(Random.value*2 -1,Random.value*2-1) * (1 - _elapsedTime) * _shakeStrength;
 
-            yield return null;
+            await Task.Yield();
         }
 
         _isShaking = false;

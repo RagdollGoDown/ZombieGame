@@ -291,7 +291,7 @@ public class ZombieBehaviour : MonoBehaviour
             _zombieAnimator.SetInteger("AttackType", 3);
         }
 
-        _zombieTarget.getHit.Invoke(new Damage(attackDamage, transform.position - _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT, this));
+        _zombieTarget.GetHitEvent().Invoke(new Damage(attackDamage, transform.position - _zombieTarget.transform.position + OFFSET_FOR_HEAD_CONSTRAINT, this));
         _timeBetweenAttackCounter = timeBetweenAttacks;
 
         yield return null;
@@ -368,6 +368,8 @@ public class ZombieBehaviour : MonoBehaviour
         _currentState = ZombieState.Dead;
         _zombieAnimator.enabled = false;
 
+        if (lastDamagedBodyPart == null) lastDamagedBodyPart = rootDamageableObject;
+
         OnDeath.Invoke(this);
 
         ReadyRagdoll();
@@ -401,7 +403,7 @@ public class ZombieBehaviour : MonoBehaviour
     /// This is the last part that was damaged, we need this for the reaper
     /// </summary>
     /// <returns>The last damageable object that was damaged</returns>
-    public DamageableObject GetLastDeadBodyPart()
+    public DamageableObject GetLastDamagedBodyPart()
     {
         return lastDamagedBodyPart;
     }

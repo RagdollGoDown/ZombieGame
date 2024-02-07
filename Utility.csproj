@@ -63,6 +63,7 @@
      <Compile Include="Assets\Scripts\Utility\Conditions\SimpleCondition.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ObservableFloat.cs" />
      <Compile Include="Assets\Scripts\Utility\ObjectPool\RandomObjectSpawner.cs" />
+     <Compile Include="Assets\Scripts\Utility\PreparableObject.cs" />
      <None Include="Assets\Scripts\Utility\Utility.asmdef" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2022.2.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

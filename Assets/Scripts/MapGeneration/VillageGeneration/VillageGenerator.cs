@@ -73,8 +73,6 @@ namespace MapGeneration.VillageGeneration
             PlaceBuildings();
 
             villageBuildingsCollection.FinishCollection(width);
-
-            Debug.Log("Generation Done for generator:" + name);
         }
 
         //--------------------------------------------------utility functions

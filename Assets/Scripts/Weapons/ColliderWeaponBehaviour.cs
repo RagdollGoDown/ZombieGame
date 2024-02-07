@@ -42,7 +42,7 @@ namespace Weapons
                     {
                         Damage damageDone = new(damage, p.transform.position - d.transform.position, this);
 
-                        d.getHit.Invoke(damageDone);
+                        d.GetHitEvent().Invoke(damageDone);
                     }
 
                     lastShotPosition = p.transform.position;

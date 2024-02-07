@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour,Interactor
 
             if (hit.transform && hit.transform.TryGetComponent(out DamageableObject damObj))
             {
-                damObj.getHit.Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
+                damObj.GetHitEvent().Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
             }
         }
     }
@@ -218,7 +218,7 @@ public class PlayerController : MonoBehaviour,Interactor
         playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
 
         _damageablePlayer = GetComponent<DamageableObject>();
-        _damageablePlayer.getHit.AddListener(playerUI.UpdateHealthBar);
+        _damageablePlayer.GetHitEvent().AddListener(playerUI.UpdateHealthBar);
         
         GunSetup();
 
