@@ -83,8 +83,8 @@ public class ZombieSpawner : MonoBehaviour
     {
         while (_zombiesToSpawn > 0  && !spawnZombiesAsyncCancelToken.IsCancellationRequested)
         {
-            await Task.Delay(timeBetweenSpawnsMilliSec);
             SpawnZombie(zombieReaper);
+            await Task.Delay(timeBetweenSpawnsMilliSec);
         }
     }
 
