@@ -2279,7 +2279,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4463498479093733608}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28.749998, y: 0, z: 132.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2497,8 +2497,8 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4463498479093733604}
-        m_TargetAssemblyTypeName: PlayerController, Player
-        m_MethodName: Pause
+        m_TargetAssemblyTypeName: Player.PlayerController, Player
+        m_MethodName: Escape
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2563,18 +2563,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8bd8f52068033643aae7f5354fc1ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maximumHeadSway: 0.15
+  maximumHeadSway: 0.2
   headSwaySpeed: 2
-  maximumHeadBob: 0.01
+  maximumHeadBob: 0.03
   headBobSpeed: 1
   movementSpeed: 10
   movementSpeedWhenAiming: 5
   mouseSensitivity: 20
-  maxWeaponsHeld: 3
+  maxWeaponsHeld: 2
   _weaponsHeld:
   - {fileID: 6284672778376349908}
   - {fileID: 9040535435785125949}
-  - {fileID: 5847717264853021304}
   timeBetweenWeaponSwitches: 0.5
   kickDamage: 40
   kickRange: 3
@@ -6198,18 +6197,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8805151709175910296}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5847717264853021304 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3104507421895245280, guid: 00a647f83c496a74a9e3385544584e66,
-    type: 3}
-  m_PrefabInstance: {fileID: 8805151709175910296}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &9191886103263137390
 PrefabInstance:
   m_ObjectHideFlags: 0

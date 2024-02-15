@@ -7,512 +7,591 @@ using UnityEngine.InputSystem;
 using Weapons;
 using Utility.Observable;
 using Objectives;
+using System;
 
-[RequireComponent(typeof(CharacterController))]
-[RequireComponent(typeof(DamageableObject))]
-public class PlayerController : MonoBehaviour,Interactor
+namespace Player
 {
-    private static List<PlayerController> PLAYERS;
-
-    private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
-    private static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
-
-    private static float ACCELERATION_DEGRADATION_SPEED = 5;
-
-    private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
-    private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
+    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(DamageableObject))]
+    public class PlayerController : MonoBehaviour,Interactor
     {
-        new Vector3(1,0,0), new Vector3(0.9f,0.1f,0), new Vector3(0.9f,0,0.1f), 
-        new Vector3(0.9f,-0.1f,0), new Vector3(0.9f,0,-0.1f), new Vector3(0.9f,-0.05f,.05f),
-        new Vector3(0.9f,0.05f, .05f), new Vector3(0.9f,-0.05f,-0.05f), new Vector3(0.9f,0.05f,-0.05f)
-    };
+        private static List<PlayerController> PLAYERS;
 
-    public enum PlayerState
-    {
-        Normal,
-        Paused,
-        Dead
-    }
+        private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
+        private static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
 
-    private PlayerState playerState;
+        private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
-    private CharacterController _characterController;
-    private PlayerInput _playerInput;
-    [Header("Camera mouvement")]
-    private Transform _cameraTransform;
-    private Transform _cameraHolderTransform;
-    [SerializeField] private float maximumHeadSway = 0.07f;
-    [SerializeField] private float headSwaySpeed = 5;
-    [SerializeField] private float maximumHeadBob = 0.1f;
-    [SerializeField] private float headBobSpeed = 1;
-    private float _headBobTime;
-    private Vector3 _tempHeadBobDirection;
+        private static float TIMESCALE_WHEN_AIMING = 0.2f;
 
-    private DamageableObject _damageablePlayer;
-
-    //--------------------movement
-    [Header("Mouvement")]
-    private Vector2 _movementDirection;
-    private Vector3 _movementVector;
-    private Vector3 _movementSpeedAffectedByAcceleration;
-    private Vector3 _movementSpeedGravity;
-    private float _currentMovementSpeed;
-    [SerializeField] private float movementSpeed;
-    [SerializeField] private float movementSpeedWhenAiming;
-    
-    private Vector2 _mouseDelta;
-    private Vector2 _headRotation;
-    [SerializeField] float mouseSensitivity;
-
-    //----------------------------ui
-    private PlayerUI playerUI;
-
-    //----------------------------shooting
-    //temporarily a serialize field to check the guns
-    private int _currentWeaponIndex;
-    [SerializeField] private int maxWeaponsHeld = 2;
-    [SerializeField] private WeaponBehaviour[] _weaponsHeld;
-
-    private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
-
-    [SerializeField] private float timeBetweenWeaponSwitches;
-    private float lastTimeSwitched;
-
-    //---------------------------interaction
-    private Interaction _currentInteract;
-    private List<Interaction> _interactions;
-
-    //---------------------------kicking
-    private Animator _kickAnimator;
-    [SerializeField] private float kickDamage;
-    [SerializeField] private float kickRange;
-    [SerializeField] private float kickAnimationLength;
-    [SerializeField] private float kickDuration;
-    private float _lastTimeKicked;
-
-    //--------------------------------------------------general
-    private void GunSetup()
-    {
-        _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
-        _currentWeaponIndex = 0;
-
-        if (_weaponsHeld.Length > maxWeaponsHeld) throw new System.ArgumentException("Too many weapons held on the player!");
-
-        foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
+        private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
+        private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
         {
-            if (t.TryGetComponent(out WeaponBehaviour wpb))
-            {
-                _onPlayerWeaponsToName.Add(t.name, wpb);
+            new Vector3(1,0,0), new Vector3(0.9f,0.1f,0), new Vector3(0.9f,0,0.1f), 
+            new Vector3(0.9f,-0.1f,0), new Vector3(0.9f,0,-0.1f), new Vector3(0.9f,-0.05f,.05f),
+            new Vector3(0.9f,0.05f, .05f), new Vector3(0.9f,-0.05f,-0.05f), new Vector3(0.9f,0.05f,-0.05f)
+        };
 
-                if (wpb is CrossHaired) { ((CrossHaired)wpb).SetSpreadOrigin(_cameraTransform); }
-
-                //t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
-                t.gameObject.SetActive(_weaponsHeld[_currentWeaponIndex] == wpb);
-            }
+        public enum PlayerState
+        {
+            Normal,
+            InMenu,
+            Dead
         }
 
-        Invoke(nameof(EquipCurrentWeapon), Time.deltaTime);
-    }
+        private PlayerState playerState;
 
-    private void PlayerMovement(float deltaTime)
-    {
-        MovePlayer(deltaTime);
-        PlayerCameraMouvement(deltaTime);
-        CalculateSway(_movementDirection, deltaTime);
-    }
+        private CharacterController _characterController;
+        private PlayerInput _playerInput;
 
-    private void PlayerAcceleration(float deltaTime)
-    {
-        _movementSpeedAffectedByAcceleration -= 
-            ACCELERATION_DEGRADATION_SPEED * _movementSpeedAffectedByAcceleration * deltaTime;
+        private int moneyOnPlayer;
 
-        //-----------------acceleration
-        if (!_characterController.isGrounded)
-        {
-            //add gravity
-            _movementSpeedGravity.y -= deltaTime * 9.81f;
-        }
-        else
-        {
-            //make sure when the player is grounded he doesn't go through the floor
-            if (_movementSpeedAffectedByAcceleration.y < 0)
-            {
-                _movementSpeedAffectedByAcceleration.y = 0;
-            }
+        [Header("Camera mouvement")]
+        private Transform _cameraTransform;
+        private Transform _cameraHolderTransform;
+        [SerializeField] private float maximumHeadSway = 0.07f;
+        [SerializeField] private float headSwaySpeed = 5;
+        [SerializeField] private float maximumHeadBob = 0.1f;
+        [SerializeField] private float headBobSpeed = 1;
+        private float _headBobTime;
+        private Vector3 _headSwayMotion;
+        private Vector3 _tempHeadBobDirection;
 
-            if (_movementSpeedGravity.y < 0)
-            {
-                _movementSpeedGravity.y = 0;
-            }
-        }
-    }
+        private DamageableObject _damageablePlayer;
 
-    private void MovePlayer(float deltaTime)
-    {
-        PlayerAcceleration(deltaTime);
-
-        //---------------normal movement
-        _movementVector = transform.right * _movementDirection.x + transform.forward * _movementDirection.y;
-        _movementVector *= deltaTime *_currentMovementSpeed;
-
-        _movementVector += (_movementSpeedAffectedByAcceleration+_movementSpeedGravity) * deltaTime;
-
-        _characterController.Move(_movementVector);
-    }
-
-    private void PlayerCameraMouvement(float deltaTime)
-    {
-        //--------------head turning
-        _mouseDelta *= Time.deltaTime * mouseSensitivity;
-        _headRotation += _mouseDelta;
-        _headRotation.y = Mathf.Clamp(_headRotation.y, -90f, 90f);
-
-        _cameraHolderTransform.localEulerAngles = Vector3.right * -_headRotation.y;
-        transform.localEulerAngles = Vector3.up * _headRotation.x;
-
-        CalculateSway(new Vector3(_movementDirection.x, 0, _movementDirection.y), deltaTime);
-        CalculateBob(deltaTime);
-    }
-
-    private void HandleKickDamageAndRayCast() 
-    {
-        RaycastHit hit;
-
-        foreach (Vector3 v in KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE)
-        {
-            Physics.Raycast(_cameraTransform.position, 
-                _cameraTransform.forward * v.x + _cameraTransform.right * v.y + _cameraTransform.up * v.z,
-                out hit, kickRange, SHOOTABLE_LAYERMASK_VALUE);
-
-            if (hit.transform && hit.transform.TryGetComponent(out DamageableObject damObj))
-            {
-                damObj.GetHitEvent().Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
-            }
-        }
-    }
-
-    //--------------------------------------------------unity events
-    private void Awake()
-    {
-        if (PLAYERS == null) PLAYERS = new List<PlayerController>();
-
-        PLAYERS.Add(this);
-
-        playerState = PlayerState.Normal;
-
-        _characterController = GetComponent<CharacterController>();
-   
-        _playerInput = GetComponent<PlayerInput>();
-        PlayerScore.ResetScore();
-
-        _cameraHolderTransform = transform.Find("CameraAndGunHolder").transform;
-
-        _cameraTransform = _cameraHolderTransform.Find("PlayerCamera").transform;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        _movementDirection = new Vector2();
-        _currentMovementSpeed = movementSpeed;
-
-        playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
-
-        _damageablePlayer = GetComponent<DamageableObject>();
-        _damageablePlayer.GetHitEvent().AddListener(playerUI.UpdateHealthBar);
+        //--------------------movement
+        [Header("Mouvement")]
+        private Vector2 _movementDirection;
+        private Vector3 _movementVector;
+        private Vector3 _movementSpeedAffectedByAcceleration;
+        private Vector3 _movementSpeedGravity;
+        private float _currentMovementSpeed;
+        [SerializeField] private float movementSpeed;
+        [SerializeField] private float movementSpeedWhenAiming;
         
-        GunSetup();
+        private Vector2 _mouseDelta;
+        private Vector2 _headRotation;
+        [SerializeField] float mouseSensitivity;
 
-        _interactions = new List<Interaction>();
+        //----------------------------ui
+        private PlayerUI playerUI;
 
-        _kickAnimator = transform.Find("CameraAndGunHolder/PlayerCamera/GunCamera/KickAnimations").GetComponent<Animator>();
-        _kickAnimator.SetFloat(KICK_SPEED_PARAM_ID, kickAnimationLength / kickDuration);
-    }
+        [Header("Weapons")]
+        //----------------------------shooting
+        //temporarily a serialize field to check the guns
+        private int _currentWeaponIndex;
+        [SerializeField] private int maxWeaponsHeld = 2;
+        [SerializeField] private List<WeaponBehaviour> _weaponsHeld;
 
-    private void FixedUpdate()
-    {
-        if (playerState == PlayerState.Normal)
+        private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
+
+        [SerializeField] private float timeBetweenWeaponSwitches;
+        private float lastTimeSwitched;
+
+        //---------------------------interaction
+        private Interaction _currentInteract;
+        private List<Interaction> _interactions;
+
+        //---------------------------kicking
+        [Header("Kicking")]
+        private Animator _kickAnimator;
+        [SerializeField] private float kickDamage;
+        [SerializeField] private float kickRange;
+        [SerializeField] private float kickAnimationLength;
+        [SerializeField] private float kickDuration;
+        private float _lastTimeKicked;
+
+        //--------------------------------------------------general
+        private void GunSetup()
         {
-            PlayerMovement(Time.fixedDeltaTime);
-            PlayerScore.AddDeltaTimeToTimeSurvived(Time.fixedDeltaTime);
-        }
-    }
+            _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
+            _currentWeaponIndex = 0;
 
-    private void OnDisable()
-    {
-        PLAYERS.Remove(this);
-    }
+            if (_weaponsHeld.Count > maxWeaponsHeld) throw new System.ArgumentException("Too many weapons held on the player!");
 
-    //---------------------------------------------------------------------ui
-    private void CalculateSway(Vector3 direction, float deltaTime)
-    {
-        direction = direction.normalized;
-
-        _cameraTransform.localPosition += (direction * maximumHeadSway - _cameraTransform.localPosition) * headSwaySpeed * deltaTime;
-    }
-
-    private void CalculateBob(float deltaTime)
-    {
-        _headBobTime += deltaTime * headBobSpeed * _characterController.velocity.magnitude;
-        if (_headBobTime >= 2*Mathf.PI) { _headBobTime = 0; }
-
-        _tempHeadBobDirection.x = Mathf.Cos(_headBobTime);
-        _tempHeadBobDirection.y = Mathf.Sin(2 * _headBobTime);
-
-        _cameraTransform.localPosition += maximumHeadBob*_tempHeadBobDirection;
-    }
-    
-    //------------------------------------------------------------------weapons
-    public RaycastHit GetRaycastHitInFrontOfCamera(float spread)
-    {
-        float randomAngle = Random.Range(0, 2 * Mathf.PI);
-
-        Vector3 spreadDiff = _cameraTransform.up * Mathf.Cos(randomAngle) + _cameraTransform.right * Mathf.Sin(randomAngle);
-        spreadDiff *= spread * Random.value;
-
-        Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,SHOOTABLE_LAYERMASK_VALUE);
-        return hit;
-    }
-
-    private void Switch()
-    {
-        UnequipCurrentWeapon();
-        _currentWeaponIndex = (_currentWeaponIndex + 1) % _weaponsHeld.Length;
-
-        EquipCurrentWeapon();
-    }
-
-    private void EquipCurrentWeapon()
-    {
-        _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
-        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += playerUI.SetAmmoText;
-        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired c)
-        {
-            c.GetSpread().onValueChange += playerUI.SetCrosshairScale;
-        }
-        playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
-    }
-
-    private void UnequipCurrentWeapon()
-    {
-        _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
-        _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= playerUI.SetAmmoText;
-        if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
-        {
-            CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
-
-            c.GetSpread().onValueChange -= playerUI.SetCrosshairScale;
-        }
-    }
-
-    //---------------------------------------------------------------interactions
-    public void OnInteractableEntered(Interaction interaction)
-    {
-        if (!_interactions.Contains(interaction))
-        {
-            _interactions.Add(interaction);
-        }
-
-
-        UpdateCurrentInteraction();
-    }
-
-    public void OnInteractableExit(Interaction interaction)
-    {
-        _interactions.Remove(interaction);
-
-        UpdateCurrentInteraction();
-    }
-
-    private void UpdateCurrentInteraction()
-    {
-        if (_interactions.Count == 0) 
-        {
-            playerUI.SetInteractionText("");
-            _currentInteract = null;
-        }
-        else
-        {
-            playerUI.SetInteractionText("Press [E] to " + _interactions[0].GetInteractionText());
-            _currentInteract = _interactions[0];
-        }
-    }
-
-    /* DEPRECATED does not support for when there are more than 2 weapons on the player
-     * 
-     * returns false if the player didn't pick up the weapon
-     * 
-     * replaces the weapon currently equipped with the weapon given, identified by it's name
-     * if the weapon isn't identified then it throws illegal argument Exception
-     */
-    public bool PickUpWeapon(string weaponName)
-    {
-        if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
-        {
-            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
-
-            newWeapon.gameObject.SetActive(true);
-
-            //if he already has the weapon just refill it and switch to it
-            if (_weaponsHeld[0] == newWeapon)
+            foreach (Transform t in transform.Find("CameraAndGunHolder/GunHolder"))
             {
-                _currentWeaponIndex = 0;
+                if (t.TryGetComponent(out WeaponBehaviour wpb))
+                {
+                    _onPlayerWeaponsToName.Add(t.name, wpb);
+
+                    if (wpb is CrossHaired) { ((CrossHaired)wpb).SetSpreadOrigin(_cameraTransform); }
+
+                    //t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
+                    t.gameObject.SetActive(_weaponsHeld[_currentWeaponIndex] == wpb);
+                }
             }
-            else if (_weaponsHeld[1] == newWeapon)
+
+            Invoke(nameof(EquipCurrentWeapon), Time.deltaTime);
+        }
+
+        private void PlayerMovement(float deltaTime)
+        {
+            MovePlayer(deltaTime);
+            PlayerCameraMouvement(deltaTime);
+        }
+
+        private void PlayerAcceleration(float deltaTime)
+        {
+            _movementSpeedAffectedByAcceleration -= 
+                ACCELERATION_DEGRADATION_SPEED * _movementSpeedAffectedByAcceleration * deltaTime;
+
+            //-----------------acceleration
+            if (!_characterController.isGrounded)
             {
-                _currentWeaponIndex = 1;
+                //add gravity
+                _movementSpeedGravity.y -= deltaTime * 9.81f;
             }
             else
             {
-                _weaponsHeld[_currentWeaponIndex] = newWeapon;
+                //make sure when the player is grounded he doesn't go through the floor
+                if (_movementSpeedAffectedByAcceleration.y < 0)
+                {
+                    _movementSpeedAffectedByAcceleration.y = 0;
+                }
+
+                if (_movementSpeedGravity.y < 0)
+                {
+                    _movementSpeedGravity.y = 0;
+                }
             }
-
-            _weaponsHeld[_currentWeaponIndex].RefillWeaponAmmo();
-
-            return true;
         }
-        else
+
+        private void MovePlayer(float deltaTime)
         {
-            throw new System.ArgumentException("No such weapon");
+            PlayerAcceleration(deltaTime);
+
+            //---------------normal movement
+            _movementVector = transform.right * _movementDirection.x + transform.forward * _movementDirection.y;
+            _movementVector *= deltaTime *_currentMovementSpeed;
+
+            _movementVector += (_movementSpeedAffectedByAcceleration+_movementSpeedGravity) * deltaTime;
+
+            _characterController.Move(_movementVector);
         }
-    }
 
-    /*
-     * used to see if the player needs more ammo or a new weapon
-     */
-    public float GetPlayerAmmoFillRatio()
-    {
-        return (_weaponsHeld[0].GetAmmoFillRatio() + _weaponsHeld[1].GetAmmoFillRatio()) / 2;
-    }
+        private void PlayerCameraMouvement(float deltaTime)
+        {
+            //--------------head turning
+            _mouseDelta *= deltaTime * mouseSensitivity;
+            _headRotation += _mouseDelta;
+            _headRotation.y = Mathf.Clamp(_headRotation.y, -90f, 90f);
 
-    //-----------------------------------------player state
-    public void Die()
-    {
-        playerState = PlayerState.Dead;
-    }
+            _cameraHolderTransform.localEulerAngles = Vector3.right * -_headRotation.y;
+            transform.localEulerAngles = Vector3.up * _headRotation.x;
 
-    //----------------------------input events
-    public void SetMovementDirection(InputAction.CallbackContext context)
-    {
-        _movementDirection = context.ReadValue<Vector2>();
-    }
+            ApplyBobandSway(deltaTime);
+        }
+
+        private void HandleKickDamageAndRayCast() 
+        {
+            RaycastHit hit;
+
+            foreach (Vector3 v in KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE)
+            {
+                Physics.Raycast(_cameraTransform.position, 
+                    _cameraTransform.forward * v.x + _cameraTransform.right * v.y + _cameraTransform.up * v.z,
+                    out hit, kickRange, SHOOTABLE_LAYERMASK_VALUE);
+
+                if (hit.transform && hit.transform.TryGetComponent(out DamageableObject damObj))
+                {
+                    damObj.GetHitEvent().Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
+                }
+            }
+        }
+
+        
+        private void ApplyBobandSway(float deltaTime)
+        {
+            //--------------head bob
+            _headBobTime += deltaTime * headBobSpeed * _characterController.velocity.magnitude;
+            if (_headBobTime >= 2*Mathf.PI) { _headBobTime = 0; }
+
+            _tempHeadBobDirection.x = Mathf.Cos(_headBobTime);
+            _tempHeadBobDirection.y = Mathf.Sin(2 * _headBobTime);
+
+            //--------------head sway
+            Vector3 swayDirection = new Vector3(_movementDirection.x, 0, _movementDirection.y).normalized;
+
+            _headSwayMotion  += (swayDirection * maximumHeadSway - _cameraTransform.localPosition) * headSwaySpeed * deltaTime;
+            
+            _cameraTransform.localPosition = maximumHeadBob*_tempHeadBobDirection + _headSwayMotion;
+        }
+        
+
+        //--------------------------------------------------unity events
+        private void Awake()
+        {
+            if (PLAYERS == null) PLAYERS = new List<PlayerController>();
+
+            PLAYERS.Add(this);
+
+            playerState = PlayerState.Normal;
+
+            _characterController = GetComponent<CharacterController>();
     
-    public void SetMouseDelta(InputAction.CallbackContext context)
-    {
-        _mouseDelta = context.ReadValue<Vector2>();
-    }
+            _playerInput = GetComponent<PlayerInput>();
+            PlayerScore.ResetScore();
 
-    public void UseWeaponInput(InputAction.CallbackContext context)
-    {
-        if (playerState != PlayerState.Normal) return;
+            _cameraHolderTransform = transform.Find("CameraAndGunHolder").transform;
 
-        _weaponsHeld[_currentWeaponIndex].UseWeaponInput(context);
-    }
-    
-    public void ReloadCurrentGun(InputAction.CallbackContext context)
-    {
-        if (playerState != PlayerState.Normal) return;
+            _cameraTransform = _cameraHolderTransform.Find("PlayerCamera").transform;
 
-        _weaponsHeld[_currentWeaponIndex].ReloadInput(context);
-    }
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
 
-    public void AimCurrentGun(InputAction.CallbackContext context)
-    {
-        if (playerState != PlayerState.Normal) return;
-        _weaponsHeld[_currentWeaponIndex].AimInputAction(context);
+            _movementDirection = new Vector2();
+            _currentMovementSpeed = movementSpeed;
 
-        if (context.started) { _currentMovementSpeed = movementSpeedWhenAiming; }
-        if (context.canceled) { _currentMovementSpeed = movementSpeed; }
-    }
+            playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
 
-    public void SwitchWeaponsInput(InputAction.CallbackContext context)
-    {
-        if (playerState != PlayerState.Normal) return;
+            _damageablePlayer = GetComponent<DamageableObject>();
+            _damageablePlayer.GetHitEvent().AddListener(playerUI.UpdateHealthBar);
+            
+            GunSetup();
 
-        if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
-        {
-            Switch();
+            _interactions = new List<Interaction>();
 
-            lastTimeSwitched = Time.time;
+            _kickAnimator = transform.Find("CameraAndGunHolder/PlayerCamera/GunCamera/KickAnimations").GetComponent<Animator>();
+            _kickAnimator.SetFloat(KICK_SPEED_PARAM_ID, kickAnimationLength / kickDuration);
         }
-    }
 
-    public void InteractInput(InputAction.CallbackContext context)
-    {
-        if (context.started && _currentInteract != null) { 
-            _currentInteract.GetAction().Invoke();
-            OnInteractableExit(_currentInteract);
-        }
-    }
-
-    public void KickInput(InputAction.CallbackContext context)
-    {
-        if (playerState != PlayerState.Normal) return;
-
-        if (context.started && Time.time - _lastTimeKicked > kickDuration)
-        {
-            _kickAnimator.SetTrigger(KICK_TRIGGER_PARAM_ID);
-
-            _lastTimeKicked = Time.time;
-
-            HandleKickDamageAndRayCast();
-        }
-    }
-
-    public void Pause(InputAction.CallbackContext context)
-    {
-        if (context.started)
+        private void Update()
         {
             if (playerState == PlayerState.Normal)
             {
-                playerUI.ActivatePauseUI();
-
-                playerState = PlayerState.Paused;
-
-                Time.timeScale = 0;
-
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else if (playerState == PlayerState.Paused)
-            {
-                playerUI.DeactivatePauseUI();
-
-                playerState = PlayerState.Normal;
-
-                Time.timeScale = 1;
-
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                PlayerMovement(Time.unscaledDeltaTime * Time.timeScale);
+                PlayerScore.AddDeltaTimeToTimeSurvived(Time.unscaledDeltaTime * Time.timeScale);
             }
         }
-    }
 
-    //--------------------------------------------------------getters
+        private void OnDisable()
+        {
+            PLAYERS.Remove(this);
+        }
 
-    public DamageableObject GetPlayerTargetComponent() { return _damageablePlayer; }
+        //------------------------------------------------------------------weapons
+        public RaycastHit GetRaycastHitInFrontOfCamera(float spread)
+        {
+            float randomAngle = UnityEngine.Random.Range(0, 2 * Mathf.PI);
 
-    public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
+            Vector3 spreadDiff = _cameraTransform.up * Mathf.Cos(randomAngle) + _cameraTransform.right * Mathf.Sin(randomAngle);
+            spreadDiff *= spread * UnityEngine.Random.value;
 
-    public PlayerState GetPlayerState() { return playerState; }
+            Physics.Raycast(_cameraTransform.position + spreadDiff, _cameraTransform.forward + spreadDiff, out RaycastHit hit, 1000,SHOOTABLE_LAYERMASK_VALUE);
+            return hit;
+        }
 
-    public static ReadOnlyCollection<PlayerController> GetPlayers()
+        private void Switch()
+        {
+            UnequipCurrentWeapon();
+            _currentWeaponIndex = (_currentWeaponIndex + 1) % _weaponsHeld.Count;
+
+            EquipCurrentWeapon();
+        }
+
+        private void EquipCurrentWeapon()
+        {
+            if (_weaponsHeld.Count == 0) return;
+
+            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
+            _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += playerUI.SetAmmoText;
+            if (_weaponsHeld[_currentWeaponIndex] is CrossHaired c)
+            {
+                c.GetSpread().onValueChange += playerUI.SetCrosshairScale;
+            }
+            playerUI.SetWeaponName(_weaponsHeld[_currentWeaponIndex].name);
+        }
+
+        private void UnequipCurrentWeapon()
+        {
+            if (_weaponsHeld.Count == 0) return;
+
+            _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
+            _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= playerUI.SetAmmoText;
+            if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
+            {
+                CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
+
+                c.GetSpread().onValueChange -= playerUI.SetCrosshairScale;
+            }
+        }
+
+        //---------------------------------------------------------------interactions
+        public void OnInteractableEntered(Interaction interaction)
+        {
+            if (!_interactions.Contains(interaction))
+            {
+                _interactions.Add(interaction);
+            }
+
+
+            UpdateCurrentInteraction();
+        }
+
+        public void OnInteractableExit(Interaction interaction)
+        {
+            _interactions.Remove(interaction);
+
+            UpdateCurrentInteraction();
+        }
+
+        private void UpdateCurrentInteraction()
+        {
+            if (_interactions.Count == 0) 
+            {
+                playerUI.SetInteractionText("");
+                _currentInteract = null;
+            }
+            else
+            {
+                playerUI.SetInteractionText("Press [E] to " + _interactions[0].GetInteractionText());
+                _currentInteract = _interactions[0];
+            }
+        }
+
+        /* DEPRECATED does not support for when there are more than 2 weapons on the player
+        * 
+        * returns false if the player didn't pick up the weapon
+        * 
+        * replaces the weapon currently equipped with the weapon given, identified by it's name
+        */
+        public bool PickUpWeapon(string weaponName)
+        {
+            if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
+            {
+                UnequipCurrentWeapon();
+               
+
+                if (_weaponsHeld.Count < maxWeaponsHeld)
+                {
+                    _currentWeaponIndex = _weaponsHeld.Count - 1;
+                    _weaponsHeld.Add(newWeapon);
+                }
+                else
+                {
+                    _weaponsHeld[_currentWeaponIndex] = newWeapon;
+                }
+
+                EquipCurrentWeapon();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /*
+        * used to see if the player needs more ammo or a new weapon
+        */
+        public float GetPlayerAmmoFillRatio()
+        {
+            return (_weaponsHeld[0].GetAmmoFillRatio() + _weaponsHeld[1].GetAmmoFillRatio()) / 2;
+        }
+
+        //-----------------------------------------player state
+        public void Die()
+        {
+            playerState = PlayerState.Dead;
+        }
+
+        //----------------------------input events
+        public void SetMovementDirection(InputAction.CallbackContext context)
+        {
+            _movementDirection = context.ReadValue<Vector2>();
+        }
+        
+        public void SetMouseDelta(InputAction.CallbackContext context)
+        {
+            _mouseDelta = context.ReadValue<Vector2>();
+        }
+
+        public void UseWeaponInput(InputAction.CallbackContext context)
+        {
+            if (playerState != PlayerState.Normal) return;
+
+            _weaponsHeld[_currentWeaponIndex].UseWeaponInput(context);
+        }
+        
+        public void ReloadCurrentGun(InputAction.CallbackContext context)
+        {
+            if (playerState != PlayerState.Normal) return;
+
+            _weaponsHeld[_currentWeaponIndex].ReloadInput(context);
+        }
+
+        public void AimCurrentGun(InputAction.CallbackContext context)
+        {
+            if (playerState != PlayerState.Normal) return;
+            _weaponsHeld[_currentWeaponIndex].AimInputAction(context);
+
+            if (context.started) { Time.timeScale = TIMESCALE_WHEN_AIMING; }
+            if (context.canceled) { Time.timeScale = 1; }
+        }
+
+        public void SwitchWeaponsInput(InputAction.CallbackContext context)
+        {
+            if (playerState != PlayerState.Normal) return;
+
+            if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
+            {
+                Switch();
+
+                lastTimeSwitched = Time.time;
+            }
+        }
+
+        public void InteractInput(InputAction.CallbackContext context)
+        {
+            if (context.started && _currentInteract != null) { 
+                _currentInteract.GetAction().Invoke();
+                OnInteractableExit(_currentInteract);
+            }
+        }
+
+        public void KickInput(InputAction.CallbackContext context)
+        {
+            if (playerState != PlayerState.Normal) return;
+
+            if (context.started && Time.time - _lastTimeKicked > kickDuration)
+            {
+                _kickAnimator.SetTrigger(KICK_TRIGGER_PARAM_ID);
+
+                _lastTimeKicked = Time.time;
+
+                HandleKickDamageAndRayCast();
+            }
+        }
+
+        public void Escape(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                if (playerState == PlayerState.Normal)
+                {
+                    playerUI.OpenMenu(PlayerUI.Menu.Pause);
+
+                    playerState = PlayerState.InMenu;
+
+                    Time.timeScale = 0;
+
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+                else if (playerState == PlayerState.InMenu)
+                {
+                    playerUI.CloseMenu();
+
+                    playerState = PlayerState.Normal;
+
+                    Time.timeScale = 1;
+
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                }
+            }
+        }
+
+        //--------------------------------------------------------getters
+
+        public DamageableObject GetPlayerTargetComponent() { return _damageablePlayer; }
+
+        public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
+
+        public PlayerState GetPlayerState() { return playerState; }
+
+        public static ReadOnlyCollection<PlayerController> GetPlayers()
+        {
+            return PLAYERS.AsReadOnly();
+        }
+
+        public PlayerSaveData GetSaveData()
+        {
+            PlayerSaveData data = new();
+
+            data.money = GetMoney();
+
+            data.Weapons = new List<string>();
+
+            foreach (WeaponBehaviour wpb in _weaponsHeld)
+            {
+                data.Weapons.Add(wpb.name);
+            }
+
+            data.currentWeaponIndex = _currentWeaponIndex;
+
+            return data;
+        }
+
+        public int GetMoney() { return moneyOnPlayer; }
+
+        public PlayerUI getPlayerUI() { return playerUI; }
+
+        //--------------------------------------------------------setters
+
+        /*
+        * makes the round text show which is the current one
+        */
+        public void SetRoundText(int round)
+        {
+            playerUI.SetRoundText(round);
+        }
+
+        public void SetMission(Mission mission)
+        {
+            playerUI.SetMission(mission);
+        }
+
+        public void SetMoney(int money)
+        {
+            moneyOnPlayer = money;
+        }
+
+        public void AddMoney(int money)
+        {
+            moneyOnPlayer += money;
+        }
+
+        public void SetPlayerData(PlayerSaveData data)
+        {
+            moneyOnPlayer = data.money;
+
+            UnequipCurrentWeapon();
+
+            _weaponsHeld.Clear();
+
+            foreach (string wpnName in data.Weapons)
+            {
+                if (_onPlayerWeaponsToName.TryGetValue(wpnName, out WeaponBehaviour newWeapon)){
+                    _weaponsHeld.Add(newWeapon);
+                }
+                else{
+                    Debug.LogError("Weapon not found: " + wpnName);
+                }
+            }
+
+            if (data.currentWeaponIndex < _weaponsHeld.Count)
+            {
+                _currentWeaponIndex = data.currentWeaponIndex;
+            }
+            else
+            {
+                _currentWeaponIndex = 0;
+            }
+            
+            EquipCurrentWeapon();
+        }
+    }    
+
+    [Serializable]
+    public struct PlayerSaveData
     {
-        return PLAYERS.AsReadOnly();
-    }
+        public int money;
 
-    //--------------------------------------------------------setters
+        public List<string> Weapons;
 
-    /*
-     * makes the round text show which is the current one
-     */
-    public void SetRoundText(int round)
-    {
-        playerUI.SetRoundText(round);
-    }
-
-    public void SetMission(Mission mission)
-    {
-        playerUI.SetMission(mission);
+        public int currentWeaponIndex;
     }
 }
-

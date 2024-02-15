@@ -40,10 +40,9 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.2.6f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\RewardsManager.cs" />
-     <Compile Include="Assets\Scripts\LevelManager.cs" />
-     <Compile Include="Assets\Scripts\WeaponCrate.cs" />
-     <Compile Include="Assets\Scripts\HubManager.cs" />
+     <Compile Include="Assets\Scripts\SceneManager\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\SceneManager\GameSaver.cs" />
+     <Compile Include="Assets\Scripts\SceneManager\HubManager.cs" />
      <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\ImportedAssets\PolygonPrototype\Shaders\Prototype_Glass_Global.shader" />
      <None Include="Assets\ImportedAssets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
@@ -332,6 +331,9 @@
     </Reference>
     <Reference Include="Unity.Burst.Cecil">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+        <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.0.2\Runtime\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Cecil.Rocks">
         <HintPath>C:\Users\Cadet\UnityProjects\ZombieGame\Library\PackageCache\com.unity.burst@1.8.2\Unity.Burst.CodeGen\Unity.Burst.Cecil.Rocks.dll</HintPath>

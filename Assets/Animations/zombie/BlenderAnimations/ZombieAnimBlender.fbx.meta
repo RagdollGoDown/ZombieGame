@@ -19,21 +19,30 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'AttackLeft.001' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
+    animationImportWarnings: "\nClip 'AttackHead' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
       to improve retargeting quality.\n\t'Jaw' has translation animation that will
-      be discarded.\n\nClip 'AttackRight' has import animation warnings that might
+      be discarded.\n\nClip 'AttackRight.001' has import animation warnings that
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar
+      to improve retargeting quality.\n\t'Jaw' has translation animation that will
+      be discarded.\n\nClip 'AttackLeft' has import animation warnings that might
       lower retargeting quality:\nNote: Activate translation DOF on avatar to improve
       retargeting quality.\n\t'Jaw' has translation animation that will be discarded.\n\nClip
-      'AttackHead' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
-      has translation animation that will be discarded.\n\nClip 'Armature|AttackHead'
-      has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
+      'Armature|AttackHead' has import animation warnings that might lower retargeting
+      quality:\nNote: Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
       has translation animation that will be discarded.\n\nClip 'Armature|AttackLeft'
       has import animation warnings that might lower retargeting quality:\nNote:
       Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
       has translation animation that will be discarded.\n\nClip 'Armature|AttackRight'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
+      has translation animation that will be discarded.\n\nClip 'Armature|Damaged_1'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
+      has translation animation that will be discarded.\n\nClip 'Armature|Damaged_2'
+      has import animation warnings that might lower retargeting quality:\nNote:
+      Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
+      has translation animation that will be discarded.\n\nClip 'Armature|Damaged_3'
       has import animation warnings that might lower retargeting quality:\nNote:
       Activate translation DOF on avatar to improve retargeting quality.\n\t'Jaw'
       has translation animation that will be discarded.\n"
@@ -605,7 +614,7 @@ ModelImporter:
       takeName: Armature|AttackLeft
       internalID: 21120514395870912
       firstFrame: 0
-      lastFrame: 10
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: -0.95
@@ -634,7 +643,7 @@ ModelImporter:
       takeName: Armature|AttackRight
       internalID: -4523083797507840679
       firstFrame: 0
-      lastFrame: 10
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: -0.95

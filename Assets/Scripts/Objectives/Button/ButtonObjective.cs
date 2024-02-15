@@ -1,15 +1,22 @@
 using UnityEngine;
+using System;
 
 namespace Objectives.Button
 {
     public class ButtonObjective : Objective
     {
-        private int totalButtonsToPress;
         private int _buttonsToPress;
+
+        private Action onButtonPress;
 
         protected override void Awake()
         {
             base.Awake();
+
+            if (GetObjectiveObjects().Count == 0)
+            {
+                throw new Exception("No buttons to press");
+            }
 
             foreach (ObjectiveObject button in GetObjectiveObjects())
             {
@@ -22,23 +29,29 @@ namespace Objectives.Button
             base.Begin();
 
             _buttonsToPress =  GetObjectiveObjects().Count;
-            Debug.Log("began");
-            Debug.Log(_buttonsToPress);
         }
 
         private void PressButton()
         {
-            Debug.Log("Button Pressed");
-            Debug.Log(_buttonsToPress);
-
             _buttonsToPress -= 1;
-            Debug.Log(_buttonsToPress);
+
+            onButtonPress?.Invoke();
             if (_buttonsToPress <= 0) { Complete(); }
         }
 
         public override float GetCompletenessRatio()
         {
-            return _buttonsToPress / totalButtonsToPress;
+            return (float)(GetObjectiveObjects().Count - _buttonsToPress) / GetObjectiveObjects().Count;
+        }
+
+        public void ObserveOnButtonPress(Action action)
+        {
+            onButtonPress += action;
+        }
+
+        public void StopObservingOnButtonPress(Action action)
+        {
+            onButtonPress -= action;
         }
     }
 }

@@ -25,6 +25,8 @@ namespace Objectives
         public UnityEvent onStarted;
         public UnityEvent onCompleted;
 
+        public int RewardMoney;
+
         public void StartMission()
         {
             if (currentMissionState == MissionState.NotReady)
@@ -52,14 +54,15 @@ namespace Objectives
             {
                 Objective next = objectives[currentObjectiveIndex];
 
-                currentObjective.SetValue(next);
                 next.Begin();
+                currentObjective.SetValue(next);
             }
         }
 
         private void CompleteMission()
         {
             Debug.Log("Mission Completed");
+
             onCompleted.Invoke();
         }
 

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: fe11f9c11a130444fbab51dd532a5aea
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerPrefab: {fileID: 4463498479093733608, guid: efae5bc7090c0224993a5ed99581af2b,
+      type: 3}
+  - zombieSpawnerManager: {instanceID: 0}
+  - mainMission: {instanceID: 0}
+  - navMesh: {instanceID: 0}
+  - villageGenerator: {instanceID: 0}
+  - spawnPoint: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
