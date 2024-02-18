@@ -36,7 +36,8 @@ public class LevelManager : MonoBehaviour
         villageGenerator.Generate(necessaryBuildingsToPlace: necessarybuildings);
         player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation).GetComponent<PlayerController>();
 
-        if (playerUsesSaveData) player.SetPlayerData(GameSaver.LoadPlayerData());
+        if (playerUsesSaveData) player.SetPlayerData(GameSaver.LoadData<PlayerSaveData>("player"));
+
 
         zombieSpawnerManager.SetTarget(player.GetComponent<DamageableObject>());
 
@@ -54,8 +55,9 @@ public class LevelManager : MonoBehaviour
     public async void EndLevel()
     { 
         Debug.Log("end Level");
+        player.AddMoney(mainMission.RewardMoney);
 
-        GameSaver.SavePlayerData(player);
+        GameSaver.SaveData("player", player.GetSaveData());
 
         SceneManager.LoadSceneAsync("Hub");        
     }

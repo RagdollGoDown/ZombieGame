@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Objective", "Objective.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI.csproj", "{290af5d2-d0f5-7c0b-e2bd-ec2abd09a9bb}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{970b5706-7207-f00f-be7c-6bd02c18a982}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Player", "Player.csproj", "{2af2feba-3411-254c-2d69-09ea00886cf3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weapons", "Weapons.csproj", "{6402a288-c360-0456-cfe4-1d1d4ac7f845}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{970b5706-7207-f00f-be7c-6bd02c18a982}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zombies", "Zombies.csproj", "{f7235ae3-197d-f799-b64e-b285283355e7}"
 EndProject
@@ -30,12 +30,12 @@ Global
 		{e8772cb3-2e79-19e3-a2cf-3084bcf1622e}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{290af5d2-d0f5-7c0b-e2bd-ec2abd09a9bb}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{290af5d2-d0f5-7c0b-e2bd-ec2abd09a9bb}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{970b5706-7207-f00f-be7c-6bd02c18a982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{970b5706-7207-f00f-be7c-6bd02c18a982}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2af2feba-3411-254c-2d69-09ea00886cf3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2af2feba-3411-254c-2d69-09ea00886cf3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6402a288-c360-0456-cfe4-1d1d4ac7f845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6402a288-c360-0456-cfe4-1d1d4ac7f845}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{970b5706-7207-f00f-be7c-6bd02c18a982}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{970b5706-7207-f00f-be7c-6bd02c18a982}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{f7235ae3-197d-f799-b64e-b285283355e7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{f7235ae3-197d-f799-b64e-b285283355e7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection

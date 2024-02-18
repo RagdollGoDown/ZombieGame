@@ -383,12 +383,28 @@ namespace Player
             }
         }
 
-        /*
-        * used to see if the player needs more ammo or a new weapon
-        */
-        public float GetPlayerAmmoFillRatio()
+        public void OpenMenu(PlayerUI.Menu menu)
         {
-            return (_weaponsHeld[0].GetAmmoFillRatio() + _weaponsHeld[1].GetAmmoFillRatio()) / 2;
+            playerUI.OpenMenu(menu);
+
+            playerState = PlayerState.InMenu;
+
+            Time.timeScale = 0;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        public void CloseMenu()
+        {
+            playerUI.CloseMenu();
+
+            playerState = PlayerState.Normal;
+
+            Time.timeScale = 1;
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         //-----------------------------------------player state
@@ -471,25 +487,11 @@ namespace Player
             {
                 if (playerState == PlayerState.Normal)
                 {
-                    playerUI.OpenMenu(PlayerUI.Menu.Pause);
-
-                    playerState = PlayerState.InMenu;
-
-                    Time.timeScale = 0;
-
-                    Cursor.lockState = CursorLockMode.None;
-                    Cursor.visible = true;
+                    OpenMenu(PlayerUI.Menu.Pause);
                 }
                 else if (playerState == PlayerState.InMenu)
                 {
-                    playerUI.CloseMenu();
-
-                    playerState = PlayerState.Normal;
-
-                    Time.timeScale = 1;
-
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
+                    CloseMenu();
                 }
             }
         }
@@ -526,8 +528,6 @@ namespace Player
         }
 
         public int GetMoney() { return moneyOnPlayer; }
-
-        public PlayerUI getPlayerUI() { return playerUI; }
 
         //--------------------------------------------------------setters
 

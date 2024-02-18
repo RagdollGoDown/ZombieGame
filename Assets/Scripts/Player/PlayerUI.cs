@@ -171,6 +171,15 @@ namespace Player
                     _objectiveUI.completenessSlider.value = buttonObjective.GetCompletenessRatio();
                 });
             }
+            else if (objective is AreaObjective areaObjective)
+            {
+                _objectiveUI.completenessSlider.value = areaObjective.GetCompletenessRatio();
+                areaObjective.ObserveStayInArea(() =>
+                {
+                    Debug.Log("Stay in area");
+                    _objectiveUI.completenessSlider.value = areaObjective.GetCompletenessRatio();
+                });
+            }
             else
             {
                 _objectiveUI.completenessSlider.value = 1;

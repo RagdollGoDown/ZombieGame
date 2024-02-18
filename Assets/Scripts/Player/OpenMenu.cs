@@ -14,6 +14,6 @@ public class OpenMenu : MonoBehaviour
 
         PlayerController player = (PlayerController)interactable.GetInteractorInArea();
 
-        player.getPlayerUI().OpenMenu(menu);
+        player.OpenMenu(menu);
     }
 }

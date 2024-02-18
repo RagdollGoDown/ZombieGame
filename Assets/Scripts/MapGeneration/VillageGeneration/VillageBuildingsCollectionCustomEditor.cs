@@ -32,7 +32,7 @@ namespace MapGeneration.VillageGeneration
 
             //------------------------------------------show buildings
 
-            EditorGUILayout.LabelField("Colletion Buildings:");
+            EditorGUILayout.LabelField("Collection Buildings:");
 
             VillageBuilding v;
 

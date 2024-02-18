@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Objectives.Area
+namespace Objectives
 {
     public class AreaObjective : Objective
     {
         private float _currentStayTime;
         [SerializeField] private float totalStayTime;
+
+        private Action stayinArea;
 
         protected override void Awake()
         {
@@ -30,13 +33,25 @@ namespace Objectives.Area
 
         private void stayInObjective()
         {
-            _currentStayTime += Time.fixedDeltaTime;
+            stayinArea?.Invoke();
+            _currentStayTime += Time.fixedDeltaTime * Time.timeScale;
             if (_currentStayTime >= totalStayTime) Complete();
         }
 
         public override float GetCompletenessRatio()
         {
+            Debug.Log(_currentStayTime / totalStayTime);
             return _currentStayTime / totalStayTime;
+        }
+
+        public void ObserveStayInArea(Action action)
+        {
+            stayinArea += action;
+        }
+
+        public void StopObservingStayInArea(Action action)
+        {
+            stayinArea -= action;
         }
     }
 }
