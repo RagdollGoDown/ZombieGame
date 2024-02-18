@@ -32,6 +32,8 @@ public class Shop : MonoBehaviour
 {
     private static string ITEMS_PURCHASED_FILE = "shop-purchased";
 
+    private static string PURCHASED_REFUSED_IMAGE_PATH = "BuyButton/X";
+
     private static List<Item> itemsForSale = new List<Item>{
         new Item("AK-47",1000),
         new Item("Revolver",1500),
@@ -50,10 +52,14 @@ public class Shop : MonoBehaviour
 
     private RectTransform itemHolder;
 
+    private TextMeshProUGUI moneyText;
+
     //---------------------------------unity events
     private void Awake()
     {
         itemHolder = transform.Find("Panel/ItemHolder").GetComponent<RectTransform>();
+
+        moneyText = transform.Find("Panel/Money").GetComponent<TextMeshProUGUI>();
 
         if (itemsForSale == null)
         {
@@ -71,6 +77,7 @@ public class Shop : MonoBehaviour
         }
 
         SelectItemsForSale();
+        UpdatePlayerShowcaseMoney();
     }
 
     //----------------------------------general functions
@@ -123,6 +130,8 @@ public class Shop : MonoBehaviour
 
             itemsPurchased.Add(itemSelectedForSale[index].Item1);
             GameSaver.SaveData(ITEMS_PURCHASED_FILE, itemsPurchased);
+
+            UpdatePlayerShowcaseMoney();
             Debug.Log("Item purchased");
         }
         else
@@ -134,9 +143,22 @@ public class Shop : MonoBehaviour
 
     private async void ShowTooPoor(GameObject itemShowCase)
     {
-        itemShowCase.transform.Find("TooPoor").gameObject.SetActive(true);
+        itemShowCase.transform.Find(PURCHASED_REFUSED_IMAGE_PATH).gameObject.SetActive(true);
         await Task.Delay(1000);
-        itemShowCase.transform.Find("TooPoor").gameObject.SetActive(false);
+        itemShowCase.transform.Find(PURCHASED_REFUSED_IMAGE_PATH).gameObject.SetActive(false);
+    }
+
+    public void UpdatePlayerShowcaseMoney()
+    {
+        moneyText.text = "Money: " + player.GetMoney().ToString();
+    }
+
+    //---------------------------------setters
+
+    public void ClearItemsPurchased()
+    {
+        itemsPurchased.Clear();
+        GameSaver.SaveData(ITEMS_PURCHASED_FILE, itemsPurchased);
     }
 
     //---------------------------------getters

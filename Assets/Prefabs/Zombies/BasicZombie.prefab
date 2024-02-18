@@ -5572,9 +5572,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkingSpeed: 2
-  minRunningSpeed: 8
-  maxRunningSpeed: 14
-  distanceForMaxSpeed: 30
+  runningSpeedWhenClosest: 20
+  runningSpeedWhenFurthest: 10
+  distanceForMaxSpeed: 10
   crawlingSpeed: 3
   OnDeath:
     m_PersistentCalls:
@@ -13348,8 +13348,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.5, y: 0.8, z: 0.5}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &1952098107977333255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13562,8 +13562,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 0.5, y: 0.5, z: 0.5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.5, y: 0.8, z: 0.5}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!114 &5940749335999256925
 MonoBehaviour:
   m_ObjectHideFlags: 0

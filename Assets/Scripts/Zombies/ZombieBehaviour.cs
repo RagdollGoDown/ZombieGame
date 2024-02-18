@@ -30,6 +30,7 @@ public class ZombieBehaviour : MonoBehaviour
 
     //used for the chase direction
     private static readonly int DISTANCE_TO_TIME_BETWEEN_NAVMESH_UPDATES_PROPORTION_MILLISEC = 10;
+    private static readonly float SPEED_TO_ATTACK_DISTANCE_PROPORTION = .1f;
 
     private static readonly float IDLING_MAX_DISTANCE = 10;
     private static readonly float IDLING_MAX_WAIT_BETWEEN_WANDERS = 20;
@@ -44,8 +45,8 @@ public class ZombieBehaviour : MonoBehaviour
     //-------------------navigation
     private NavMeshAgent _navMeshAgent;
     [SerializeField] private float walkingSpeed = 2;
-    [SerializeField] private float minRunningSpeed = 9;
-    [SerializeField] private float maxRunningSpeed = 11;
+    [SerializeField] private float runningSpeedWhenClosest = 9;
+    [SerializeField] private float runningSpeedWhenFurthest = 11;
     [SerializeField] private float distanceForMaxSpeed = 5;
     private float runningSpeed;
     [SerializeField] private float crawlingSpeed;
@@ -71,6 +72,9 @@ public class ZombieBehaviour : MonoBehaviour
     [Header("Attacking")]
     //--------------------attacking
     private bool isAttacking;
+
+    private bool isSpeedingUp;
+
     [SerializeField] private float attackDamage;
     [SerializeField] private float attackDamageWithHead;
     [SerializeField] private float timeBetweenAttacks;
@@ -89,7 +93,7 @@ public class ZombieBehaviour : MonoBehaviour
     private void Awake()
     {
         _navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
-        runningSpeed = UnityEngine.Random.Range(minRunningSpeed, maxRunningSpeed);
+        runningSpeed = UnityEngine.Random.Range(runningSpeedWhenClosest, runningSpeedWhenFurthest);
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;
 
         float angle = UnityEngine.Random.Range(0, 2 * MathF.PI);
@@ -246,14 +250,14 @@ public class ZombieBehaviour : MonoBehaviour
             lookingPosition = target.transform.position + OFFSET_FOR_HEAD_CONSTRAINT;
 
             //the speed gets linearly smaller when the zombie gets closer to the player
-            _navMeshAgent.speed = distanceFromPlayer >= distanceForMaxSpeed ? maxRunningSpeed :
-                minRunningSpeed + (maxRunningSpeed - minRunningSpeed) * distanceFromPlayer / distanceForMaxSpeed;
+            _navMeshAgent.speed = distanceFromPlayer >= distanceForMaxSpeed ? runningSpeedWhenFurthest :
+                runningSpeedWhenClosest + (runningSpeedWhenFurthest - runningSpeedWhenClosest) * distanceFromPlayer / distanceForMaxSpeed;
 
             _navMeshAgent.SetDestination(lookingPosition);
 
             _headConstraint.transform.LookAt(lookingPosition);
 
-            if (distanceFromPlayer <= distanceBeforeAttack
+            if (distanceFromPlayer <= distanceBeforeAttack + SPEED_TO_ATTACK_DISTANCE_PROPORTION * _navMeshAgent.speed
                 && _navMeshAgent.velocity.magnitude <= MaxNavMeshSpeedRequieredAttack
                 && !isAttacking)
             {
@@ -291,6 +295,12 @@ public class ZombieBehaviour : MonoBehaviour
         //when the attack type is 0 then it isn't attacking
         _zombieAnimator.SetInteger("AttackType", 0);
         isAttacking = false;
+    }
+
+    private async void SpeedUp(){
+        isSpeedingUp = true;
+        await Task.Delay(1000);
+        isSpeedingUp = false;
     }
 
     //---------------------------------zombie body
