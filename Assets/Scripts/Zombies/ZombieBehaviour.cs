@@ -86,6 +86,7 @@ public class ZombieBehaviour : MonoBehaviour
     //we enable these transforms to choose which skinned skeleton is rendered 
     [SerializeField] List<GameObject> differentZombieMeshsGameObject;
     [SerializeField] List<Material> differentZombieMaterialsForSkinnedMesh;
+    [SerializeField] private Material zombieEyesMaterial;
     [SerializeField] GameObject _selectedZombieMesh;
     //[SerializeField] private GameObject defaultZombieMeshTransform;
 
@@ -162,20 +163,26 @@ public class ZombieBehaviour : MonoBehaviour
 
             SkinnedMeshRenderer zombieSkinnedMesh = _selectedZombieMesh.GetComponent<SkinnedMeshRenderer>();
 
+            int selectedMaterial = UnityEngine.Random.Range(0, differentZombieMaterialsForSkinnedMesh.Count);
+
+            List<Material> selectedMaterials = new List<Material>
+            {
+                differentZombieMaterialsForSkinnedMesh[selectedMaterial],
+                zombieEyesMaterial
+            };
+
             if (zombieSkinnedMesh != null)
             {
-                zombieSkinnedMesh.material =
-                differentZombieMaterialsForSkinnedMesh[UnityEngine.Random.Range(0, differentZombieMaterialsForSkinnedMesh.Count)];
+                zombieSkinnedMesh.SetMaterials(selectedMaterials);
             }
             else
             {
                 //if the gameobject itself doesn't have it then it's probably the LODs as children
                 SkinnedMeshRenderer[] skinRenderers = _selectedZombieMesh.GetComponentsInChildren<SkinnedMeshRenderer>();
-                int selectedMaterial = UnityEngine.Random.Range(0, differentZombieMaterialsForSkinnedMesh.Count);
 
                 foreach (SkinnedMeshRenderer SR in skinRenderers)
                 {
-                    SR.material = differentZombieMaterialsForSkinnedMesh[selectedMaterial];
+                    SR.SetMaterials(selectedMaterials);
                 }
             }
         }

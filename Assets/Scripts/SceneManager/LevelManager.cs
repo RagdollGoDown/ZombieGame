@@ -13,7 +13,7 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField] private UnityEvent onStartGame;
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private ZombieSpawnerManager zombieSpawnerManager;
+    [SerializeField] private List<ZombieSpawnerManager> zombieSpawnerManagers;
     [SerializeField] private Mission mainMission;
     [SerializeField] private NavMeshSurface navMesh;
     [SerializeField] private VillageGenerator villageGenerator;
@@ -38,15 +38,21 @@ public class LevelManager : MonoBehaviour
 
         if (playerUsesSaveData) player.SetPlayerData(GameSaver.LoadData<PlayerSaveData>("player"));
 
-
-        zombieSpawnerManager.SetTarget(player.GetComponent<DamageableObject>());
+        foreach (var spawnerManager in zombieSpawnerManagers)
+        {
+            spawnerManager.SetTarget(player.GetComponent<DamageableObject>());
+        }
 
         mainMission.StartMission();
 
         navMesh.BuildNavMesh();
 
         await Task.Delay(500);
-        zombieSpawnerManager.BeginToSpawn();
+        
+        foreach (var spawnerManager in zombieSpawnerManagers)
+        {
+            spawnerManager.BeginToSpawn();
+        }
 
         player.SetMission(mainMission);
         onStartGame.Invoke();

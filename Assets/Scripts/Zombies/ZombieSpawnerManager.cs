@@ -19,8 +19,6 @@ public class ZombieSpawnerManager : MonoBehaviour
     
     private int quantitySpawned;
 
-    private int currentLivingQuantity;
-
     [SerializeField] private float timeFromStartToEndOfEscalationCurveSec = 240;
     private float currentEscalationCurveTimeSec = 0;
     [SerializeField] private AnimationCurve initialSpawnQuantityEscalationCurve;

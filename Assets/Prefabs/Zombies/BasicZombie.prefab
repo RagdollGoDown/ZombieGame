@@ -5606,10 +5606,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5545c89bb0a75004bbe217d139a97e89, type: 2}
   - {fileID: 2100000, guid: a7617607466826e4cb2d99cd90200ebd, type: 2}
   - {fileID: 2100000, guid: 7f2790332154c79459a9115b8faf30dd, type: 2}
-  - {fileID: 2100000, guid: f385a7ac18064474384241d57c7b302a, type: 2}
-  - {fileID: 2100000, guid: 1178f7d0ddbcea640930dccf08526a6b, type: 2}
-  - {fileID: 2100000, guid: 26ed874aa87d5fa429658a022bbef360, type: 2}
-  - {fileID: 2100000, guid: 53cdaf5556ef3c149acfe7e3c2acc33a, type: 2}
   - {fileID: 2100000, guid: d893d84bc6be0b348af0d3199f134c02, type: 2}
   - {fileID: 2100000, guid: 75dfe1e02a971524789ee9d6e57feec4, type: 2}
   - {fileID: 2100000, guid: 9b0fdcd26a76fb64c8bc7c5c7bb46fcf, type: 2}
@@ -5619,6 +5615,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 3d2ba34110eec5b49943c7892563c95b, type: 2}
   - {fileID: 2100000, guid: f9313f049f005e846b8e678ce0a71584, type: 2}
   - {fileID: 2100000, guid: 8a3544c4b9f21a2488b0937a6fefc181, type: 2}
+  zombieEyesMaterial: {fileID: 2100000, guid: 41eb18b94bec1aa4a94ad41da717feb9, type: 2}
   _selectedZombieMesh: {fileID: 0}
 --- !u!114 &5807502767276379594
 MonoBehaviour:
