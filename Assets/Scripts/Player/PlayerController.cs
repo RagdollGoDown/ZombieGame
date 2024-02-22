@@ -22,7 +22,7 @@ namespace Player
 
         private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
-        private static float TIMESCALE_WHEN_AIMING = 0.2f;
+        private static float TIMESCALE_IN_SLOWMO = 0.2f;
 
         private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
         private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
@@ -87,6 +87,14 @@ namespace Player
 
         [SerializeField] private float timeBetweenWeaponSwitches;
         private float lastTimeSwitched;
+
+        [Header("Slow Mo")]
+        //--------------------------slow mo
+        private bool isInSlowMo;
+        private float slowMoCharge;
+        [SerializeField] private float slowMoMaxCharge = 1;
+        [SerializeField] private float slowMoDecreaseSpeed = 0.2f;
+        [SerializeField] private float slowMoRegenSpeed = 0.2f;
 
         //---------------------------interaction
         private Interaction _currentInteract;
@@ -201,6 +209,8 @@ namespace Player
         }
 
         
+
+        
         private void ApplyBobandSway(float deltaTime)
         {
             //--------------head bob
@@ -217,7 +227,48 @@ namespace Player
             
             _cameraTransform.localPosition = maximumHeadBob*_tempHeadBobDirection + _headSwayMotion;
         }
-        
+
+        //------------------------------------------SlowMo
+
+        private void UpdateSlowMo(float unscaledDeltaTime)
+        {
+            if (isInSlowMo)
+            {
+                if (slowMoCharge >= 0)
+                {
+                    slowMoCharge -= unscaledDeltaTime * slowMoDecreaseSpeed;
+                    playerUI.UpdateSlowMoChargeSliders(slowMoCharge);
+                }
+                else
+                {
+                    ExitSlowMo();
+                }
+            }
+            else
+            {
+                if (slowMoCharge < 1)
+                {
+                    slowMoCharge += unscaledDeltaTime * slowMoRegenSpeed;
+                    playerUI.UpdateSlowMoChargeSliders(slowMoCharge);
+                }
+            }
+        }
+
+        private void EnterSlowMo()
+        {
+            if (slowMoCharge <= 0 || isInSlowMo) return;
+
+            isInSlowMo = true;
+            Time.timeScale = TIMESCALE_IN_SLOWMO;
+        }
+
+        private void ExitSlowMo()
+        {
+            if (!isInSlowMo) return;
+
+            isInSlowMo = false;
+            Time.timeScale = 1;
+        }
 
         //--------------------------------------------------unity events
         private void Awake()
@@ -260,8 +311,11 @@ namespace Player
         {
             if (playerState == PlayerState.Normal)
             {
-                PlayerMovement(Time.unscaledDeltaTime * Time.timeScale);
-                PlayerScore.AddDeltaTimeToTimeSurvived(Time.unscaledDeltaTime * Time.timeScale);
+                float deltaTime = Time.unscaledDeltaTime * Time.timeScale;
+
+                PlayerMovement(deltaTime);
+                PlayerScore.AddDeltaTimeToTimeSurvived(deltaTime);
+                UpdateSlowMo(Time.unscaledDeltaTime);
             }
         }
 
@@ -443,8 +497,8 @@ namespace Player
             if (playerState != PlayerState.Normal) return;
             _weaponsHeld[_currentWeaponIndex].AimInputAction(context);
 
-            if (context.started) { Time.timeScale = TIMESCALE_WHEN_AIMING; }
-            if (context.canceled) { Time.timeScale = 1; }
+            if (context.started) { EnterSlowMo(); }
+            if (context.canceled) { ExitSlowMo(); }
         }
 
         public void SwitchWeaponsInput(InputAction.CallbackContext context)

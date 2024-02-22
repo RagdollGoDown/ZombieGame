@@ -23,6 +23,7 @@ namespace Weapons
         [SerializeField] private float fireRateForShots;
         private float _lastTimeShot;
         [SerializeField] protected float damage;
+        [SerializeField] protected bool destroyOnKill;
         [SerializeField] protected int pelletsPerShot = 1;
         [SerializeField] protected int penetration = 1;
         [SerializeField] protected float range = 100;
@@ -218,7 +219,8 @@ namespace Weapons
 
                 if (pointShot.transform.TryGetComponent(out DamageableObject DO))
                 {
-                    Damage damageToDO = new(damage, pointShot.point - transform.position, this);
+                    Damage damageToDO = new(damage, pointShot.point - transform.position, this,
+                        destroyOnKill);
                     DO.GetHitEvent().Invoke(damageToDO);
 
                     //--------------------------hitmarker

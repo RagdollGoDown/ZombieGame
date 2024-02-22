@@ -7,9 +7,6 @@ public class GPUInstanceManager : MonoBehaviour
     private static GPUInstanceManager currentManager;
     private static List<GPUInstance> instances;
 
-    public Mesh testm;
-    public Material testmat;
-
     //------------------------------------unity events
 
     private void Awake()

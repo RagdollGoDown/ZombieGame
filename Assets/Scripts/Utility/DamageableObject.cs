@@ -14,6 +14,7 @@ namespace Utility
         private readonly static float DAMAGE_TO_VELOCITY_PROPORTION = .3f;
 
         private bool isDead;
+        private bool isDestroyed;
 
         public bool IsDead
         {
@@ -23,11 +24,20 @@ namespace Utility
             }
         }
 
+        public bool IsDestroyed
+        {
+            get
+            {
+                return isDestroyed;
+            }
+        }
+
         private Object lastDamageDealer;
         private Damage lastDamageRecieved;
 
-        [SerializeField] private float _health;
+        [SerializeField] private float health;
         [SerializeField] private float maxHealth = 10;
+        [SerializeField] private float extraHealthBeforeDestruction = 20;
         private UnityEventRecieveDamage getHit;
         public UnityEvent<DamageableObject> OnDamageTaken;
 
@@ -40,19 +50,22 @@ namespace Utility
 
         //--------------------------to do on destruction
         [SerializeField] private List<string> destructionParticlePoolNames;
+        [SerializeField] private List<string> destructionParticlePoolNamesWhenChild;
         private ObjectPool[] destructionParticlePool;
+        private ObjectPool[] destructionParticlePoolWhenChild;
         public UnityEvent<DamageableObject> deathCalls;
 
-        [SerializeField] private bool shrinkOnDeath;
-        [SerializeField] private bool disableCollidersOnDeath = true;
+        [SerializeField] private bool shrinkOnDestruction = true;
+        [SerializeField] private bool disableCollidersOnDestruction = true;
 
         [SerializeField] private bool killChildrenOnDeath = true;
+        [SerializeField] private bool destroyChildrenOnDestruction = true;
         private List<DamageableObject> _damageableChildren;
 
 
         private void Awake()
         {
-            _health = maxHealth;
+            health = maxHealth;
 
             getHit ??= new UnityEventRecieveDamage();
             getHit.AddListener(TakeDamage);
@@ -63,6 +76,12 @@ namespace Utility
 
             destructionParticlePool =
                 destructionParticlePoolNames.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
+            destructionParticlePoolWhenChild =
+                destructionParticlePoolNamesWhenChild.Select(dpp =>
                 {
                     return ObjectPool.GetPool(dpp);
                 }).Where(dpp => dpp != null).ToArray();
@@ -81,10 +100,10 @@ namespace Utility
 
         public void Revive()
         {
-            _health = maxHealth;
+            health = maxHealth;
             transform.localScale = initialScale;
 
-            if (disableCollidersOnDeath)
+            if (disableCollidersOnDestruction)
             {
                 _colliders.Select(c => c.enabled = true);
             }
@@ -104,11 +123,18 @@ namespace Utility
             lastDamageDealer = damage.GetDamageDealer();
             lastDamageRecieved = damage;
 
-            _health -= damage.GetDamageDone();
+            health -= damage.GetDamageDone();
 
-            if (_health <= 0)
+            if (health <= 0)
             {
                 Die(damage);
+
+                extraHealthBeforeDestruction -= damage.GetDamageDone();
+
+                if (extraHealthBeforeDestruction <= 0 || damage.WillDestroyOnKill())
+                {
+                    Destroy(damage);
+                }
             }
         }
 
@@ -118,7 +144,7 @@ namespace Utility
 
         public float GetHealthRatio()
         {
-            return _health / maxHealth;
+            return health / maxHealth;
         }
 
         public Object GetLastDamageDealer()
@@ -158,48 +184,56 @@ namespace Utility
             return getHit;
         }
 
-        // -----------------------------------------------------------destroying commands
-        private void Die(Damage damage)
+        // -----------------------------------------------------------Death commands
+        private void Die(Damage damage, bool asChild = false)
         {
+            //if the object is dead the there is no need to kill it
             if (isDead) { return; }
 
             if (killChildrenOnDeath) { KillChildren(damage); }
 
-            foreach (ObjectPool op in destructionParticlePool)
-            {
-                Transform dpg = op.Pull(false).transform;
-                dpg.position = transform.position;
-                dpg.Rotate(transform.rotation.eulerAngles);
-
-                if (dpg.TryGetComponent(out Rigidbody rigidbody))
-                {
-                    rigidbody.velocity = 
-                        damage.GetDamageDone() * DAMAGE_TO_VELOCITY_PROPORTION * damage.GetDamageDirection();
-                }
-
-                dpg.gameObject.SetActive(true);
-
-                StartCoroutine(nameof(DisableParticle), dpg.gameObject);
-            }
-
             deathCalls.Invoke(this);
 
-            if (disableCollidersOnDeath)
-            {
-                _colliders.Select(c => c.enabled = false);
-            }
-
             isDead = true;
-
-            //this needs to be done last
-            if (shrinkOnDeath) {
-                transform.localScale = Vector3.zero;
-            }
         }
 
         private void KillChildren(Damage damage)
         {
-            _damageableChildren?.ForEach(d => d.Die(damage));
+            _damageableChildren?.ForEach(d => d.Die(damage, true));
+        }
+
+        private void DestroyChildren(Damage damage)
+        {
+            _damageableChildren?.ForEach(d => d.Destroy(damage, true));
+        }
+
+        private void Destroy(Damage damage, bool asChild = false)
+        {
+            if (isDestroyed) return;
+
+            if (asChild)
+            {
+                PullDestructionParticles(destructionParticlePoolWhenChild, damage);
+            }
+            else
+            {
+                PullDestructionParticles(destructionParticlePool, damage);
+            }
+
+            if (destroyChildrenOnDestruction) DestroyChildren(damage);
+
+            //this needs to be done last
+            if (shrinkOnDestruction)
+            {
+                transform.localScale = Vector3.zero;
+            }
+
+            if (disableCollidersOnDestruction)
+            {
+                _colliders.Select(c => c.enabled = false);
+            }
+
+            isDestroyed = true;
         }
 
         private IEnumerator DisableParticle(GameObject particle)
@@ -208,6 +242,26 @@ namespace Utility
 
             particle.SetActive(false);
         }
+
+        private void PullDestructionParticles(ObjectPool[] particlesPool, Damage damage)
+        {
+            foreach (ObjectPool op in particlesPool)
+            {
+                Transform dpg = op.Pull(false).transform;
+                dpg.position = transform.position;
+                dpg.Rotate(transform.rotation.eulerAngles);
+
+                if (dpg.TryGetComponent(out Rigidbody rigidbody))
+                {
+                    rigidbody.velocity =
+                        damage.GetDamageDone() * DAMAGE_TO_VELOCITY_PROPORTION * damage.GetDamageDirection();
+                }
+
+                dpg.gameObject.SetActive(true);
+
+                StartCoroutine(nameof(DisableParticle), dpg.gameObject);
+            }
+        }
     }
 
     public class Damage
@@ -215,12 +269,16 @@ namespace Utility
         private readonly Object damageDealer;
         private readonly Vector3 damageDirection;
         private readonly float damageDone;
+        private readonly bool destroyOnKill = false;
 
-        public Damage(float damageDone, Vector3 damageDirection, Object damageDealer)
+        public Damage(float damageDone, Vector3 damageDirection, Object damageDealer,
+            bool destroyOnKill = false)
         {
             this.damageDone = damageDone;
             this.damageDirection = damageDirection.normalized;
             this.damageDealer = damageDealer;
+
+            this.destroyOnKill = destroyOnKill;
         }
 
         public float GetDamageDone()
@@ -236,6 +294,11 @@ namespace Utility
         public Object GetDamageDealer()
         {
             return damageDealer;
+        }
+
+        public bool WillDestroyOnKill()
+        {
+            return destroyOnKill;
         }
     }
 }
