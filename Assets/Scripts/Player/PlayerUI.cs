@@ -27,8 +27,7 @@ namespace Player
         public enum Menu
         {
             Pause,
-            Shop,
-            Contracts
+            Shop
         }
 
         private Menu currentMenu;
@@ -36,7 +35,6 @@ namespace Player
         private GameObject deathScreen;
         private GameObject pauseScreen;
         private GameObject shopScreen;
-        private GameObject contractsScreen;
 
         private struct WeaponUI
         {
@@ -55,6 +53,12 @@ namespace Player
 
         private TextMeshProUGUI _currentRoundText;
         private TextMeshProUGUI _interactText;
+
+        private struct SlowMoUI
+        {
+            public Slider slowMoChargeSlider;
+        }
+        private SlowMoUI slowMoUI;
 
         private struct ObjectiveUI
         {
@@ -90,8 +94,6 @@ namespace Player
             pauseScreen.SetActive(false);
             shopScreen = transform.Find("ShopScreen").gameObject;
             shopScreen.SetActive(false);
-            contractsScreen = transform.Find("ContractsScreen").gameObject;
-            contractsScreen.SetActive(false);
 
             weaponUI.ammoTextHolder = playScreen.transform.Find("Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>();
             weaponUI.weaponNameTextHolder = playScreen.transform.Find("Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>();
@@ -100,6 +102,8 @@ namespace Player
             _healthUI = new();
             _healthUI.slider = playScreen.transform.Find("HealthBar").GetComponent<Slider>();
             _healthUI.tmp = _healthUI.slider.transform.Find("HealthText").GetComponent<TextMeshProUGUI>();
+
+            slowMoUI.slowMoChargeSlider = playScreen.transform.Find("SlowMoChargeSlider").GetComponent<Slider>();
 
             _currentRoundText = playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
 
@@ -176,7 +180,6 @@ namespace Player
                 _objectiveUI.completenessSlider.value = areaObjective.GetCompletenessRatio();
                 areaObjective.ObserveStayInArea(() =>
                 {
-                    Debug.Log("Stay in area");
                     _objectiveUI.completenessSlider.value = areaObjective.GetCompletenessRatio();
                 });
             }
@@ -199,6 +202,11 @@ namespace Player
             uiScale = canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView;
         } 
 
+        public void UpdateSlowMoChargeSliders(float charge)
+        {
+            slowMoUI.slowMoChargeSlider.value = charge;
+        }
+
         public void OpenMenu(Menu menu)
         {
             switch (menu)
@@ -208,9 +216,6 @@ namespace Player
                     break;
                 case Menu.Shop:
                     shopScreen.SetActive(true);
-                    break;
-                case Menu.Contracts:
-                    contractsScreen.SetActive(true);
                     break;
                 default:
                     Debug.LogError("Menu not found");
@@ -229,9 +234,6 @@ namespace Player
                     break;
                 case Menu.Shop:
                     shopScreen.SetActive(false);
-                    break;
-                case Menu.Contracts:
-                    contractsScreen.SetActive(false);
                     break;
                 default:
                     Debug.LogError("Menu not found");

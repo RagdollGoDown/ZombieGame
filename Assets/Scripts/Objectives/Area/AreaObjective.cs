@@ -40,7 +40,6 @@ namespace Objectives
 
         public override float GetCompletenessRatio()
         {
-            Debug.Log(_currentStayTime / totalStayTime);
             return _currentStayTime / totalStayTime;
         }
 

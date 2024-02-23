@@ -1699,8 +1699,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -1717,6 +1718,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibFootR
   deathCalls:
     m_PersistentCalls:
@@ -1733,8 +1736,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &939575575821001644
 GameObject:
@@ -2118,8 +2121,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -2136,6 +2140,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibFootL
   deathCalls:
     m_PersistentCalls:
@@ -2152,8 +2158,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &1193458946295852684
 GameObject:
@@ -3222,8 +3228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -3240,6 +3247,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibUpperArmR
   deathCalls:
     m_PersistentCalls:
@@ -3256,8 +3265,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &2434091852729557246
 GameObject:
@@ -3403,8 +3412,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -3421,6 +3431,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibUpperArmL
   deathCalls:
     m_PersistentCalls:
@@ -3437,8 +3449,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &2477741090145728803
 GameObject:
@@ -3872,8 +3884,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -3890,6 +3903,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibUpperLegL
   deathCalls:
     m_PersistentCalls:
@@ -3906,8 +3921,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &2785038312296607893
 GameObject:
@@ -4213,8 +4228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 20
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -4231,6 +4247,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibHips
   deathCalls:
     m_PersistentCalls:
@@ -4247,8 +4265,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &3007291860234978900
 GameObject:
@@ -6013,8 +6031,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -6031,6 +6050,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibHandR
   deathCalls:
     m_PersistentCalls:
@@ -6047,8 +6068,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 0
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &4034572029588849306
 GameObject:
@@ -6333,12 +6354,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
   destructionParticlePoolNames: []
+  destructionParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -6354,8 +6377,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 0
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 0
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &4221243010668693128
 GameObject:
@@ -7481,17 +7504,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
   destructionParticlePoolNames: []
+  destructionParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls: []
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 0
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &5006279509055085558
 GameObject:
@@ -8033,12 +8058,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
   destructionParticlePoolNames: []
+  destructionParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -8054,8 +8081,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 0
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 0
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &5339576557323582129
 GameObject:
@@ -9155,17 +9182,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
   destructionParticlePoolNames: []
+  destructionParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls: []
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &5943695149853971518
 GameObject:
@@ -9455,8 +9484,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -9473,6 +9503,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibHandL
   deathCalls:
     m_PersistentCalls:
@@ -9489,8 +9521,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 0
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &6029479806066046661
 GameObject:
@@ -9919,17 +9951,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
   destructionParticlePoolNames: []
+  destructionParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls: []
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &6284100889025021149
 GameObject:
@@ -11636,8 +11670,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 0
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -11654,6 +11689,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibHead
   deathCalls:
     m_PersistentCalls:
@@ -11670,8 +11707,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!65 &5348323405673111739
 BoxCollider:
@@ -12216,8 +12253,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 10
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -12234,6 +12272,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibUpperLegR
   deathCalls:
     m_PersistentCalls:
@@ -12250,8 +12290,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &7774919965456322288
 GameObject:
@@ -12697,8 +12737,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
+  health: 0
   maxHealth: 20
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -12715,6 +12756,8 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
   - ZombieGibChest
   deathCalls:
     m_PersistentCalls:
@@ -12731,8 +12774,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  shrinkOnDeath: 1
-  disableCollidersOnDeath: 1
+  shrinkOnDestruction: 1
+  disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
 --- !u!1 &8038046523151369843
 GameObject:
