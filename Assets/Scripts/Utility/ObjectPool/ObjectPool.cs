@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Utility
 {
@@ -16,6 +17,8 @@ namespace Utility
         private CancellationTokenSource readyInitialAsyncCancelTokenSource;
         private CancellationToken readyInitialAsyncCancelToken;
         [SerializeField] private List<GameObject> possibleObjects;
+
+        public readonly UnityEvent<GameObject> onObjectAdded = new();
 
 
         //----------------------------------------pool function
@@ -34,19 +37,13 @@ namespace Utility
                 if (!objects[i].activeSelf)
                 {
                     GameObject obj = objects[i];
-                    objects.Remove(obj);
-                    objects.Insert(objects.Count - 1, obj);
 
                     obj.SetActive(enabled);
                     return obj;
                 }
             }
 
-            int possibleIndex = Random.Range(0, possibleObjects.Count);
-
-            objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
-
-            objects[^1].SetActive(enabled);
+            AddObjectToPool();
             return objects[^1];
         }
 
@@ -61,15 +58,11 @@ namespace Utility
 
             EmptyObjects();
 
-            int possibleIndex;
-
             objects = new();
 
             for (int i = 0; i < initialNumber; i++)
             {
-                possibleIndex = Random.Range(0,possibleObjects.Count);
-                objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
-                objects[^1].SetActive(false);
+                AddObjectToPool();
             }
         }
 
@@ -85,18 +78,22 @@ namespace Utility
 
             EmptyObjects();
 
-            int possibleIndex;
-
             objects = new();
 
             for (int i = 0; i < initialNumber && !readyInitialAsyncCancelToken.IsCancellationRequested; i++)
             {
-                possibleIndex = Random.Range(0, possibleObjects.Count);
-                objects.Add(Instantiate(possibleObjects[possibleIndex], transform));
-                objects[^1].SetActive(false);
+                AddObjectToPool();
 
                 await Task.Yield(); 
             }
+        }
+
+        private void AddObjectToPool()
+        {
+            GameObject added = Instantiate(possibleObjects[Random.Range(0, possibleObjects.Count)], transform);
+            objects.Add(added);
+            onObjectAdded.Invoke(added);
+            added.SetActive(false);
         }
 
         /// <summary>

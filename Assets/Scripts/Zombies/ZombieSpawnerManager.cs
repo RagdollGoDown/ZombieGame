@@ -17,7 +17,7 @@ public class ZombieSpawnerManager : MonoBehaviour
     [SerializeField] private int minQuantity = 10;
     [SerializeField] private int maxQuantity = 100;
     
-    private int quantitySpawned;
+    private int livingZombies = 0;
 
     [SerializeField] private float timeFromStartToEndOfEscalationCurveSec = 240;
     private float currentEscalationCurveTimeSec = 0;
@@ -50,6 +50,7 @@ public class ZombieSpawnerManager : MonoBehaviour
         if (timeBetweenRounds <= 0) throw new System.ArgumentException("Time before first round not strictly positiv");
 
         if (zombiePool == null) throw new System.NullReferenceException("No object pool to take zombies from");
+        zombiePool.onObjectAdded.AddListener((x) => ReapZombieFromGameObject(x));
         zombiePool.ReadyInitialObjectsAsync(maxQuantity);
 
         zombieReaper = new();
@@ -81,6 +82,9 @@ public class ZombieSpawnerManager : MonoBehaviour
 
     private async void RepeatZombieSpawning()
     {
+        await Task.Delay((int)(timeBetweenRounds * 1000));
+
+
         while(!spawnZombiesAsyncCancelToken.IsCancellationRequested){
             SpawnZombies();
             await Task.Delay((int)(timeBetweenRounds * 1000));
@@ -124,7 +128,8 @@ public class ZombieSpawnerManager : MonoBehaviour
             tempAmount = Random.Range(1, Mathf.Min(maxZombiesGivenPerSpawner, zombiesToSpawn + 1));
             tempAmount = spawnersInSector[Random.Range(0, spawnersInSector.Count - 1)].AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
             zombiesToSpawn -= tempAmount;
-            quantitySpawned += tempAmount;
+            livingZombies += tempAmount;
+
 
             await Task.Delay(timeBetweenSpawnsMilliSec);
         }
@@ -155,9 +160,20 @@ public class ZombieSpawnerManager : MonoBehaviour
 
         float lerpTime = initialSpawnQuantityEscalationCurve.Evaluate(currentEscalationCurveTimeSec / timeFromStartToEndOfEscalationCurveSec);
 
-        int currentLivingQuantity = quantitySpawned - zombieReaper.GetReapedObjects().Count;
-        
+        int currentLivingQuantity = livingZombies;
         return Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(minQuantity, maxQuantity, lerpTime)) - currentLivingQuantity,0,maxZombiesGivenPerRound);
+    }
+
+    private void ReapZombieFromGameObject(GameObject zb)
+    {
+        ZombieBehaviour zombie = zb.GetComponent<ZombieBehaviour>();
+        if(zombie == null) Debug.LogError("ZombieBehaviour not found in " + zb.name);
+
+        zombie.OnDeath.AddListener((z) => 
+        
+        {
+            livingZombies--;
+            zombieReaper.Reap(z.GetLastDamagedBodyPart());});
     }
 
     //-------------------------------set/getters

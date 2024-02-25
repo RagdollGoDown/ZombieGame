@@ -246,7 +246,7 @@ namespace Player
             }
             else
             {
-                if (slowMoCharge < 1)
+                if (slowMoCharge < slowMoMaxCharge)
                 {
                     slowMoCharge += unscaledDeltaTime * slowMoRegenSpeed;
                     playerUI.UpdateSlowMoChargeSliders(slowMoCharge);
@@ -584,15 +584,6 @@ namespace Player
         public int GetMoney() { return moneyOnPlayer; }
 
         //--------------------------------------------------------setters
-
-        /*
-        * makes the round text show which is the current one
-        */
-        public void SetRoundText(int round)
-        {
-            playerUI.SetRoundText(round);
-        }
-
         public void SetMission(Mission mission)
         {
             playerUI.SetMission(mission);
@@ -601,11 +592,15 @@ namespace Player
         public void SetMoney(int money)
         {
             moneyOnPlayer = money;
+
+            playerUI.SetMoneyText(money);
         }
 
         public void AddMoney(int money)
         {
             moneyOnPlayer += money;
+
+            playerUI.SetMoneyText(moneyOnPlayer);
         }
 
         public void SetPlayerData(PlayerSaveData data)

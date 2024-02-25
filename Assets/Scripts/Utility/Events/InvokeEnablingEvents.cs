@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine;
 
 public class InvokeEnableEvents : MonoBehaviour
 {
-    public event System.Action OnEnableEvent;
-    public event System.Action OnDisableEvent;
+    public UnityEvent OnEnableEvent;
+    public UnityEvent OnDisableEvent;
 
     private void OnEnable()
     {

@@ -97,16 +97,8 @@ public class ZombieSpawner : MonoBehaviour
         zb.gameObject.SetActive(true);
         zb.StartChase(_zombieTargetOnSpawn);
         _zombiesToSpawn--;
-
-        if (zombieReaper != null) ReapToZombieOnDeathEvent(zb, zombieReaper);
     }
 
-    private void ReapToZombieOnDeathEvent(ZombieBehaviour zb, Reaper zombieReaper)
-    {
-        if (zombieReaper == null || zb == null) return;
-        zb.OnDeath.RemoveListener(z => zombieReaper.Reap(z.GetLastDamagedBodyPart()));
-        zb.OnDeath.AddListener(z => zombieReaper.Reap(z.GetLastDamagedBodyPart()));
-    }
     //-----------------------------------------------get/setters
 
     /// <summary>

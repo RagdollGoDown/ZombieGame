@@ -51,7 +51,7 @@ namespace Player
         }
         private HealthUI _healthUI;
 
-        private TextMeshProUGUI _currentRoundText;
+        private TextMeshProUGUI MoneyText;
         private TextMeshProUGUI _interactText;
 
         private struct SlowMoUI
@@ -105,7 +105,7 @@ namespace Player
 
             slowMoUI.slowMoChargeSlider = playScreen.transform.Find("SlowMoChargeSlider").GetComponent<Slider>();
 
-            _currentRoundText = playScreen.transform.Find("RoundText/Text").GetComponent<TextMeshProUGUI>();
+            MoneyText = playScreen.transform.Find("MoneyText/Text").GetComponent<TextMeshProUGUI>();
 
             _objectiveUI = new();
             _objectiveUI.talkieWalkieMover = transform.parent.Find("GunCamera/WalkieTalkie").GetComponent<MovePointToPointNonUI>();
@@ -247,9 +247,9 @@ namespace Player
             _interactText.text = newText;
         }
 
-        public void SetRoundText(int round)
+        public void SetMoneyText(int money)
         {
-            _currentRoundText.text = round.ToString();
+            MoneyText.text = money.ToString();
         }
 
         public void SetMission(Mission mission)

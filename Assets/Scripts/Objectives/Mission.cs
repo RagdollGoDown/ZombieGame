@@ -32,6 +32,7 @@ namespace Objectives
             if (currentMissionState == MissionState.NotReady)
             {
                 Prepare();
+                ReadyMission();
             }
 
             if (currentMissionState == MissionState.OnGoing)
@@ -63,14 +64,26 @@ namespace Objectives
         {
             Debug.Log("Mission Completed");
 
+            ReadyMission();
+
             onCompleted.Invoke();
+        }
+
+        private void ReadyMission()
+        {
+            currentMissionState = MissionState.Ready;
+            currentObjectiveIndex = 0;
+
+            if (objectives.Count > 0)
+            {
+                currentObjective.SetValue(objectives[0]);
+            }
         }
 
         private void Prepare()
         {
             currentObjective = new ObservableObject<Objective>(null);
 
-            currentObjectiveIndex = 0;
             objectives = new();
 
             foreach (Transform t in transform)
@@ -81,13 +94,6 @@ namespace Objectives
                     obj.GetOnObjectiveCompleteEvent().AddListener(StartNextObjective);
                 }
             }
-
-            if (objectives.Count > 0)
-            {
-                currentObjective.SetValue(objectives[0]);
-            }
-
-            currentMissionState = MissionState.Ready;
         }
 
         public ObjectiveObject[] ObjectiveObjects()

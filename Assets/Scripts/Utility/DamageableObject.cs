@@ -108,12 +108,13 @@ namespace Utility
                 _colliders.Select(c => c.enabled = true);
             }
 
-            if (killChildrenOnDeath)
+            if (killChildrenOnDeath || destroyChildrenOnDestruction)
             {
                 _damageableChildren?.ForEach(d => d.Revive());
             }
 
             isDead = false;
+            isDestroyed = false;
         }
 
         private void TakeDamage(Damage damage)
