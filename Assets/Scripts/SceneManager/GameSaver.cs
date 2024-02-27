@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Player;
 using UnityEngine;
+using System.IO;
 
 public class GameSaver
 {
@@ -29,6 +30,8 @@ public class GameSaver
     /// <param name="fileName">the name of the file with it's relative path</param>
     /// <param name="data"></param>
     public static void SaveData(string fileName, object data){
+        if (CheckIfSaveFileExists(currentSaveFileIndex)) CreateSaveFile(currentSaveFileIndex);
+
         dataService.SaveData($"/File{currentSaveFileIndex}/" + fileName, data);
     }
 
@@ -44,5 +47,15 @@ public class GameSaver
 
     public static void SetCurrentSaveFile(int fileIndex){
         CurrentSaveFileIndex = fileIndex;
+    }
+
+    private static bool CheckIfSaveFileExists(int saveFile)
+    {
+        return Directory.Exists(Application.persistentDataPath + $"/File{saveFile}");
+    }
+
+    private static void CreateSaveFile(int saveFile)
+    {
+        Directory.CreateDirectory(Application.persistentDataPath + $"/File{saveFile}");
     }
 }

@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 3860554693412282760, guid: 396211b680d38b3429748aebf2c704a8,
         type: 3}
       propertyPath: runningSpeedWhenClosest
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3860554693412282760, guid: 396211b680d38b3429748aebf2c704a8,
         type: 3}
