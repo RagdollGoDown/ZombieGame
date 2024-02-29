@@ -26,11 +26,13 @@ public class GameSaver
 
     /// <summary>
     /// Save data to a file of relative path filename in the current save file.
+    /// If the save file doesn't exist, it will create it
     /// </summary>
     /// <param name="fileName">the name of the file with it's relative path</param>
-    /// <param name="data"></param>
+    /// <param name="data">the data to be stored</param>
     public static void SaveData(string fileName, object data){
-        if (CheckIfSaveFileExists(currentSaveFileIndex)) CreateSaveFile(currentSaveFileIndex);
+        if (Directory.Exists(Application.persistentDataPath + $"/File{currentSaveFileIndex}"))
+            Directory.CreateDirectory(Application.persistentDataPath + $"/File{currentSaveFileIndex}");
 
         dataService.SaveData($"/File{currentSaveFileIndex}/" + fileName, data);
     }
@@ -43,19 +45,5 @@ public class GameSaver
     /// <returns>the loaded data if it finds and can decrypt it or else an error</returns>
     public static T LoadData<T>(string fileName){
         return dataService.LoadData<T>($"/File{currentSaveFileIndex}/" + fileName);
-    }
-
-    public static void SetCurrentSaveFile(int fileIndex){
-        CurrentSaveFileIndex = fileIndex;
-    }
-
-    private static bool CheckIfSaveFileExists(int saveFile)
-    {
-        return Directory.Exists(Application.persistentDataPath + $"/File{saveFile}");
-    }
-
-    private static void CreateSaveFile(int saveFile)
-    {
-        Directory.CreateDirectory(Application.persistentDataPath + $"/File{saveFile}");
     }
 }

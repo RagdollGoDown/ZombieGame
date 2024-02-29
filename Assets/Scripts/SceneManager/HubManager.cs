@@ -11,16 +11,11 @@ public class HubManager : MonoBehaviour
     [SerializeField] private Transform initSpawnPoint;
     private PlayerController player;
 
-    [SerializeField] private bool setSaveFile = true;
-    [SerializeField] private int saveFileIndex = 1;
-
-    private void Awake()
+    public void Awake()
     {
         player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity).GetComponent<PlayerController>();
 
-        if (setSaveFile) GameSaver.SetCurrentSaveFile(saveFileIndex);
-
-        try 
+        try
         {
             player.SetPlayerData(GameSaver.LoadData<PlayerSaveData>("player"));
         }
@@ -33,6 +28,6 @@ public class HubManager : MonoBehaviour
     public void LoadSimpleLevel()
     {
         GameSaver.SaveData("player", player.GetSaveData());
-        SceneManager.LoadScene("SimpleLevel");
+        SceneManager.LoadSceneAsync("LevelScene");
     }
 }

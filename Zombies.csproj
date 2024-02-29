@@ -8,9 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
-    <ProjectGuid>{F7235AE3-197D-F799-B64E-B285283355E7}</ProjectGuid>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{B57E0ACA-FA63-9231-332E-35A8E3031022}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Zombies</AssemblyName>

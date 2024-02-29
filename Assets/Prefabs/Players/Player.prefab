@@ -3596,7 +3596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 10000
+  maxHealth: 100
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:

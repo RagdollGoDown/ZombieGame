@@ -8,9 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
-    <ProjectGuid>{3834DEE7-292E-252A-D0CE-D472D29F0DE1}</ProjectGuid>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{264699B2-A4F6-6660-0C8D-208B2CDACDAE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>MapGeneration</AssemblyName>

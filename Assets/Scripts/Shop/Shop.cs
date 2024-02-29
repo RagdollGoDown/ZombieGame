@@ -16,7 +16,6 @@ public class Item
 
     public Item()
     {
-        Debug.Log("Item constructor");
         name = "Item";
         price = 0;
     }

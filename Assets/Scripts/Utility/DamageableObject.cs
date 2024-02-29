@@ -35,8 +35,9 @@ namespace Utility
         private Object lastDamageDealer;
         private Damage lastDamageRecieved;
 
-        [SerializeField] private float health;
-        [SerializeField] private float maxHealth = 10;
+        public float currentHealth;
+        [SerializeField] private float health = 10;
+        private float currentExtraHealthBeforeDestruction;
         [SerializeField] private float extraHealthBeforeDestruction = 20;
         private UnityEventRecieveDamage getHit;
         public UnityEvent<DamageableObject> OnDamageTaken;
@@ -65,7 +66,8 @@ namespace Utility
 
         private void Awake()
         {
-            health = maxHealth;
+            currentHealth = health;
+            currentExtraHealthBeforeDestruction = extraHealthBeforeDestruction;
 
             getHit ??= new UnityEventRecieveDamage();
             getHit.AddListener(TakeDamage);
@@ -100,7 +102,8 @@ namespace Utility
 
         public void Revive()
         {
-            health = maxHealth;
+            currentHealth = health;
+            currentExtraHealthBeforeDestruction = extraHealthBeforeDestruction;
             transform.localScale = initialScale;
 
             if (disableCollidersOnDestruction)
@@ -124,9 +127,9 @@ namespace Utility
             lastDamageDealer = damage.GetDamageDealer();
             lastDamageRecieved = damage;
 
-            health -= damage.GetDamageDone();
+            currentHealth -= damage.GetDamageDone();
 
-            if (health <= 0)
+            if (currentHealth <= 0)
             {
                 Die(damage);
 
@@ -145,7 +148,7 @@ namespace Utility
 
         public float GetHealthRatio()
         {
-            return health / maxHealth;
+            return currentHealth / health;
         }
 
         public Object GetLastDamageDealer()

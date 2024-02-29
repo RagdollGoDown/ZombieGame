@@ -110,7 +110,7 @@ public class LevelManager : MonoBehaviour
 
         GameSaver.SaveData("player", player.GetSaveData());
 
-        SceneManager.LoadSceneAsync("Hub");        
+        SceneManager.LoadSceneAsync("HubScene");        
     }
 
     private void OpenExitDoor()

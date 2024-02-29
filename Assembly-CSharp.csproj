@@ -8,9 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
-    <ProjectGuid>{970B5706-7207-F00F-BE7C-6BD02C18A982}</ProjectGuid>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{32C3BDE6-E125-3128-82C1-25D0441455A3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -60,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Shop\Shop.cs" />
+    <Compile Include="Assets\Scripts\SceneManager\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\SceneManager\HubManager.cs" />
     <Compile Include="Assets\Scripts\SceneManager\LevelManager.cs" />
     <Compile Include="Assets\Scripts\SceneManager\GameSaver.cs" />

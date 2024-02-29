@@ -1986,6 +1986,7 @@ MonoBehaviour:
   reloadAnimationTime: 1
   fireRateForShots: 0.4
   damage: 30
+  destroyOnKill: 0
   pelletsPerShot: 1
   penetration: 4
   range: 100
