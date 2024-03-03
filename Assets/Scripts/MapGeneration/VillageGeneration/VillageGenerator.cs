@@ -45,34 +45,43 @@ namespace MapGeneration.VillageGeneration
         /// go only in the places given by the bigger generator
         /// </summary>
         /// <param name="upperWidth"> the width of the upper generator</param>
-        public void Generate(float upperWidth = 0, List<GameObject> necessaryBuildingsToPlace = null)
+        public void Generate(List<GameObject> necessaryBuildingsToPlace = null)
         {
-            //if the mask is null then it has already been used
-            if (upperWidth != 0 && mask == null) return;
+            
             if (villageBuildingsCollection == null) throw new System.Exception("Need to have a village collection component");
             if (size < 3) throw new System.ArgumentException("Size must be bigger than 2");
             if (density < 0 || density > 1) throw new System.ArgumentException("Density must be between 0 and 1");
-            
-            width = villageBuildingsCollection.GetWidth();
-            
-            if (upperWidth % width != 0) throw new System.Exception("Sub generator with width not divideable by upper generator width given");
-
-            size = upperWidth == 0 ? size : mask.GetLength(0) * (int)(upperWidth / width);
 
             buildingConditionalArrays = new bool[size+2, size+2];
             villageBuildingsCollection.ReadyCollection(size);
+            width = villageBuildingsCollection.GetWidth();
 
             List<Vector3Int> necessaryBuildingPositions = PlaceNecessaryBuildings(necessaryBuildingsToPlace);
 
             GenerateConditionalBoolArray(necessaryBuildingPositions);
 
-            if (mask != null) FillMask(upperWidth);
-
             GenerateBorders();
 
             PlaceBuildings();
 
-            villageBuildingsCollection.FinishCollection(width);
+            villageBuildingsCollection.FinishCollection(buildingConditionalArrays,size);
+        }
+
+        public void GenerateAsSubGenerator(bool[,] upperConditionalBuildingArray,float upperWidth,int upperSize)
+        {
+            width = villageBuildingsCollection.GetWidth();
+
+            if (upperWidth % width != 0) throw new System.Exception("Sub generator with width not divideable by upper generator width given");
+            size = (int)(upperWidth / width) * upperSize;
+
+            buildingConditionalArrays = new bool[size+2, size+2];
+            villageBuildingsCollection.ReadyCollection(size);
+
+            ExpandUpperConditionalBool(upperWidth, upperConditionalBuildingArray);
+
+            PlaceBuildingsWithMask((int)(upperWidth / width));
+
+            villageBuildingsCollection.FinishCollection(buildingConditionalArrays,size);
         }
 
         //--------------------------------------------------utility functions
@@ -103,25 +112,21 @@ namespace MapGeneration.VillageGeneration
         }
 
         /// <summary>
-        /// This will apply the mask to the conditionalBoolArray and getting rid of it after
+        /// This will expand the conditional bool array of the upper generator
+        /// so that we can fit the buildings of the sub generator
         /// </summary>
-        /// <param name="upperWidth">the width of the generator applying the mask</param>
-        private void FillMask(float upperWidth){
+        /// <param name="upperWidth">the width of the upper generator</param>
+        private void ExpandUpperConditionalBool(float upperWidth, bool[,] upperConditionalBoolArray){
             
             int divide = (int)(upperWidth / width);
 
-                for (int i = 0; i < mask.GetLength(0); i++)
+            for (int i = 0; i < upperConditionalBoolArray.GetLength(0)-2; i++)
+            {
+                for (int j = 0; j < upperConditionalBoolArray.GetLength(1)-2; j++)
                 {
-                    for (int j = 0; j < mask.GetLength(1); j++)
-                    {
-                        if (!mask[i, j])
-                        {
-                            FillExtract(buildingConditionalArrays, i * divide, j * divide, divide, false);
-                        }
-                    }
+                    FillExtract(buildingConditionalArrays, i * divide, j * divide, divide, upperConditionalBoolArray[i, j]);
                 }
-
-            mask = null;
+            }
         }
 
         //-------------------------------------------------------------unity events
@@ -139,9 +144,15 @@ namespace MapGeneration.VillageGeneration
                     for (int j = 0; j < size; j++)
                     {
                         color = buildingConditionalArrays[i, j] ? Color.white : Color.black;
-                        origin = new Vector3((i) * width - ((size-1) * width / 2), 0, (j) * width - ((size-1) * width / 2));
+                        origin = new Vector3(i * width - ((size-1) * width / 2), 0, j * width - ((size-1) * width / 2));
                         Gizmos.color = color;
                         Gizmos.DrawLine(origin, origin + Vector3.up * 5);
+
+                        if (mask != null && mask[i/2, j/2])
+                        {
+                            Gizmos.color = Color.red;
+                            Gizmos.DrawWireCube(origin, new Vector3(5, 0, 5));
+                        }
                     }
                 }
             }
@@ -313,7 +324,6 @@ namespace MapGeneration.VillageGeneration
                     break;
 
                 default:
-
                     GenerateBuildingConditionalArrayRandom(necessaryBuildingPositions);
                     break;
             }
@@ -350,10 +360,28 @@ namespace MapGeneration.VillageGeneration
             {
                 for (int j = 0; j < size - 2; j++)
                 {
-                    if (mask == null || mask[i, j])
+                    villageBuildingsCollection.Place(
+                            ExtractArray(buildingConditionalArrays, i, j, 3), width, size, i, j);
+                }
+            }
+        }
+
+        /// <summary>
+        /// places all the building
+        /// </summary>
+        private void PlaceBuildingsWithMask(int divide)
+        {
+
+            //convert bool map to buildings using buildings collection
+            if (mask == null) throw new System.Exception("Mask not created");
+            for (int i = 0; i < size - 2; i++)
+            {
+                for (int j = 0; j < size - 2; j++)
+                {
+                    if (mask[(i+1)/divide,(j+1)/divide])
                     {
                         villageBuildingsCollection.Place(
-                            ExtractArray(buildingConditionalArrays, i, j, 3), width, size, i, j);
+                            ExtractArray(buildingConditionalArrays, i, j, 3), width, size, i, j);   
                     }
                 }
             }
@@ -376,6 +404,14 @@ namespace MapGeneration.VillageGeneration
             buildingConditionalArrays = newArray.Clone() as bool[,];
         }
 
+        public bool[,] GetBuildingConditionalArrays(){
+            return buildingConditionalArrays;
+        }
+
+        public void ResetMask(int size){
+            mask = new bool[size, size];
+        }
+
         /// <summary>
         /// The mask tells which area should be empty and which shouldn't
         /// empty being filled with false
@@ -384,9 +420,8 @@ namespace MapGeneration.VillageGeneration
         /// <param name="size">size of the upper gen, only used if the mask wasn't created</param>
         /// <param name="i">row of the mask</param>
         /// <param name="j">column of the mask</param>
-        public void SetMask(int size, int i, int j)
+        public void SetMask(int i, int j)
         {
-            if (mask == null) mask = new bool[size, size];
             mask[i, j] = true;
         }
     }

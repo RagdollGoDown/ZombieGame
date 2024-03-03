@@ -7,7 +7,6 @@ using Utility;
 using Objectives;
 using System;
 using Objectives.Button;
-
 namespace Player
 {
     public class PlayerUI : MonoBehaviour
@@ -51,7 +50,7 @@ namespace Player
         }
         private HealthUI _healthUI;
 
-        private TextMeshProUGUI MoneyText;
+        private TextMeshProUGUI TimeText;
         private TextMeshProUGUI _interactText;
 
         private struct SlowMoUI
@@ -76,8 +75,8 @@ namespace Player
         [SerializeField] private float shakingLength;
         [SerializeField] private float shakingStrength;
 
-        // Start is called before the first frame update
-        void Awake()
+        
+        private void Awake()
         {
             _playerController = transform.parent.parent.parent.GetComponent<PlayerController>();
             playerCamera = transform.parent.GetComponent<Camera>();
@@ -105,7 +104,7 @@ namespace Player
 
             slowMoUI.slowMoChargeSlider = playScreen.transform.Find("SlowMoChargeSlider").GetComponent<Slider>();
 
-            MoneyText = playScreen.transform.Find("MoneyText/Text").GetComponent<TextMeshProUGUI>();
+            TimeText = playScreen.transform.Find("TimeText/Text").GetComponent<TextMeshProUGUI>();
 
             _objectiveUI = new();
             _objectiveUI.talkieWalkieMover = transform.parent.Find("GunCamera/WalkieTalkie").GetComponent<MovePointToPointNonUI>();
@@ -140,8 +139,8 @@ namespace Player
         {
             deathScreen.SetActive(true);
 
-            deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetTime().ToString("N2");
-            deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = PlayerScore.GetKills().ToString();
+            deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = _playerController.GetPlayerScore().GetTime().ToString("N2");
+            deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = _playerController.GetPlayerScore().GetKills().ToString();
         }
 
         public void UpdateHealthBar(Damage damage)
@@ -239,17 +238,18 @@ namespace Player
                     Debug.LogError("Menu not found");
                     break;
             }
+        
+        }
+
+        public void UpdateTimeSurvived(float timeSurvived)
+        {
+            TimeText.text = timeSurvived.ToString("N2");
         }
 
         //----------------------------------------Setters
         public void SetInteractionText(string newText)
         {
             _interactText.text = newText;
-        }
-
-        public void SetMoneyText(int money)
-        {
-            MoneyText.text = money.ToString();
         }
 
         public void SetMission(Mission mission)

@@ -6,6 +6,8 @@ using Utility;
 
 public class Explosiv : MonoBehaviour
 {
+    private bool exploded;
+
     [SerializeField] private float radius;
     [SerializeField] private float damage;
     [SerializeField] private Vector3 offset;
@@ -15,6 +17,8 @@ public class Explosiv : MonoBehaviour
 
     public void Explode()
     {
+        if (exploded) { return; }
+        exploded = true;
         Vector3 position = transform.position + offset;
 
         Collider[] cols = Physics.OverlapSphere(position, radius);

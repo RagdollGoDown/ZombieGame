@@ -1699,8 +1699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 20
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -2122,8 +2121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 20
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -3230,8 +3228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 10
   extraHealthBeforeDestruction: 0
   OnDamageTaken:
     m_PersistentCalls:
@@ -3415,8 +3412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 10
   extraHealthBeforeDestruction: 0
   OnDamageTaken:
     m_PersistentCalls:
@@ -3888,8 +3884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 20
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -4233,8 +4228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 20
+  health: 30
   extraHealthBeforeDestruction: 50
   OnDamageTaken:
     m_PersistentCalls:
@@ -6036,8 +6030,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 10
   extraHealthBeforeDestruction: 0
   OnDamageTaken:
     m_PersistentCalls:
@@ -6360,8 +6353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 30
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -7511,8 +7503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 30
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -8066,8 +8057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 30
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -9191,9 +9181,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
-  extraHealthBeforeDestruction: 50
+  health: 30
+  extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []
@@ -9494,8 +9483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 10
   extraHealthBeforeDestruction: 0
   OnDamageTaken:
     m_PersistentCalls:
@@ -9962,8 +9950,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 30
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -11683,7 +11670,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 10
   extraHealthBeforeDestruction: 0
   OnDamageTaken:
     m_PersistentCalls:
@@ -12266,8 +12252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 10
+  health: 20
   extraHealthBeforeDestruction: 20
   OnDamageTaken:
     m_PersistentCalls:
@@ -12751,8 +12736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382a0ed5d56d3ca46a570626016e99df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  maxHealth: 20
+  health: 30
   extraHealthBeforeDestruction: 50
   OnDamageTaken:
     m_PersistentCalls:

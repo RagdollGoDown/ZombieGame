@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Utility;
+using System.Threading.Tasks;
 
 namespace MapGeneration.VillageGeneration
 {
@@ -36,7 +37,7 @@ namespace MapGeneration.VillageGeneration
             name = vb.name;
         }
 
-        public virtual void Finish(float width) { }
+        public virtual void Finish(float width,int size, bool[,] conditionalBuildingArray) { }
 
         public virtual void Place(float width, int size, int posX, int posY, float rotation) { }
         
@@ -85,7 +86,7 @@ namespace MapGeneration.VillageGeneration
             possibleObjects = opb.possibleObjects;
         }
 
-        public override void Finish(float width) { }
+        public override void Finish(float width, int size, bool[,] conditionalBuildingArray) { }
 
         public override void Place(float width, int size, int posX, int posY, float rotation)
         {
@@ -95,7 +96,7 @@ namespace MapGeneration.VillageGeneration
 
             tempGameObject.transform.position = new Vector3((posX + 1) * width - ((size - 1) * width / 2), 0, (posY + 1) * width - ((size - 1) * width / 2));
             tempGameObject.transform.Rotate(Vector3.up, rotation);
-
+            Debug.Log("Placing object at " + tempGameObject.transform.position + " " + width);
             tempGameObject.SetActive(true);
 
             if (tempGameObject.TryGetComponent(out PlacableBuilding placable))
@@ -122,18 +123,19 @@ namespace MapGeneration.VillageGeneration
             generator = gpb.generator;
         }
 
-        public override void Finish(float width)
+        public override void Finish(float width,int size, bool[,] conditionalBuildingArray)
         {
-            generator.Generate(width);
+            generator.GenerateAsSubGenerator(conditionalBuildingArray,width, size);
         }
 
         public override void Place(float width, int size, int posX, int posY, float rotation)
         {
-            generator.SetMask(size-2,posX, posY);
+            generator.SetMask(posX + 1, posY + 1);
         }
 
         public override void Ready(int size) 
         {
+            generator.ResetMask(size);
             generator.GetCollection().ReadyCollection(size);
         }
     }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 30527925383908517}
   - component: {fileID: 30527925383908514}
   - component: {fileID: 30527925383908518}
-  - component: {fileID: 30527925383908521}
+  - component: {fileID: 6055417727990239872}
   - component: {fileID: 30527925383908520}
   - component: {fileID: 30527925383908523}
   m_Layer: 10
@@ -124,9 +124,9 @@ MonoBehaviour:
   interactEvent:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 30527925383908521}
-        m_TargetAssemblyTypeName: WeaponnCrate, Assembly-CSharp
-        m_MethodName: GiveGun
+      - m_Target: {fileID: 6055417727990239872}
+        m_TargetAssemblyTypeName: PlayerInteractions, Player
+        m_MethodName: GiveWeapon
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -136,8 +136,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  interactionText: 
---- !u!114 &30527925383908521
+  interactionText: Pick up Random Weapon
+--- !u!114 &6055417727990239872
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,10 +146,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 30527925383908515}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dbe6606837819947bcd3e03b7f74ddc, type: 3}
+  m_Script: {fileID: 11500000, guid: ff4cff236dc55af4ca9174197e944edd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: AK-47
+  menu: 0
 --- !u!65 &30527925383908520
 BoxCollider:
   m_ObjectHideFlags: 0

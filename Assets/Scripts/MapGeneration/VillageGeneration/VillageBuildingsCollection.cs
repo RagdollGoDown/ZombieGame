@@ -84,11 +84,11 @@ namespace MapGeneration.VillageGeneration
             }
         }
 
-        public void FinishCollection(float width)
+        public void FinishCollection(bool[,] conditionalBuildingArray, int size)
         {
             foreach (VillageBuilding vb in buildings)
             {
-                vb.Finish(width);
+                vb.Finish(buildingWidth,size,conditionalBuildingArray);
             }
         }
     }

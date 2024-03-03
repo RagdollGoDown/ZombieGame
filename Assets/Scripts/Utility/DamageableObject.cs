@@ -35,7 +35,7 @@ namespace Utility
         private Object lastDamageDealer;
         private Damage lastDamageRecieved;
 
-        public float currentHealth;
+        private float currentHealth;
         [SerializeField] private float health = 10;
         private float currentExtraHealthBeforeDestruction;
         [SerializeField] private float extraHealthBeforeDestruction = 20;

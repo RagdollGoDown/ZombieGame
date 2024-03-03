@@ -3017,7 +3017,7 @@ MonoBehaviour:
   bulletLerpSpeed: 200
   barrelExit: {fileID: 661866200493340501}
   maxBulletsInMag: 8
-  maxBulletsOnPlayer: 16
+  maxBulletsOnPlayer: 32
   shotsPerTriggerPress: 1
   reloadEnterAnimationTime: 0.583
   reloadChunkAnimationTime: 0.583

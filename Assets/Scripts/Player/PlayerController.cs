@@ -43,6 +43,9 @@ namespace Player
 
         private CharacterController _characterController;
         private PlayerInput _playerInput;
+        private PlayerScore _playerScore;
+        private DamageableObject _damageablePlayer;
+
 
         private int moneyOnPlayer;
 
@@ -57,21 +60,25 @@ namespace Player
         private Vector3 _headSwayMotion;
         private Vector3 _tempHeadBobDirection;
 
-        private DamageableObject _damageablePlayer;
+        [Header("Lean")]
+        [SerializeField] private float leanAcceleration;
+        [SerializeField] private float maxLeanAngle;
+        private float leanSpeed;
+        private float leanAngle;
 
         //--------------------movement
         [Header("Mouvement")]
+        [SerializeField] private float movementSpeed;
+        [SerializeField] private float movementSpeedWhenAiming;
         private Vector2 _movementDirection;
         private Vector3 _movementVector;
         private Vector3 _movementSpeedAffectedByAcceleration;
         private Vector3 _movementSpeedGravity;
         private float _currentMovementSpeed;
-        [SerializeField] private float movementSpeed;
-        [SerializeField] private float movementSpeedWhenAiming;
         
         private Vector2 _mouseDelta;
         private Vector2 _headRotation;
-        [SerializeField] float mouseSensitivity;
+        [SerializeField] private float mouseSensitivity;
 
         //----------------------------ui
         private PlayerUI playerUI;
@@ -79,9 +86,10 @@ namespace Player
         [Header("Weapons")]
         //----------------------------shooting
         //temporarily a serialize field to check the guns
-        private int _currentWeaponIndex;
         [SerializeField] private int maxWeaponsHeld = 2;
         [SerializeField] private List<WeaponBehaviour> _weaponsHeld;
+        private int _currentWeaponIndex;
+        public List<string> _weaponsNamesWhoCanBeEquiped;
 
         private Dictionary<string,WeaponBehaviour> _onPlayerWeaponsToName;
 
@@ -90,11 +98,11 @@ namespace Player
 
         [Header("Slow Mo")]
         //--------------------------slow mo
-        private bool isInSlowMo;
-        private float slowMoCharge;
         [SerializeField] private float slowMoMaxCharge = 1;
         [SerializeField] private float slowMoDecreaseSpeed = 0.2f;
         [SerializeField] private float slowMoRegenSpeed = 0.2f;
+        private bool isInSlowMo;
+        private float slowMoCharge;
 
         //---------------------------interaction
         private Interaction _currentInteract;
@@ -102,17 +110,19 @@ namespace Player
 
         //---------------------------kicking
         [Header("Kicking")]
-        private Animator _kickAnimator;
         [SerializeField] private float kickDamage;
         [SerializeField] private float kickRange;
         [SerializeField] private float kickAnimationLength;
         [SerializeField] private float kickDuration;
+        private Animator _kickAnimator;
+
         private float _lastTimeKicked;
 
         //--------------------------------------------------general
         private void GunSetup()
         {
             _onPlayerWeaponsToName = new Dictionary<string, WeaponBehaviour>();
+            _weaponsNamesWhoCanBeEquiped = new List<string>();
             _currentWeaponIndex = 0;
 
             if (_weaponsHeld.Count > maxWeaponsHeld) throw new System.ArgumentException("Too many weapons held on the player!");
@@ -122,10 +132,9 @@ namespace Player
                 if (t.TryGetComponent(out WeaponBehaviour wpb))
                 {
                     _onPlayerWeaponsToName.Add(t.name, wpb);
+                    _weaponsNamesWhoCanBeEquiped.Add(t.name);
 
                     if (wpb is CrossHaired) { ((CrossHaired)wpb).SetSpreadOrigin(_cameraTransform); }
-
-                    //t.gameObject.SetActive(_weaponsHeld[0] == wpb || _weaponsHeld[1] == wpb);
                     t.gameObject.SetActive(_weaponsHeld[_currentWeaponIndex] == wpb);
                 }
             }
@@ -189,6 +198,8 @@ namespace Player
             transform.localEulerAngles = Vector3.up * _headRotation.x;
 
             ApplyBobandSway(deltaTime);
+
+            ApplyLean(deltaTime);
         }
 
         private void HandleKickDamageAndRayCast() 
@@ -207,9 +218,6 @@ namespace Player
                 }
             }
         }
-
-        
-
         
         private void ApplyBobandSway(float deltaTime)
         {
@@ -226,6 +234,17 @@ namespace Player
             _headSwayMotion  += (swayDirection * maximumHeadSway - _cameraTransform.localPosition) * headSwaySpeed * deltaTime;
             
             _cameraTransform.localPosition = maximumHeadBob*_tempHeadBobDirection + _headSwayMotion;
+        }
+
+        private void ApplyLean(float deltaTime)
+        {
+            float desiredAngle = maxLeanAngle * _movementDirection.x;
+
+            leanSpeed = (desiredAngle - leanAngle) * leanAcceleration;
+
+            leanAngle += leanSpeed * deltaTime;
+
+            _cameraHolderTransform.localEulerAngles -= Vector3.forward * leanAngle;
         }
 
         //------------------------------------------SlowMo
@@ -282,7 +301,7 @@ namespace Player
             _characterController = GetComponent<CharacterController>();
     
             _playerInput = GetComponent<PlayerInput>();
-            PlayerScore.ResetScore();
+            _playerScore = new PlayerScore();
 
             _cameraHolderTransform = transform.Find("CameraAndGunHolder").transform;
 
@@ -314,7 +333,8 @@ namespace Player
                 float deltaTime = Time.unscaledDeltaTime * Time.timeScale;
 
                 PlayerMovement(deltaTime);
-                PlayerScore.AddDeltaTimeToTimeSurvived(deltaTime);
+                _playerScore.AddDeltaTimeToTimeSurvived(deltaTime);
+                playerUI.UpdateTimeSurvived(_playerScore.GetTime());
                 UpdateSlowMo(Time.unscaledDeltaTime);
             }
         }
@@ -347,6 +367,7 @@ namespace Player
         private void EquipCurrentWeapon()
         {
             if (_weaponsHeld.Count == 0) return;
+            Debug.Log("Equipping " + _weaponsHeld[_currentWeaponIndex].name);
 
             _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
             _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += playerUI.SetAmmoText;
@@ -360,13 +381,11 @@ namespace Player
         private void UnequipCurrentWeapon()
         {
             if (_weaponsHeld.Count == 0) return;
-
+            Debug.Log("Unequipping " + _weaponsHeld[_currentWeaponIndex].name);
             _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
             _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= playerUI.SetAmmoText;
-            if (_weaponsHeld[_currentWeaponIndex] is CrossHaired)
+            if (_weaponsHeld[_currentWeaponIndex] is CrossHaired c)
             {
-                CrossHaired c = (CrossHaired)_weaponsHeld[_currentWeaponIndex];
-
                 c.GetSpread().onValueChange -= playerUI.SetCrosshairScale;
             }
         }
@@ -404,23 +423,19 @@ namespace Player
             }
         }
 
-        /* DEPRECATED does not support for when there are more than 2 weapons on the player
-        * 
-        * returns false if the player didn't pick up the weapon
-        * 
-        * replaces the weapon currently equipped with the weapon given, identified by it's name
-        */
         public bool PickUpWeapon(string weaponName)
         {
             if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
             {
                 UnequipCurrentWeapon();
-               
 
                 if (_weaponsHeld.Count < maxWeaponsHeld)
                 {
-                    _currentWeaponIndex = _weaponsHeld.Count - 1;
                     _weaponsHeld.Add(newWeapon);
+                    Debug.Log(_currentWeaponIndex + " a");
+                    _currentWeaponIndex = _weaponsHeld.Count - 1;
+                    Debug.Log(_currentWeaponIndex + " b");
+
                 }
                 else
                 {
@@ -435,6 +450,11 @@ namespace Player
             {
                 return false;
             }
+        }
+
+        public bool HasWeaponInEquipment(string weaponName)
+        {
+            return _onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon) && _weaponsHeld.Contains(newWeapon);
         }
 
         public void OpenMenu(PlayerUI.Menu menu)
@@ -503,7 +523,7 @@ namespace Player
 
         public void SwitchWeaponsInput(InputAction.CallbackContext context)
         {
-            if (playerState != PlayerState.Normal) return;
+            if (playerState != PlayerState.Normal || _weaponsHeld.Count == 1) return;
 
             if (context.started && lastTimeSwitched < Time.time - timeBetweenWeaponSwitches)
             {
@@ -550,6 +570,11 @@ namespace Player
             }
         }
 
+        public void QuitGame()
+        {
+            Application.Quit();
+        }
+
         //--------------------------------------------------------getters
 
         public DamageableObject GetPlayerTargetComponent() { return _damageablePlayer; }
@@ -557,6 +582,8 @@ namespace Player
         public float GetPlayerHealthRatio() { return _damageablePlayer.GetHealthRatio(); }
 
         public PlayerState GetPlayerState() { return playerState; }
+
+        public PlayerScore GetPlayerScore() { return _playerScore; }
 
         public static ReadOnlyCollection<PlayerController> GetPlayers()
         {
@@ -592,15 +619,11 @@ namespace Player
         public void SetMoney(int money)
         {
             moneyOnPlayer = money;
-
-            playerUI.SetMoneyText(money);
         }
 
         public void AddMoney(int money)
         {
             moneyOnPlayer += money;
-
-            playerUI.SetMoneyText(moneyOnPlayer);
         }
 
         public void SetPlayerData(PlayerSaveData data)

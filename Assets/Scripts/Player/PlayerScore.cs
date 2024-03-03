@@ -4,49 +4,33 @@ using UnityEngine;
 
 public class PlayerScore
 {
-    private static float _timeSurvived;
-    private static int _killCount;
+    private float _timeSurvived;
+    private int _killCount;
 
-    private static int _multiKillsTotal;
-    private static int _headShotsTotal;
+    public PlayerScore(){
+        _timeSurvived = 0;
+        _killCount = 0;
 
-    private PlayerScore(){}
+    }
 
     //--------------------------------------------------setters
 
-    public static void ResetScore()
-    {
-        _timeSurvived = 0;
-        _killCount = 0;
-        _headShotsTotal = 0;
-    }
-
-    public static void AddHeadShot()
-    {
-        _headShotsTotal++;
-    }
-
-    public static int GetHeadShots()
-    {
-        return _headShotsTotal;
-    }
-
-    public static void AddKill()
+    public void AddKill()
     {
         _killCount++;
     }
 
-    public static int GetKills()
+    public int GetKills()
     {
         return _killCount;
     }
 
-    public static void AddDeltaTimeToTimeSurvived(float deltaTime)
+    public void AddDeltaTimeToTimeSurvived(float deltaTime)
     {
         _timeSurvived += deltaTime;
     }
 
-    public static float GetTime()
+    public float GetTime()
     {
         return _timeSurvived;
     }

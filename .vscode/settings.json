@@ -1,4 +1,7 @@
 {
     "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "ZombieGame.sln"
+    "dotnet.defaultSolution": "ZombieGame.sln",
+    "files.watcherExclude": {
+        "**/target": true
+    }
 }

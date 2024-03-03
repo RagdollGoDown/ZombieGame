@@ -73,6 +73,7 @@ MonoBehaviour:
   reloadAnimationTime: 3.3
   fireRateForShots: 0.2
   damage: 20
+  destroyOnKill: 0
   pelletsPerShot: 1
   penetration: 1
   range: 100
@@ -91,7 +92,7 @@ MonoBehaviour:
   bulletLerpSpeed: 500
   barrelExit: {fileID: 4062378062954414808}
   maxBulletsInMag: 25
-  maxBulletsOnPlayer: 75
+  maxBulletsOnPlayer: 175
   shotsPerTriggerPress: 100
 --- !u!1 &694665245767129001
 GameObject:
