@@ -3642,8 +3642,6 @@ MonoBehaviour:
   headBobSpeed: 1
   leanAcceleration: 2
   maxLeanAngle: 4
-  leanAccelerationInSlowMo: 10
-  maxLeanAngleInSlowMo: 20
   movementSpeed: 10
   movementSpeedWhenAiming: 5
   mouseSensitivity: 20
@@ -7732,6 +7730,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6957158243777286706}
     m_Modifications:
+    - target: {fileID: 2929458714071647930, guid: 6d95e65112bf597438e8483e7250cff7,
+        type: 3}
+      propertyPath: hitMarker
+      value: 
+      objectReference: {fileID: 7367131164601019050, guid: 2b5806868cfc79947829d22887d1d1d4,
+        type: 3}
     - target: {fileID: 5372954332967825087, guid: 6d95e65112bf597438e8483e7250cff7,
         type: 3}
       propertyPath: m_LocalPosition.y

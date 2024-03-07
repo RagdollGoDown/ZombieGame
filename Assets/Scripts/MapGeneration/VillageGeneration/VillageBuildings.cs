@@ -96,7 +96,6 @@ namespace MapGeneration.VillageGeneration
 
             tempGameObject.transform.position = new Vector3((posX + 1) * width - ((size - 1) * width / 2), 0, (posY + 1) * width - ((size - 1) * width / 2));
             tempGameObject.transform.Rotate(Vector3.up, rotation);
-            Debug.Log("Placing object at " + tempGameObject.transform.position + " " + width);
             tempGameObject.SetActive(true);
 
             if (tempGameObject.TryGetComponent(out PlacableBuilding placable))

@@ -224,9 +224,9 @@ namespace Weapons
                     DO.GetHitEvent().Invoke(damageToDO);
 
                     //--------------------------hitmarker
-                    Transform HM = Instantiate(hitMarker, pointShot.point, Quaternion.identity).transform;
-                    HM.transform.LookAt(cameraPosition);
-                    HM.localScale *= pointShot.distance / 10;
+                    Transform HM = Instantiate(hitMarker,
+                        pointShot.point + pointShot.normal * 0.03f,
+                        Quaternion.FromToRotation(Vector3.forward, pointShot.normal)).transform;
                     Destroy(HM.gameObject, HITMARKER_LIFETIME);
                 }
 

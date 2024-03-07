@@ -367,7 +367,6 @@ namespace Player
         private void EquipCurrentWeapon()
         {
             if (_weaponsHeld.Count == 0) return;
-            Debug.Log("Equipping " + _weaponsHeld[_currentWeaponIndex].name);
 
             _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(true);
             _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange += playerUI.SetAmmoText;

@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapGeneration", "MapGeneration.csproj", "{264699B2-A4F6-6660-0C8D-208B2CDACDAE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{32C3BDE6-E125-3128-82C1-25D0441455A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Objective", "Objective.csproj", "{41CC9D9D-F743-2EB3-8F33-69613750FE04}"
@@ -11,9 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility.csproj",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Player", "Player.csproj", "{09D4C4A0-1145-FC47-1060-D37D20944110}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapGeneration", "MapGeneration.csproj", "{264699B2-A4F6-6660-0C8D-208B2CDACDAE}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI.csproj", "{34B56DEF-D299-D287-EE27-CB443EE4C9AD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weapons", "Weapons.csproj", "{7A747A90-E370-81A5-D420-839A0B3E4676}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor.csproj", "{7E856D9B-D22D-F824-DC7F-CD407A5450A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zombies", "Zombies.csproj", "{B57E0ACA-FA63-9231-332E-35A8E3031022}"
 EndProject
@@ -23,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{32C3BDE6-E125-3128-82C1-25D0441455A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{32C3BDE6-E125-3128-82C1-25D0441455A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32C3BDE6-E125-3128-82C1-25D0441455A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -43,6 +41,10 @@ Global
 		{09D4C4A0-1145-FC47-1060-D37D20944110}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09D4C4A0-1145-FC47-1060-D37D20944110}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09D4C4A0-1145-FC47-1060-D37D20944110}.Release|Any CPU.Build.0 = Release|Any CPU
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{264699B2-A4F6-6660-0C8D-208B2CDACDAE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{34B56DEF-D299-D287-EE27-CB443EE4C9AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{34B56DEF-D299-D287-EE27-CB443EE4C9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34B56DEF-D299-D287-EE27-CB443EE4C9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +53,10 @@ Global
 		{7A747A90-E370-81A5-D420-839A0B3E4676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A747A90-E370-81A5-D420-839A0B3E4676}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A747A90-E370-81A5-D420-839A0B3E4676}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E856D9B-D22D-F824-DC7F-CD407A5450A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E856D9B-D22D-F824-DC7F-CD407A5450A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E856D9B-D22D-F824-DC7F-CD407A5450A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E856D9B-D22D-F824-DC7F-CD407A5450A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B57E0ACA-FA63-9231-332E-35A8E3031022}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B57E0ACA-FA63-9231-332E-35A8E3031022}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B57E0ACA-FA63-9231-332E-35A8E3031022}.Release|Any CPU.ActiveCfg = Release|Any CPU
