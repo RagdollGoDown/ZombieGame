@@ -27,7 +27,7 @@ public class Explosiv : MonoBehaviour
         {
             if (col.TryGetComponent(out DamageableObject d) && col.gameObject != gameObject)
             {
-                Damage damageDone = new(damage, col.transform.position - position, this);
+                Damage damageDone = new(damage, col.transform.position - position, position, Vector3.zero, this);
 
                 d.GetHitEvent().Invoke(damageDone);
             }

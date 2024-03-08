@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,8 @@ namespace Utility
         [SerializeField] private float extraHealthBeforeDestruction = 20;
         private UnityEventRecieveDamage getHit;
         public UnityEvent<DamageableObject> OnDamageTaken;
+        [SerializeField] private string onDamageTakenEffectPoolName;
+        private ObjectPool onDamageTakenEffectPool;
 
         private Collider[] _colliders;
 
@@ -75,6 +78,8 @@ namespace Utility
             _colliders = GetComponents<Collider>();
 
             initialScale = transform.localScale;
+
+            if (onDamageTakenEffectPoolName != "") onDamageTakenEffectPool = ObjectPool.GetPool(onDamageTakenEffectPoolName);
 
             destructionParticlePool =
                 destructionParticlePoolNames.Select(dpp =>
@@ -129,6 +134,10 @@ namespace Utility
 
             currentHealth -= damage.GetDamageDone();
 
+            if (onDamageTakenEffectPoolName != "" && damage.GetDamageNormal() != Vector3.zero){
+                HandleOnDamageEffect(damage);
+            }
+
             if (currentHealth <= 0)
             {
                 Die(damage);
@@ -140,6 +149,15 @@ namespace Utility
                     Destroy(damage);
                 }
             }
+        }
+
+        private void HandleOnDamageEffect(Damage damage)
+        {
+            Transform effect = onDamageTakenEffectPool.Pull(false).transform;
+            effect.position = damage.GetDamagePosition();
+            effect.rotation = Quaternion.FromToRotation(Vector3.forward, damage.GetDamageNormal());
+            effect.gameObject.SetActive(true);
+            StartCoroutine(nameof(DisableParticle), effect.gameObject);
         }
 
 
@@ -272,14 +290,22 @@ namespace Utility
     {
         private readonly Object damageDealer;
         private readonly Vector3 damageDirection;
+        private readonly Vector3 damagePosition;
+        private readonly Vector3 damageNormal;
         private readonly float damageDone;
         private readonly bool destroyOnKill = false;
 
-        public Damage(float damageDone, Vector3 damageDirection, Object damageDealer,
+        public Damage(float damageDone, 
+            Vector3 damageDirection,
+            Vector3 damagePosition,
+            Vector3 damageNormal,
+            Object damageDealer,
             bool destroyOnKill = false)
         {
             this.damageDone = damageDone;
             this.damageDirection = damageDirection.normalized;
+            this.damagePosition = damagePosition;
+            this.damageNormal = damageNormal;
             this.damageDealer = damageDealer;
 
             this.destroyOnKill = destroyOnKill;
@@ -293,6 +319,16 @@ namespace Utility
         public Vector3 GetDamageDirection()
         {
             return damageDirection;
+        }
+
+        public Vector3 GetDamagePosition()
+        {
+            return damagePosition;
+        }
+
+        public Vector3 GetDamageNormal()
+        {
+            return damageNormal;
         }
 
         public Object GetDamageDealer()

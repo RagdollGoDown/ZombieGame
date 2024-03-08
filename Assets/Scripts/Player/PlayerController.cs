@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine.InputSystem;
 using Weapons;
-using Utility.Observable;
+using Utility.Tweening;
 using Objectives;
 using System;
 
@@ -23,6 +23,7 @@ namespace Player
         private static float ACCELERATION_DEGRADATION_SPEED = 5;
 
         private static float TIMESCALE_IN_SLOWMO = 0.2f;
+        private static float TRANSITION_TO_SLOWMO_TIME = 0.5f;
 
         private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
         private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
@@ -214,7 +215,7 @@ namespace Player
 
                 if (hit.transform && hit.transform.TryGetComponent(out DamageableObject damObj))
                 {
-                    damObj.GetHitEvent().Invoke(new Damage(kickDamage, _cameraTransform.forward, this));
+                    damObj.GetHitEvent().Invoke(new Damage(kickDamage, _cameraTransform.forward,hit.point,hit.normal, this));
                 }
             }
         }
@@ -278,7 +279,8 @@ namespace Player
             if (slowMoCharge <= 0 || isInSlowMo) return;
 
             isInSlowMo = true;
-            Time.timeScale = TIMESCALE_IN_SLOWMO;
+
+            TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(1, TIMESCALE_IN_SLOWMO, t), true);
         }
 
         private void ExitSlowMo()
@@ -286,7 +288,8 @@ namespace Player
             if (!isInSlowMo) return;
 
             isInSlowMo = false;
-            Time.timeScale = 1;
+            
+            TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(TIMESCALE_IN_SLOWMO, 1, t), true);
         }
 
         //--------------------------------------------------unity events

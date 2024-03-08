@@ -43,8 +43,6 @@ namespace Weapons
 
         [Header("Visual Effects")]
         [SerializeField] private VisualEffect muzzleFlash;
-        [SerializeField] private GameObject hitMarker;
-        //[SerializeField] private GameObject bulletHole;
         [SerializeField] private Mesh bulletHoleMesh;
         [SerializeField] private Material bulletHoleMaterial;
         [SerializeField] private ObjectPool bulletTrailPool;
@@ -219,15 +217,9 @@ namespace Weapons
 
                 if (pointShot.transform.TryGetComponent(out DamageableObject DO))
                 {
-                    Damage damageToDO = new(damage, pointShot.point - transform.position, this,
-                        destroyOnKill);
+                    Damage damageToDO = new(damage, pointShot.point - transform.position,
+                    pointShot.point, pointShot.normal, this, destroyOnKill);
                     DO.GetHitEvent().Invoke(damageToDO);
-
-                    //--------------------------hitmarker
-                    Transform HM = Instantiate(hitMarker,
-                        pointShot.point + pointShot.normal * 0.03f,
-                        Quaternion.FromToRotation(Vector3.forward, pointShot.normal)).transform;
-                    Destroy(HM.gameObject, HITMARKER_LIFETIME);
                 }
 
                 //-----------------------------------------------bullet hole
