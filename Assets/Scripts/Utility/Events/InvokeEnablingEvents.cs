@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine;
 
-public class InvokeEnableEvents : MonoBehaviour
+namespace Utility.Events
 {
-    public UnityEvent OnEnableEvent;
-    public UnityEvent OnDisableEvent;
-
-    private void OnEnable()
+    public class InvokeEnableEvents : MonoBehaviour
     {
-        OnEnableEvent?.Invoke();
-    }
+        public UnityEvent OnEnableEvent;
+        public UnityEvent OnDisableEvent;
 
-    private void OnDisable()
-    {
-        OnDisableEvent?.Invoke();
+        private void OnEnable()
+        {
+            OnEnableEvent?.Invoke();
+        }
+
+        private void OnDisable()
+        {
+            OnDisableEvent?.Invoke();
+        }
     }
 }

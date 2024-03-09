@@ -3615,6 +3615,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onDamageTakenEffectPoolName: 
   destructionParticlePoolNames: []
   destructionParticlePoolNamesWhenChild: []
   deathCalls:
@@ -3647,7 +3648,7 @@ MonoBehaviour:
   mouseSensitivity: 20
   maxWeaponsHeld: 2
   _weaponsHeld:
-  - {fileID: 6284672778376349908}
+  - {fileID: 1051864591873449496}
   _weaponsNamesWhoCanBeEquiped: []
   timeBetweenWeaponSwitches: 0.5
   slowMoMaxCharge: 1
@@ -7558,6 +7559,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ce861bcb386bb24ebb1380c976272a9, type: 3}
+--- !u!114 &1051864591873449496 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6519188541319711695, guid: 0ce861bcb386bb24ebb1380c976272a9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6115947898909038039}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1051864591873449498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6519188541319711693, guid: 0ce861bcb386bb24ebb1380c976272a9,
@@ -7757,15 +7770,3 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 9191886103263137390}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6284672778376349908 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2929458714071647930, guid: 6d95e65112bf597438e8483e7250cff7,
-    type: 3}
-  m_PrefabInstance: {fileID: 9191886103263137390}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66313582b6c6c754cbe1274ad4fc7276, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

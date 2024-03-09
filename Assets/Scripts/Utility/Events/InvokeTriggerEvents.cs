@@ -4,24 +4,27 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 
-public class InvokeTriggerEvents : MonoBehaviour
+namespace Utility.Events
 {
-    public UnityEvent<Collider> OnTriggerEnterEvent;
-    public UnityEvent<Collider> OnTriggerStayEvent;
-    public UnityEvent<Collider> OnTriggerExitEvent;
-
-    private void OnTriggerEnter(Collider collider)
+    public class InvokeTriggerEvents : MonoBehaviour
     {
-        OnTriggerEnterEvent?.Invoke(collider);
-    }
+        public UnityEvent<Collider> OnTriggerEnterEvent;
+        public UnityEvent<Collider> OnTriggerStayEvent;
+        public UnityEvent<Collider> OnTriggerExitEvent;
 
-    private void OnTriggerStay(Collider collider)
-    {
-        OnTriggerStayEvent?.Invoke(collider);
-    }
+        private void OnTriggerEnter(Collider collider)
+        {
+            OnTriggerEnterEvent?.Invoke(collider);
+        }
 
-    private void OnTriggerExit(Collider collider)
-    {
-        OnTriggerExitEvent?.Invoke(collider);
+        private void OnTriggerStay(Collider collider)
+        {
+            OnTriggerStayEvent?.Invoke(collider);
+        }
+
+        private void OnTriggerExit(Collider collider)
+        {
+            OnTriggerExitEvent?.Invoke(collider);
+        }
     }
 }

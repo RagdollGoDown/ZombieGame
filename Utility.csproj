@@ -44,6 +44,7 @@
      <Compile Include="Assets\Scripts\Utility\Tweening.cs" />
      <Compile Include="Assets\Scripts\Utility\ObjectPool\ObjectPool.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ObservableObject.cs" />
+     <Compile Include="Assets\Scripts\Utility\Events\InvokeAnimationStateEvents.cs" />
      <Compile Include="Assets\Scripts\Utility\BloodSpillOnCollide.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ReadOnly\ReadOnlyObservableObject.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ObservableBool.cs" />
