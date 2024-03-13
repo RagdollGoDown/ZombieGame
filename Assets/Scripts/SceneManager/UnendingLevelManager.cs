@@ -42,6 +42,7 @@ public class UnendingLevelManager : MonoBehaviour
         Debug.Log("Started Level");
         villageGenerator.Generate(necessaryBuildingsToPlace: necessarybuildings);
         player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation).GetComponent<PlayerController>();
+        player.OnRestartDemanded.AddListener(RestartLevel);
 
         foreach (var spawnerManager in zombieSpawnerManagers)
         {
@@ -105,6 +106,11 @@ public class UnendingLevelManager : MonoBehaviour
 
         Transform reward = possibleRewards[Random.Range(0, possibleRewards.Length - 1)];
         Instantiate(reward, player.transform.position + Vector3.up * 100, Quaternion.identity);
+    }
+
+    private void RestartLevel()
+    {
+        SceneManager.LoadSceneAsync("UnEndingLevelScene");
     }
 
     //------------------------------------------unity events

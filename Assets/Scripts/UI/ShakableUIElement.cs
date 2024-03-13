@@ -33,7 +33,7 @@ public class ShakableUIElement : MonoBehaviour, IPreparable
 
         while (_elapsedTime < LERP1 && !_shakeCancellationToken.IsCancellationRequested)
         {
-            _elapsedTime += Time.deltaTime / _lengthOfShakeInSeconds;
+            _elapsedTime += Time.unscaledDeltaTime / _lengthOfShakeInSeconds;
 
             _rectTransform.localPosition = _basePosition +
                 new Vector3(Random.value*2 -1,Random.value*2-1) * (1 - _elapsedTime) * _shakeStrength;

@@ -26,7 +26,8 @@ namespace Player
         public enum Menu
         {
             Pause,
-            Shop
+            Shop,
+            Death
         }
 
         private Menu currentMenu;
@@ -75,7 +76,6 @@ namespace Player
         [SerializeField] private float shakingLength;
         [SerializeField] private float shakingStrength;
 
-        
         private void Awake()
         {
             _playerController = transform.parent.parent.parent.GetComponent<PlayerController>();
@@ -127,7 +127,7 @@ namespace Player
 
         public void TakeDamage()
         {
-            if (_playerController.GetPlayerState() == PlayerController.PlayerState.Dead) return;
+            if (_playerController.GetPlayerState() != PlayerController.PlayerState.Normal) return;
 
             foreach(ShakableUIElement shakable in _shakableUIElements)
             {
@@ -135,23 +135,13 @@ namespace Player
             }
         }
 
-        public void Die()
-        {
-            deathScreen.SetActive(true);
-
-            deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = _playerController.GetPlayerScore().GetTime().ToString("N2");
-            deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = _playerController.GetPlayerScore().GetKills().ToString();
-        }
-
-        public void UpdateHealthBar(Damage damage)
+        public void UpdateHealthBar(DamageableObject damageableObject)
         {
             if (_playerController.GetPlayerState() != PlayerController.PlayerState.Normal) return;
 
             float ratio = _playerController.GetPlayerHealthRatio();
             _healthUI.slider.value = 1-ratio;
             _healthUI.tmp.text = (ratio * HEALTH100).ToString();
-
-            if (_healthUI.slider.value == 1) { Die(); }
         }
 
         private void UpdateCurrentObjective(Objective objective)
@@ -210,6 +200,11 @@ namespace Player
         {
             switch (menu)
             {
+                case Menu.Death:
+                    deathScreen.SetActive(true);
+                    deathScreen.transform.Find("TimeScore/score").GetComponent<TextMeshProUGUI>().text = _playerController.GetPlayerScore().GetTime().ToString("N2");
+                    deathScreen.transform.Find("KillScore/score").GetComponent<TextMeshProUGUI>().text = _playerController.GetPlayerScore().GetKills().ToString();
+                    break;
                 case Menu.Pause:
                     pauseScreen.SetActive(true);
                     break;
@@ -228,6 +223,9 @@ namespace Player
         {
             switch (currentMenu)
             {
+                case Menu.Death:
+                    deathScreen.SetActive(false);
+                    break;
                 case Menu.Pause:
                     pauseScreen.SetActive(false);
                     break;

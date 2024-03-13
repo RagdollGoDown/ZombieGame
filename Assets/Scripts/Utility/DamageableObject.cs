@@ -127,8 +127,6 @@ namespace Utility
 
         private void TakeDamage(Damage damage)
         {
-            OnDamageTaken.Invoke(this);
-
             lastDamageDealer = damage.GetDamageDealer();
             lastDamageRecieved = damage;
 
@@ -137,6 +135,9 @@ namespace Utility
             if (onDamageTakenEffectPoolName != "" && damage.GetDamageNormal() != Vector3.zero){
                 HandleOnDamageEffect(damage);
             }
+
+            //Should be called before death or destruction
+            OnDamageTaken.Invoke(this);
 
             if (currentHealth <= 0)
             {

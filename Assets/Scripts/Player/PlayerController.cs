@@ -17,16 +17,16 @@ namespace Player
     {
         private static List<PlayerController> PLAYERS;
 
-        private static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
-        private static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
+        private readonly static int KICK_TRIGGER_PARAM_ID = Animator.StringToHash("Kick");
+        private readonly static int KICK_SPEED_PARAM_ID = Animator.StringToHash("Speed");
 
-        private static float ACCELERATION_DEGRADATION_SPEED = 5;
+        private readonly static float ACCELERATION_DEGRADATION_SPEED = 5;
 
-        private static float TIMESCALE_IN_SLOWMO = 0.2f;
-        private static float TRANSITION_TO_SLOWMO_TIME = 0.5f;
+        private readonly static float TIMESCALE_IN_SLOWMO = 0.2f;
+        private readonly static float TRANSITION_TO_SLOWMO_TIME = 0.5f;
 
-        private static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
-        private static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
+        private readonly static int SHOOTABLE_LAYERMASK_VALUE = 65;
+        private readonly static Vector3[] KICK_RAYCAST_FORWARD_RIGHT_UP_SCALE = new Vector3[]
         {
             new Vector3(1,0,0), new Vector3(0.9f,0.1f,0), new Vector3(0.9f,0,0.1f), 
             new Vector3(0.9f,-0.1f,0), new Vector3(0.9f,0,-0.1f), new Vector3(0.9f,-0.05f,.05f),
@@ -47,7 +47,7 @@ namespace Player
         private PlayerScore _playerScore;
         private DamageableObject _damageablePlayer;
 
-
+        public UnityEvent OnRestartDemanded = new UnityEvent();
         private int moneyOnPlayer;
 
         [Header("Camera mouvement")]
@@ -319,8 +319,9 @@ namespace Player
             playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
 
             _damageablePlayer = GetComponent<DamageableObject>();
-            _damageablePlayer.GetHitEvent().AddListener(playerUI.UpdateHealthBar);
-            
+            _damageablePlayer.OnDamageTaken.AddListener(playerUI.UpdateHealthBar);
+            _damageablePlayer.deathCalls.AddListener(Die);
+
             GunSetup();
 
             _interactions = new List<Interaction>();
@@ -383,7 +384,7 @@ namespace Player
         private void UnequipCurrentWeapon()
         {
             if (_weaponsHeld.Count == 0) return;
-            Debug.Log("Unequipping " + _weaponsHeld[_currentWeaponIndex].name);
+
             _weaponsHeld[_currentWeaponIndex].gameObject.SetActive(false);
             _weaponsHeld[_currentWeaponIndex].AmmoText.onValueChange -= playerUI.SetAmmoText;
             if (_weaponsHeld[_currentWeaponIndex] is CrossHaired c)
@@ -463,7 +464,7 @@ namespace Player
         {
             playerUI.OpenMenu(menu);
 
-            playerState = PlayerState.InMenu;
+            playerState = playerState == PlayerState.Dead ? playerState : PlayerState.InMenu;
 
             Time.timeScale = 0;
 
@@ -484,19 +485,25 @@ namespace Player
         }
 
         //-----------------------------------------player state
-        public void Die()
+        private void Die(DamageableObject damageableObject)
         {
             playerState = PlayerState.Dead;
+
+            OpenMenu(PlayerUI.Menu.Death);
         }
 
         //----------------------------input events
         public void SetMovementDirection(InputAction.CallbackContext context)
         {
+            if (playerState != PlayerState.Normal) return;
+
             _movementDirection = context.ReadValue<Vector2>();
         }
         
         public void SetMouseDelta(InputAction.CallbackContext context)
         {
+            if (playerState != PlayerState.Normal) return;
+
             _mouseDelta = context.ReadValue<Vector2>();
         }
 
@@ -575,6 +582,11 @@ namespace Player
         public void QuitGame()
         {
             Application.Quit();
+        }
+
+        public void DemandRestart()
+        {
+            OnRestartDemanded.Invoke();
         }
 
         //--------------------------------------------------------getters
