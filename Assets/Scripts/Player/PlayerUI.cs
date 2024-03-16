@@ -26,7 +26,6 @@ namespace Player
         public enum Menu
         {
             Pause,
-            Shop,
             Death
         }
 
@@ -34,7 +33,6 @@ namespace Player
 
         private GameObject deathScreen;
         private GameObject pauseScreen;
-        private GameObject shopScreen;
 
         private struct WeaponUI
         {
@@ -91,8 +89,6 @@ namespace Player
             deathScreen.SetActive(false);
             pauseScreen = transform.Find("PauseScreen").gameObject;
             pauseScreen.SetActive(false);
-            shopScreen = transform.Find("ShopScreen").gameObject;
-            shopScreen.SetActive(false);
 
             weaponUI.ammoTextHolder = playScreen.transform.Find("Ammo/AmmoTextHolder").GetComponent<TextMeshProUGUI>();
             weaponUI.weaponNameTextHolder = playScreen.transform.Find("Ammo/WeaponNameTextHolder").GetComponent<TextMeshProUGUI>();
@@ -208,9 +204,6 @@ namespace Player
                 case Menu.Pause:
                     pauseScreen.SetActive(true);
                     break;
-                case Menu.Shop:
-                    shopScreen.SetActive(true);
-                    break;
                 default:
                     Debug.LogError("Menu not found");
                     break;
@@ -228,9 +221,6 @@ namespace Player
                     break;
                 case Menu.Pause:
                     pauseScreen.SetActive(false);
-                    break;
-                case Menu.Shop:
-                    shopScreen.SetActive(false);
                     break;
                 default:
                     Debug.LogError("Menu not found");

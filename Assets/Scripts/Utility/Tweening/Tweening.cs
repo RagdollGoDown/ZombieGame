@@ -7,29 +7,27 @@ namespace Utility.Tweening
     {
         private TweenUtils() { }
 
-        public static async void Tween(float duration, System.Action<float> onTween, 
-            bool unscaledTime = false, AnimationCurve curve = null)
+        public static async Task Tween(float duration, System.Action<float> onTween, 
+            int stepsMilliseconds = 0, bool unscaledTime = false, AnimationCurve curve = null)
         {
+            if (duration <= 0)
+                throw new System.ArgumentException("Duration must be greater than 0", nameof(duration));
+            if (onTween == null)
+                throw new System.ArgumentNullException("OnTween cannot be null", nameof(onTween));
+            if (stepsMilliseconds < 0)
+                throw new System.ArgumentException("StepsMilliseconds must be greater or equal to 0", nameof(stepsMilliseconds));
+
             float time = 0.0f;
             while (time < duration)
             {
                 time += unscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
                 onTween.Invoke(curve == null ? time / duration : curve.Evaluate(time/duration));
-                 await Task.Yield();
-            }
-        }
 
-        public static async void Tween(float duration, System.Action<float> onTween,int stepSizeMilliSeconds,
-            bool unscaledTime = false, AnimationCurve curve = null)
-        {
-            float time = 0.0f;
-            while (time < duration)
-            {
-                time += stepSizeMilliSeconds * 1000;
-
-                onTween.Invoke(curve == null ? time / duration : curve.Evaluate(time / duration));
-                await Task.Delay(stepSizeMilliSeconds);
+                if (stepsMilliseconds > 0)
+                    await Task.Delay(stepsMilliseconds);
+                else
+                    await Task.Yield();
             }
         }
     }

@@ -33,8 +33,6 @@ public class Explosiv : MonoBehaviour
             }
         }
 
-        Debug.Log("explosion");
-
         onExplosion.Invoke();
     }
 

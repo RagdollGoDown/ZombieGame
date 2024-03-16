@@ -15,7 +15,6 @@ namespace Weapons
         private static readonly string POOL_HEADER_OBJECT_NAME = "Pools";
 
         private static readonly float BULLETHOLE_LIFETIME = 10;
-        private static readonly float HITMARKER_LIFETIME = .1f;
 
         protected static readonly int SHOOTABLE_LAYERMASK_VALUE = 65;
 

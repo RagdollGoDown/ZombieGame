@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 namespace Utility.Tweening
@@ -13,6 +14,15 @@ namespace Utility.Tweening
             get
             {
                 return duration;
+            }
+        }
+
+        [SerializeField] private int stepsMilliseconds;
+        protected int StepsMilliseconds
+        {
+            get
+            {
+                return stepsMilliseconds;
             }
         }
 
@@ -44,7 +54,34 @@ namespace Utility.Tweening
             }
         }
 
-        abstract public void Tween();
+
+        [SerializeField] private UnityEvent onStarted;
+        protected UnityEvent OnStarted
+        {
+            get
+            {
+                return onStarted;
+            }
+        }
+
+        [SerializeField] private UnityEvent onComplete;
+        protected UnityEvent OnComplete
+        {
+            get
+            {
+                return onComplete;
+            }
+        }
+
+        public async void Tween(){
+            onStarted.Invoke();
+            
+            await TweenUtils.Tween(duration, OnTween, stepsMilliseconds: stepsMilliseconds, unscaledTime: unscaledTime, curve: curve);
+
+            onComplete.Invoke();
+        }
+
+        abstract protected void OnTween(float value);
     }
 }
 

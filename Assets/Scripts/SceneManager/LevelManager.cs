@@ -104,7 +104,7 @@ public class LevelManager : MonoBehaviour
         player.SetMission(waitMission);
     }
 
-    public async void EndLevel()
+    public void EndLevel()
     { 
         Debug.Log("end Level");
 

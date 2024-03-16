@@ -66,8 +66,6 @@ public class ZombieSpawnerManager : MonoBehaviour
     {
         if (worldSpawnersAvailableSectors.Count > 0)
         {
-            Debug.Log("Started Spawning " + name);
-
             spawnZombiesAsyncCancelTokenSource = new();
             spawnZombiesAsyncCancelToken = spawnZombiesAsyncCancelTokenSource.Token;
             currentEscalationCurveTimeSec = 0;

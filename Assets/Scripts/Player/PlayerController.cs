@@ -48,6 +48,7 @@ namespace Player
         private DamageableObject _damageablePlayer;
 
         public UnityEvent OnRestartDemanded = new UnityEvent();
+        public UnityEvent OnAwake = new UnityEvent();
         private int moneyOnPlayer;
 
         [Header("Camera mouvement")]
@@ -274,22 +275,22 @@ namespace Player
             }
         }
 
-        private void EnterSlowMo()
+        private async void EnterSlowMo()
         {
             if (slowMoCharge <= 0 || isInSlowMo) return;
 
             isInSlowMo = true;
 
-            TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(1, TIMESCALE_IN_SLOWMO, t), true);
+            await TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(1, TIMESCALE_IN_SLOWMO, t), unscaledTime: true);
         }
 
-        private void ExitSlowMo()
+        private async void ExitSlowMo()
         {
             if (!isInSlowMo) return;
 
             isInSlowMo = false;
             
-            TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(TIMESCALE_IN_SLOWMO, 1, t), true);
+            await TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(TIMESCALE_IN_SLOWMO, 1, t),unscaledTime: true);
         }
 
         //--------------------------------------------------unity events
@@ -328,6 +329,8 @@ namespace Player
 
             _kickAnimator = transform.Find("CameraAndGunHolder/PlayerCamera/GunCamera/KickAnimations").GetComponent<Animator>();
             _kickAnimator.SetFloat(KICK_SPEED_PARAM_ID, kickAnimationLength / kickDuration);
+            Debug.Log("awake");
+            OnAwake.Invoke();
         }
 
         private void Update()
@@ -435,9 +438,7 @@ namespace Player
                 if (_weaponsHeld.Count < maxWeaponsHeld)
                 {
                     _weaponsHeld.Add(newWeapon);
-                    Debug.Log(_currentWeaponIndex + " a");
                     _currentWeaponIndex = _weaponsHeld.Count - 1;
-                    Debug.Log(_currentWeaponIndex + " b");
 
                 }
                 else

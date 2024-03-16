@@ -39,6 +39,8 @@ public class UnendingLevelManager : MonoBehaviour
 
     public async void StartGame()
     { 
+        Time.timeScale = 1;
+        
         Debug.Log("Started Level");
         villageGenerator.Generate(necessaryBuildingsToPlace: necessarybuildings);
         player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation).GetComponent<PlayerController>();

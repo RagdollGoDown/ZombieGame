@@ -5,26 +5,15 @@ using UnityEngine;
 namespace Utility.Tweening
 {
     [RequireComponent(typeof(CanvasRenderer))]
-    public class CanvasRendererAlphaTween : TweenComponentAsync<CanvasRenderer>
+    public class CanvasRendererAlphaTween : TweenComponent<CanvasRenderer>
     {
         [SerializeField] private float initialAlpha;
         [SerializeField] private float finalAlpha;
 
-        public override async void Tween()
+        protected override void OnTween(float value)
         {
-            //in millisecs
-            float time = 0;
-
-            while (time < durationInMilliseconds)
-            {
-                await Task.Delay(stepMilliseconds);
-
-                Component.SetColor(new(Component.GetColor().r, Component.GetColor().g, Component.GetColor().b,
-                        (initialAlpha - finalAlpha) * Curve.Evaluate(time / durationInMilliseconds) + initialAlpha));
-                
-
-                time += stepMilliseconds;
-            }
+            Component.SetColor(new(Component.GetColor().r, Component.GetColor().g, Component.GetColor().b,
+                        (finalAlpha - initialAlpha) * Curve.Evaluate(value) + initialAlpha));
         }
     }
 }

@@ -41,8 +41,6 @@ namespace Objectives
                 return;
             }
 
-            Debug.Log("Mission Started");
-
             objectives[currentObjectiveIndex].Begin();
         }
 
@@ -62,8 +60,6 @@ namespace Objectives
 
         private void CompleteMission()
         {
-            Debug.Log("Mission Completed");
-
             ReadyMission();
 
             onCompleted.Invoke();
