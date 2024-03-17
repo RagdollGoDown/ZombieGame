@@ -42,6 +42,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Shop\Shop.cs" />
      <Compile Include="Assets\Scripts\SceneManager\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\Settings\SettingsData.cs" />
+     <Compile Include="Assets\Scripts\Settings\SettingsManager.cs" />
      <Compile Include="Assets\Scripts\SceneManager\MainMenuManager.cs" />
      <Compile Include="Assets\Scripts\SceneManager\UnendingLevelManager.cs" />
      <Compile Include="Assets\Scripts\SceneManager\GameSaver.cs" />
