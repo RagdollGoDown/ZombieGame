@@ -27,6 +27,8 @@ namespace Weapons
         [SerializeField] protected int penetration = 1;
         [SerializeField] protected float range = 100;
 
+        [SerializeField] private UnityEvent OnShoot;
+
         [Header("Spread Stats")]
         //the spread origin is the player camera that we keep to get it's forward vector
         protected Transform raycastOrigin;
@@ -132,7 +134,7 @@ namespace Weapons
         }
 
         //---------------------------------------------shooting
-        protected override void UseWeapon()
+        protected override sealed void UseWeapon()
         {
             //add spread when shooting
             _spreadPositionInLerp = Mathf.Clamp01(_spreadPositionInLerp + _spreadIncreasePerShot);
@@ -145,6 +147,8 @@ namespace Weapons
             _ammoRemainingInMag--;
             _remainingShots--;
             UpdateAmmoText();
+
+            OnShoot.Invoke();
         }
 
         protected virtual void TakeShot(DamageableObject DO = null)

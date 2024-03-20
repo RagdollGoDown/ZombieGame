@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using Utility;
+using System.Threading;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine.InputSystem;
@@ -105,6 +106,9 @@ namespace Player
         [SerializeField] private float slowMoRegenSpeed = 0.2f;
         private bool isInSlowMo;
         private float slowMoCharge;
+
+        private CancellationTokenSource slowMoTokenSource;
+        private CancellationToken slowMoToken;
 
         //---------------------------interaction
         private Interaction _currentInteract;
@@ -281,7 +285,8 @@ namespace Player
 
             isInSlowMo = true;
 
-            await TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(1, TIMESCALE_IN_SLOWMO, t), unscaledTime: true);
+            await TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, slowMoToken,
+                (float t) => Time.timeScale = Mathf.Lerp(1, TIMESCALE_IN_SLOWMO, t), unscaledTime: true);
         }
 
         private async void ExitSlowMo()
@@ -290,7 +295,8 @@ namespace Player
 
             isInSlowMo = false;
             
-            await TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, (float t) => Time.timeScale = Mathf.Lerp(TIMESCALE_IN_SLOWMO, 1, t),unscaledTime: true);
+            await TweenUtils.Tween(TRANSITION_TO_SLOWMO_TIME, slowMoToken,
+                (float t) => Time.timeScale = Mathf.Lerp(TIMESCALE_IN_SLOWMO, 1, t),unscaledTime: true);
         }
 
         //--------------------------------------------------unity events
@@ -317,6 +323,9 @@ namespace Player
             _movementDirection = new Vector2();
             _currentMovementSpeed = movementSpeed;
 
+            slowMoTokenSource = new();
+            slowMoToken = slowMoTokenSource.Token;
+
             playerUI = _cameraTransform.Find("UI").GetComponent<PlayerUI>();
 
             _damageablePlayer = GetComponent<DamageableObject>();
@@ -329,7 +338,7 @@ namespace Player
 
             _kickAnimator = transform.Find("CameraAndGunHolder/PlayerCamera/GunCamera/KickAnimations").GetComponent<Animator>();
             _kickAnimator.SetFloat(KICK_SPEED_PARAM_ID, kickAnimationLength / kickDuration);
-            Debug.Log("awake");
+
             OnAwake.Invoke();
         }
 
@@ -349,6 +358,11 @@ namespace Player
         private void OnDisable()
         {
             PLAYERS.Remove(this);
+        }
+
+        private void OnDestroy()
+        {
+            slowMoTokenSource.Cancel();
         }
 
         //------------------------------------------------------------------weapons

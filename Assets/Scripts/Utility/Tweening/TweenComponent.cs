@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,6 +9,9 @@ namespace Utility.Tweening
 {
     public abstract class TweenComponent<T> : MonoBehaviour where T : Component
     {
+        private CancellationTokenSource tokenSource = new();
+        private CancellationToken token;
+
         [SerializeField] private float duration;
         protected float Duration
         {
@@ -74,14 +78,22 @@ namespace Utility.Tweening
         }
 
         public async void Tween(){
+
+            token = token == null ? tokenSource.Token : token;
+
             onStarted.Invoke();
             
-            await TweenUtils.Tween(duration, OnTween, stepsMilliseconds: stepsMilliseconds, unscaledTime: unscaledTime, curve: curve);
+            await TweenUtils.Tween(duration, token, OnTween, stepsMilliseconds: stepsMilliseconds, unscaledTime: unscaledTime, curve: curve);
 
             onComplete.Invoke();
         }
 
         abstract protected void OnTween(float value);
+
+        private void OnDestroy()
+        {
+            tokenSource.Cancel();
+        }
     }
 }
 
