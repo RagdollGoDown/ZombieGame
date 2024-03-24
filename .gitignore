@@ -8,3 +8,4 @@
 .vs
 [Bb]uilds/
 .csproj
+*.csproj
