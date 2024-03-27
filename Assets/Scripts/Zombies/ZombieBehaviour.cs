@@ -97,8 +97,6 @@ public class ZombieBehaviour : MonoBehaviour
         runningSpeed = UnityEngine.Random.Range(runningSpeedWhenClosest, runningSpeedWhenFurthest);
         _navMeshAgent.stoppingDistance = distanceBeforeAttack;
 
-        float angle = UnityEngine.Random.Range(0, 2 * MathF.PI);
-
         DamagingZone hand_l = transform.Find("Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_L/Shoulder_L/Elbow_L/Hand_L").GetComponent<DamagingZone>();
         DamagingZone hand_r = transform.Find("Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Clavicle_R/Shoulder_R/Elbow_R/Hand_R").GetComponent<DamagingZone>();
         DamagingZone head = transform.Find("Armature/Root/Hips/Spine_01/Spine_02/Spine_03/Neck/Head").GetComponent<DamagingZone>();
@@ -182,7 +180,7 @@ public class ZombieBehaviour : MonoBehaviour
 
                 foreach (SkinnedMeshRenderer SR in skinRenderers)
                 {
-                    SR.SetMaterials(selectedMaterials);
+                    SR.materials = selectedMaterials.ToArray();
                 }
             }
         }

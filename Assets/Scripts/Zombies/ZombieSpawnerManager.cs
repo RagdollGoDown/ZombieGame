@@ -12,6 +12,7 @@ public class ZombieSpawnerManager : MonoBehaviour
     private static Vector3 SPAWNER_SECTOR_WIDTH = new(20, 100, 20);
 
     private static SectorCollection<ZombieSpawner> worldSpawnersAvailableSectors;
+    private static List<ZombieSpawner> worldSpawnersAvailableList;
 
     [SerializeField] private ObjectPool zombiePool;
     [SerializeField] private int minQuantity = 10;
@@ -107,7 +108,7 @@ public class ZombieSpawnerManager : MonoBehaviour
         int radius = radiusOfSectorsTaken;
         Vector3 spawnedPosition = target.transform.position;
 
-        if (velocityBias != 0){
+        /*if (velocityBias != 0){
             spawnedPosition += target.GetPossibleCharacterController().velocity * velocityBias;
         }
 
@@ -118,13 +119,13 @@ public class ZombieSpawnerManager : MonoBehaviour
                 Debug.Log("No spawners found in the sector");
                 return;
             }
-        }
+        }*/
         
 
         while (zombiesToSpawn > 0)
         {
             tempAmount = Random.Range(1, Mathf.Min(maxZombiesGivenPerSpawner, zombiesToSpawn + 1));
-            tempAmount = spawnersInSector[Random.Range(0, spawnersInSector.Count - 1)].AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
+            tempAmount = worldSpawnersAvailableList[Random.Range(0, worldSpawnersAvailableList.Count - 1)].AddZombiesToSpawn(tempAmount, target, zombiePool, zombieReaper);
             zombiesToSpawn -= tempAmount;
             livingZombies += tempAmount;
 
@@ -183,7 +184,9 @@ public class ZombieSpawnerManager : MonoBehaviour
     public static void AddSpawner(ZombieSpawner newZombieSpawner)
     {
         worldSpawnersAvailableSectors ??= new(SPAWNER_SECTOR_WIDTH);
+        worldSpawnersAvailableList ??= new();
 
+        worldSpawnersAvailableList.Add(newZombieSpawner);
         worldSpawnersAvailableSectors.Add(newZombieSpawner);
     }
 
@@ -194,6 +197,7 @@ public class ZombieSpawnerManager : MonoBehaviour
     public static void RemoveSpawner(ZombieSpawner newZombieSpawner)
     {
         worldSpawnersAvailableSectors?.Remove(newZombieSpawner);
+        worldSpawnersAvailableList?.Remove(newZombieSpawner);
     }
 
     /// <summary>
