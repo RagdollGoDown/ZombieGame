@@ -8,11 +8,36 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1130895689308952090, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2259587922156281894, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2493060370100372605, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3438387063502130748, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3503136214719245778, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3860554693412282760, guid: 396211b680d38b3429748aebf2c704a8,
         type: 3}
       propertyPath: zombieEyesMaterial
       value: 
-      objectReference: {fileID: 2100000, guid: 5545c89bb0a75004bbe217d139a97e89, type: 2}
+      objectReference: {fileID: 2100000, guid: e2dc46b27dfeed44bb715947fb0b1796, type: 2}
     - target: {fileID: 3860554693412282760, guid: 396211b680d38b3429748aebf2c704a8,
         type: 3}
       propertyPath: runningSpeedWhenClosest
@@ -82,6 +107,61 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SlowZombie
+      objectReference: {fileID: 0}
+    - target: {fileID: 4109872604085241434, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4976858699061081299, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034630299083858303, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5759685384957571538, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6868870255723411855, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7251490182498906320, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7781224267606955343, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8575868851892373881, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8628029959163254437, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8645257258568600629, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8961047168969061649, guid: 396211b680d38b3429748aebf2c704a8,
+        type: 3}
+      propertyPath: destroyGameObjectOnDestruction
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1202,10 +1202,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6663630933222873833, guid: 06a9858b4309bcf4cbe7ef09ae436c1d,
+        type: 3}
+      propertyPath: shrinkOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6663630933222873833, guid: 06a9858b4309bcf4cbe7ef09ae436c1d,
+        type: 3}
+      propertyPath: disableCollidersOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9211759572341068441, guid: 06a9858b4309bcf4cbe7ef09ae436c1d,
         type: 3}
       propertyPath: m_Intensity
-      value: 10
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1407,6 +1417,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 441798, guid: 06a9858b4309bcf4cbe7ef09ae436c1d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6663630933222873833, guid: 06a9858b4309bcf4cbe7ef09ae436c1d,
+        type: 3}
+      propertyPath: shrinkOnDestruction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6663630933222873833, guid: 06a9858b4309bcf4cbe7ef09ae436c1d,
+        type: 3}
+      propertyPath: disableCollidersOnDestruction
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

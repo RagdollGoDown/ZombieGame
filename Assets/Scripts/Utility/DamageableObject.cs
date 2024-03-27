@@ -42,8 +42,8 @@ namespace Utility
         [SerializeField] private float extraHealthBeforeDestruction = 20;
         private UnityEventRecieveDamage getHit;
         public UnityEvent<DamageableObject> OnDamageTaken;
-        [SerializeField] private string onDamageTakenEffectPoolName;
-        private ObjectPool onDamageTakenEffectPool;
+        [SerializeField] private List<string> onDamageTakenParticlePoolNames;
+        private ObjectPool[] onDamageTakenParticlePool;
 
         private Collider[] _colliders;
 
@@ -52,17 +52,25 @@ namespace Utility
         private Rigidbody possibleRigidbody;
         private CharacterController possibleCharacterController;
 
-        //--------------------------to do on destruction
+        [Header("Death")]
+        [SerializeField] private List<string> deathParticlePoolNames;
+        [SerializeField] private List<string> deathParticlePoolNamesWhenChild;
+        public UnityEvent<DamageableObject> deathCalls;
+        private ObjectPool[] deathParticlePool;
+        private ObjectPool[] deathParticlePoolWhenChild;
+
+        [Header("Destruction")]
         [SerializeField] private List<string> destructionParticlePoolNames;
         [SerializeField] private List<string> destructionParticlePoolNamesWhenChild;
+        public UnityEvent<DamageableObject> destructionCalls;
         private ObjectPool[] destructionParticlePool;
         private ObjectPool[] destructionParticlePoolWhenChild;
-        public UnityEvent<DamageableObject> deathCalls;
 
         [SerializeField] private bool shrinkOnDestruction = true;
         [SerializeField] private bool disableCollidersOnDestruction = true;
 
         [SerializeField] private bool killChildrenOnDeath = true;
+        [SerializeField] private bool destroyGameObjectOnDestruction = false;
         [SerializeField] private bool destroyChildrenOnDestruction = true;
         private List<DamageableObject> _damageableChildren;
 
@@ -79,7 +87,23 @@ namespace Utility
 
             initialScale = transform.localScale;
 
-            if (onDamageTakenEffectPoolName != "") onDamageTakenEffectPool = ObjectPool.GetPool(onDamageTakenEffectPoolName);
+            onDamageTakenParticlePool =
+                onDamageTakenParticlePoolNames.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
+            deathParticlePool =
+                deathParticlePoolNames.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
+            deathParticlePoolWhenChild =
+                deathParticlePoolNamesWhenChild.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
 
             destructionParticlePool =
                 destructionParticlePoolNames.Select(dpp =>
@@ -132,7 +156,7 @@ namespace Utility
 
             currentHealth -= damage.GetDamageDone();
 
-            if (onDamageTakenEffectPoolName != "" && damage.GetDamageNormal() != Vector3.zero){
+            if (onDamageTakenParticlePoolNames.Count != 0 && damage.GetDamageNormal() != Vector3.zero){
                 HandleOnDamageEffect(damage);
             }
 
@@ -154,11 +178,15 @@ namespace Utility
 
         private void HandleOnDamageEffect(Damage damage)
         {
-            Transform effect = onDamageTakenEffectPool.Pull(false).transform;
-            effect.position = damage.GetDamagePosition();
-            effect.rotation = Quaternion.FromToRotation(Vector3.forward, damage.GetDamageNormal());
-            effect.gameObject.SetActive(true);
-            StartCoroutine(nameof(DisableParticle), effect.gameObject);
+            Transform effect;
+
+            foreach(ObjectPool op in onDamageTakenParticlePool)
+            {
+                effect = op.Pull(false).transform;
+                effect.position = damage.GetDamagePosition();
+                effect.rotation = Quaternion.FromToRotation(Vector3.forward, damage.GetDamageNormal());
+                effect.gameObject.SetActive(true);
+            }
         }
 
 
@@ -213,6 +241,15 @@ namespace Utility
             //if the object is dead the there is no need to kill it
             if (isDead) { return; }
 
+            if (asChild)
+            {
+                PullParticles(deathParticlePoolWhenChild, damage);
+            }
+            else
+            {
+                PullParticles(deathParticlePool, damage);
+            }
+
             if (killChildrenOnDeath) { KillChildren(damage); }
 
             deathCalls.Invoke(this);
@@ -236,11 +273,11 @@ namespace Utility
 
             if (asChild)
             {
-                PullDestructionParticles(destructionParticlePoolWhenChild, damage);
+                PullParticles(destructionParticlePoolWhenChild, damage);
             }
             else
             {
-                PullDestructionParticles(destructionParticlePool, damage);
+                PullParticles(destructionParticlePool, damage);
             }
 
             if (destroyChildrenOnDestruction) DestroyChildren(damage);
@@ -251,25 +288,28 @@ namespace Utility
                 transform.localScale = Vector3.zero;
             }
 
-            if (disableCollidersOnDestruction)
+            if (disableCollidersOnDestruction && _colliders != null)
             {
-                _colliders.Select(c => c.enabled = false);
+                _colliders.Select(c => {
+                    if (c == null) Debug.Log("null");
+                    return c.enabled = false;
+                });
             }
 
+            destructionCalls.Invoke(this);
             isDestroyed = true;
+
+            if (destroyGameObjectOnDestruction) Destroy(gameObject);
         }
 
-        private IEnumerator DisableParticle(GameObject particle)
+        private void PullParticles(ObjectPool[] particlesPool, Damage damage)
         {
-            yield return new WaitForSeconds(TIME_BEFORE_PARTICLE_DESTRUCTION);
+            if (particlesPool == null) return;
 
-            particle.SetActive(false);
-        }
-
-        private void PullDestructionParticles(ObjectPool[] particlesPool, Damage damage)
-        {
             foreach (ObjectPool op in particlesPool)
             {
+                Debug.Log("as" + op.name);
+
                 Transform dpg = op.Pull(false).transform;
                 dpg.position = transform.position;
                 dpg.Rotate(transform.rotation.eulerAngles);
@@ -281,8 +321,6 @@ namespace Utility
                 }
 
                 dpg.gameObject.SetActive(true);
-
-                StartCoroutine(nameof(DisableParticle), dpg.gameObject);
             }
         }
     }

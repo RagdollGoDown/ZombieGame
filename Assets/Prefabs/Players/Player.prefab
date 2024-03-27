@@ -3165,7 +3165,7 @@ MonoBehaviour:
   m_CameraType: 0
   m_Cameras:
   - {fileID: 1302628395920964604}
-  m_RendererIndex: 1
+  m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -3498,7 +3498,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  onDamageTakenEffectPoolName: 
+  onDamageTakenParticlePoolNames: []
   destructionParticlePoolNames: []
   destructionParticlePoolNamesWhenChild: []
   deathCalls:

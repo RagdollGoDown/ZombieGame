@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,6 +15,17 @@ public class Explosiv : MonoBehaviour
 
     [SerializeField] private UnityEvent onTimerStart;
     [SerializeField] private UnityEvent onExplosion;
+    [SerializeField] private List<string> onExplosionParticlePoolNames;
+    private ObjectPool[] onExplosionParticlePool;
+
+    private void Awake()
+    {
+        onExplosionParticlePool =
+                onExplosionParticlePoolNames.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+    }
 
     public void Explode()
     {
@@ -23,6 +35,8 @@ public class Explosiv : MonoBehaviour
 
         Collider[] cols = Physics.OverlapSphere(position, radius);
 
+        HandleExplosionParticles();
+        
         foreach (Collider col in cols)
         {
             if (col.TryGetComponent(out DamageableObject d) && col.gameObject != gameObject)
@@ -34,6 +48,20 @@ public class Explosiv : MonoBehaviour
         }
 
         onExplosion.Invoke();
+    }
+
+    private void HandleExplosionParticles()
+    {
+        if (onExplosionParticlePool == null) return;
+
+        foreach (ObjectPool op in onExplosionParticlePool)
+        {
+            Debug.Log("s");
+            Transform particle = op.Pull(false).transform;
+            particle.position = transform.position;
+            particle.Rotate(transform.rotation.eulerAngles);
+            particle.gameObject.SetActive(true);
+        }
     }
 
     public void StartExplosionTimer(float time)
