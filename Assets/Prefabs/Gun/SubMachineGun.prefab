@@ -2034,11 +2034,11 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 1f5c935a265c5814f80096224585b380,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 291f1557d6421d84eb458429337e0804, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 890027738542b1f4095ed897804c6ce2, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -2169,7 +2169,7 @@ Transform:
   - {fileID: 7826205756407865796}
   - {fileID: 470524426799718863}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6519188541319711692
 Animator:
@@ -2214,6 +2214,9 @@ MonoBehaviour:
   pelletsPerShot: 1
   penetration: 1
   range: 100
+  OnShoot:
+    m_PersistentCalls:
+      m_Calls: []
   _maxSpread: 0.05
   _restingSpread: 0.01
   _spreadDecreaseSpeed: 2
