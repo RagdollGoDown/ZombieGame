@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 50
-  extraHealthBeforeDestruction: 100
+  extraHealthBeforeDestruction: 999
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls: []

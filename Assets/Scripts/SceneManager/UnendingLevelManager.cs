@@ -91,7 +91,6 @@ public class UnendingLevelManager : MonoBehaviour
 
     private void OnMissionCompleted()
     {
-        player.AddMoney(selectedMission.RewardMoney);
         //here is where we give the choice
         Debug.Log("wait");
         waitMission.StartMission();

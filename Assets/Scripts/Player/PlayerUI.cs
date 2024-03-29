@@ -184,6 +184,8 @@ namespace Player
 
         public void UpdateUIScale()
         {
+            if (canvasScaler == null || playerCamera == null) return;
+
             uiScale = canvasScaler.referencePixelsPerUnit * canvasScaler.referenceResolution.x / playerCamera.fieldOfView;
         } 
 

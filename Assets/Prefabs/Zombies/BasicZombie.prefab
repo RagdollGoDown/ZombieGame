@@ -1718,13 +1718,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibFootR
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -1740,6 +1735,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibFootR
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -2146,13 +2148,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibFootL
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -2168,6 +2165,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibFootL
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -3259,13 +3263,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibUpperArmR
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -3281,6 +3280,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibUpperArmR
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -3449,13 +3455,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibUpperArmL
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -3471,6 +3472,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibUpperArmL
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -3927,13 +3935,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibUpperLegL
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -3949,6 +3952,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibUpperLegL
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -4277,13 +4287,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibHips
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -4299,6 +4304,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibHips
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -5627,7 +5639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkingSpeed: 2
   runningSpeedWhenClosest: 13
-  runningSpeedWhenFurthest: 10
+  runningSpeedWhenFurthest: 7
   distanceForMaxSpeed: 10
   crawlingSpeed: 3
   OnDeath:
@@ -6085,13 +6097,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibHandR
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -6107,6 +6114,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibHandR
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 0
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -6402,11 +6416,8 @@ MonoBehaviour:
       m_Calls: []
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames: []
-  destructionParticlePoolNamesWhenChild: []
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -6422,6 +6433,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 0
+  destructionParticlePoolNames: []
+  destructionParticlePoolNamesWhenChild: []
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 0
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -7558,12 +7574,14 @@ MonoBehaviour:
       m_Calls: []
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
+  deathCalls:
+    m_PersistentCalls:
+      m_Calls: []
   destructionParticlePoolNames: []
   destructionParticlePoolNamesWhenChild: []
   destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
-  deathCalls:
     m_PersistentCalls:
       m_Calls: []
   shrinkOnDestruction: 0
@@ -8118,11 +8136,8 @@ MonoBehaviour:
       m_Calls: []
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames: []
-  destructionParticlePoolNamesWhenChild: []
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -8138,6 +8153,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 0
+  destructionParticlePoolNames: []
+  destructionParticlePoolNamesWhenChild: []
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 0
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -9248,12 +9268,14 @@ MonoBehaviour:
       m_Calls: []
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
+  deathCalls:
+    m_PersistentCalls:
+      m_Calls: []
   destructionParticlePoolNames: []
   destructionParticlePoolNamesWhenChild: []
   destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
-  deathCalls:
     m_PersistentCalls:
       m_Calls: []
   shrinkOnDestruction: 1
@@ -9568,13 +9590,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibHandL
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -9590,6 +9607,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibHandL
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 0
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -10029,12 +10053,14 @@ MonoBehaviour:
       m_Calls: []
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
+  deathCalls:
+    m_PersistentCalls:
+      m_Calls: []
   destructionParticlePoolNames: []
   destructionParticlePoolNamesWhenChild: []
   destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
-  deathCalls:
     m_PersistentCalls:
       m_Calls: []
   shrinkOnDestruction: 1
@@ -11766,13 +11792,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibHead
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -11788,6 +11809,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibHead
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -12355,13 +12383,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibUpperLegR
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -12377,6 +12400,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibUpperLegR
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1
@@ -12845,13 +12875,8 @@ MonoBehaviour:
         m_CallState: 2
   onDamageTakenParticlePoolNames:
   - BloodSplatterPool
-  destructionParticlePoolNames:
-  - ZombieSimpleGib
-  destructionParticlePoolNamesWhenChild:
-  - ZombieGibChest
-  destructionCalls:
-    m_PersistentCalls:
-      m_Calls: []
+  deathParticlePoolNames: []
+  deathParticlePoolNamesWhenChild: []
   deathCalls:
     m_PersistentCalls:
       m_Calls:
@@ -12867,6 +12892,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  destructionParticlePoolNames:
+  - ZombieSimpleGib
+  destructionParticlePoolNamesWhenChild:
+  - ZombieGibChest
+  destructionCalls:
+    m_PersistentCalls:
+      m_Calls: []
   shrinkOnDestruction: 1
   disableCollidersOnDestruction: 1
   killChildrenOnDeath: 1

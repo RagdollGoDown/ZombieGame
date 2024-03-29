@@ -50,18 +50,20 @@ namespace Player
 
         public UnityEvent OnRestartDemanded = new UnityEvent();
         public UnityEvent OnAwake = new UnityEvent();
-        private int moneyOnPlayer;
 
         [Header("Camera mouvement")]
-        private Transform _cameraTransform;
-        private Transform _cameraHolderTransform;
         [SerializeField] private float maximumHeadSway = 0.07f;
         [SerializeField] private float headSwaySpeed = 5;
         [SerializeField] private float maximumHeadBob = 0.1f;
         [SerializeField] private float headBobSpeed = 1;
+        private Transform _cameraTransform;
+        private Transform _cameraHolderTransform;
         private float _headBobTime;
         private Vector3 _headSwayMotion;
         private Vector3 _tempHeadBobDirection;
+
+        [SerializeField] private float minFOV;
+        [SerializeField] private float maxFOV;
 
         [Header("Lean")]
         [SerializeField] private float leanAcceleration;
@@ -81,7 +83,9 @@ namespace Player
         
         private Vector2 _mouseDelta;
         private Vector2 _headRotation;
-        [SerializeField] private float mouseSensitivity;
+        [SerializeField] private float minMouseSensitivity;
+        [SerializeField] private float maxMouseSensitivity;
+        private float mouseSensitivity;
 
         //----------------------------ui
         private PlayerUI playerUI;
@@ -472,6 +476,7 @@ namespace Player
 
         public bool HasWeaponInEquipment(string weaponName)
         {
+            Debug.Log("Checking for weapon " + weaponName + " : " + (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour sWeapon) && _weaponsHeld.Contains(sWeapon)));
             return _onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon) && _weaponsHeld.Contains(newWeapon);
         }
 
@@ -619,80 +624,21 @@ namespace Player
             return PLAYERS.AsReadOnly();
         }
 
-        public PlayerSaveData GetSaveData()
-        {
-            PlayerSaveData data = new();
-
-            data.money = GetMoney();
-
-            data.Weapons = new List<string>();
-
-            foreach (WeaponBehaviour wpb in _weaponsHeld)
-            {
-                data.Weapons.Add(wpb.name);
-            }
-
-            data.currentWeaponIndex = _currentWeaponIndex;
-
-            return data;
-        }
-
-        public int GetMoney() { return moneyOnPlayer; }
-
         //--------------------------------------------------------setters
         public void SetMission(Mission mission)
         {
             playerUI.SetMission(mission);
         }
 
-        public void SetMoney(int money)
+        public void SetSensitivity(float sensitivity)
         {
-            moneyOnPlayer = money;
+            mouseSensitivity = sensitivity * (maxMouseSensitivity - minMouseSensitivity) + minMouseSensitivity;
         }
 
-        public void AddMoney(int money)
+        public void SetFOV(float fov)
         {
-            moneyOnPlayer += money;
+            _cameraTransform.GetComponent<Camera>().fieldOfView = fov * (maxFOV - minFOV) + minFOV;
+            playerUI.UpdateUIScale();
         }
-
-        public void SetPlayerData(PlayerSaveData data)
-        {
-            moneyOnPlayer = data.money;
-
-            UnequipCurrentWeapon();
-
-            _weaponsHeld.Clear();
-
-            foreach (string wpnName in data.Weapons)
-            {
-                if (_onPlayerWeaponsToName.TryGetValue(wpnName, out WeaponBehaviour newWeapon)){
-                    _weaponsHeld.Add(newWeapon);
-                }
-                else{
-                    Debug.LogError("Weapon not found: " + wpnName);
-                }
-            }
-
-            if (data.currentWeaponIndex < _weaponsHeld.Count)
-            {
-                _currentWeaponIndex = data.currentWeaponIndex;
-            }
-            else
-            {
-                _currentWeaponIndex = 0;
-            }
-            
-            EquipCurrentWeapon();
-        }
-    }    
-
-    [Serializable]
-    public struct PlayerSaveData
-    {
-        public int money;
-
-        public List<string> Weapons;
-
-        public int currentWeaponIndex;
     }
 }
