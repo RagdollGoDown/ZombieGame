@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\Utility\Tweening\LightIntensityTween.cs" />
      <Compile Include="Assets\Scripts\Utility\GPUInstancing\GPUInstanceManager.cs" />
      <Compile Include="Assets\Scripts\Utility\Observable\ReadOnly\ReadOnlyObservableFloat.cs" />
+     <Compile Include="Assets\Scripts\Utility\Audio\RandomAudioSource.cs" />
      <Compile Include="Assets\Scripts\Utility\Conditions\MultipleConditions.cs" />
      <Compile Include="Assets\Scripts\Utility\Saving\IDataService.cs" />
      <Compile Include="Assets\Scripts\Utility\Interactions\Interactable.cs" />

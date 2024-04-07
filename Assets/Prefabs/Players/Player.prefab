@@ -1714,6 +1714,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5195895209021325843}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1977325714760013627
 GameObject:
   m_ObjectHideFlags: 0
@@ -4372,7 +4384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  extraHealthBeforeDestruction: 20
+  extraHealthBeforeDestruction: 9999
   OnDamageTaken:
     m_PersistentCalls:
       m_Calls:
@@ -4399,8 +4411,8 @@ MonoBehaviour:
   destructionCalls:
     m_PersistentCalls:
       m_Calls: []
-  shrinkOnDestruction: 1
-  disableCollidersOnDestruction: 1
+  shrinkOnDestruction: 0
+  disableCollidersOnDestruction: 0
   killChildrenOnDeath: 1
   destroyGameObjectOnDestruction: 0
   destroyChildrenOnDestruction: 1
@@ -4447,9 +4459,9 @@ MonoBehaviour:
   movementSpeedWhenAiming: 5
   minMouseSensitivity: 10
   maxMouseSensitivity: 100
-  maxWeaponsHeld: 2
+  maxWeaponsHeld: 1
   _weaponsHeld:
-  - {fileID: 1051864591873449496}
+  - {fileID: 9040535435785125949}
   _weaponsNamesWhoCanBeEquiped: []
   timeBetweenWeaponSwitches: 0.5
   slowMoMaxCharge: 1
@@ -8276,6 +8288,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1956161118473648932}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9040535435785125949 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7373449462057843481, guid: 851d85646f2cd9d46aaa8441c6cda36d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1956161118473648932}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66313582b6c6c754cbe1274ad4fc7276, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &5780477664061967604
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8515,18 +8539,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ce861bcb386bb24ebb1380c976272a9, type: 3}
---- !u!114 &1051864591873449496 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6519188541319711695, guid: 0ce861bcb386bb24ebb1380c976272a9,
-    type: 3}
-  m_PrefabInstance: {fileID: 6115947898909038039}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0be513dfe217354db0e04289481b9ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1051864591873449498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6519188541319711693, guid: 0ce861bcb386bb24ebb1380c976272a9,

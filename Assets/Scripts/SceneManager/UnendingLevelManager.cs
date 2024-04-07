@@ -46,6 +46,8 @@ public class UnendingLevelManager : MonoBehaviour
         player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation).GetComponent<PlayerController>();
         player.OnRestartDemanded.AddListener(RestartLevel);
 
+        navMesh.BuildNavMesh();
+
         foreach (var spawnerManager in zombieSpawnerManagers)
         {
             spawnerManager.SetTarget(player.GetComponent<DamageableObject>());
@@ -57,8 +59,6 @@ public class UnendingLevelManager : MonoBehaviour
         {
             mission.onCompleted.AddListener(OnMissionCompleted);
         }
-
-        navMesh.BuildNavMesh();
 
         await Task.Delay(500);
         

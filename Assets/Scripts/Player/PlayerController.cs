@@ -449,7 +449,7 @@ namespace Player
 
         public bool PickUpWeapon(string weaponName)
         {
-            if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon))
+            if (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon) && !_weaponsHeld.Contains(newWeapon))
             {
                 UnequipCurrentWeapon();
 
@@ -464,6 +464,8 @@ namespace Player
                     _weaponsHeld[_currentWeaponIndex] = newWeapon;
                 }
 
+                newWeapon.RefillWeaponAmmo();
+
                 EquipCurrentWeapon();
 
                 return true;
@@ -472,12 +474,6 @@ namespace Player
             {
                 return false;
             }
-        }
-
-        public bool HasWeaponInEquipment(string weaponName)
-        {
-            Debug.Log("Checking for weapon " + weaponName + " : " + (_onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour sWeapon) && _weaponsHeld.Contains(sWeapon)));
-            return _onPlayerWeaponsToName.TryGetValue(weaponName, out WeaponBehaviour newWeapon) && _weaponsHeld.Contains(newWeapon);
         }
 
         public void OpenMenu(PlayerUI.Menu menu)

@@ -27,9 +27,9 @@ public class PlayerInteractions : MonoBehaviour
 
         do {
             weaponName = player._weaponsNamesWhoCanBeEquiped[Random.Range(0, player._weaponsNamesWhoCanBeEquiped.Count)];
-        } while (player._weaponsNamesWhoCanBeEquiped.Contains(weaponName) && tries-- > 0);
+            Debug.Log(weaponName + " : " + tries);
+        } while (!player.PickUpWeapon(weaponName) && tries-- > 0);
 
-        player.PickUpWeapon(weaponName);
         Destroy(gameObject);
     }
 }
