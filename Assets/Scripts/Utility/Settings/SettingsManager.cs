@@ -24,12 +24,15 @@ namespace Utility.Settings
             try
             {
                 settingsData = jsonDataService.LoadData<SettingsData>("/settings.json");
+                
+                if (settingsData == null)
+                {
+                    ResetSettings();
+                }
             }
             catch (FileNotFoundException)
             {
-                Debug.LogWarning("Settings file not found, creating new settings file");
-                settingsData = new SettingsData();
-                jsonDataService.SaveData("/settings.json", settingsData);
+                ResetSettings();
             }
         }
 

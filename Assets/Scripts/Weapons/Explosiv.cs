@@ -18,15 +18,6 @@ public class Explosiv : MonoBehaviour
     [SerializeField] private List<string> onExplosionParticlePoolNames;
     private ObjectPool[] onExplosionParticlePool;
 
-    private void Awake()
-    {
-        onExplosionParticlePool =
-                onExplosionParticlePoolNames.Select(dpp =>
-                {
-                    return ObjectPool.GetPool(dpp);
-                }).Where(dpp => dpp != null).ToArray();
-    }
-
     public void Explode()
     {
         if (exploded) { return; }
@@ -52,6 +43,12 @@ public class Explosiv : MonoBehaviour
 
     private void HandleExplosionParticles()
     {
+        onExplosionParticlePool ??=
+        onExplosionParticlePoolNames.Select(dpp =>
+        {
+            return ObjectPool.GetPool(dpp);
+        }).Where(dpp => dpp != null).ToArray();
+
         if (onExplosionParticlePool == null) return;
 
         foreach (ObjectPool op in onExplosionParticlePool)

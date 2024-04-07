@@ -32,6 +32,11 @@ namespace Utility
         /// <returns>the pulled object</returns>
         public GameObject Pull(bool enabled)
         {
+            if (objects == null || objects.Count == 0 || objects[0] == null)
+            {
+                ReadyInitialObjects();
+            }
+
             for (int i = 0; i < objects.Count; i++)
             {
                 if (!objects[i].activeSelf)
@@ -146,7 +151,7 @@ namespace Utility
 
         private void OnEnable()
         {
-            if (availableObjectPools == null) availableObjectPools = new();
+            availableObjectPools ??= new();
 
             availableObjectPools.Add(name, this);
         }
@@ -165,10 +170,8 @@ namespace Utility
 
         public static ObjectPool GetPool(string name)
         {
-            ObjectPool pool;
-            
-            availableObjectPools.TryGetValue(name, out pool);
-            
+            availableObjectPools.TryGetValue(name, out ObjectPool pool);
+
             try
             {
 

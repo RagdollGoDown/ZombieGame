@@ -11,7 +11,6 @@ namespace Utility
 
     public class DamageableObject : MonoBehaviour
     {
-        private readonly static float TIME_BEFORE_PARTICLE_DESTRUCTION = 10;
         private readonly static float DAMAGE_TO_VELOCITY_PROPORTION = .3f;
 
         private bool isDead;
@@ -87,36 +86,6 @@ namespace Utility
 
             initialScale = transform.localScale;
 
-            onDamageTakenParticlePool =
-                onDamageTakenParticlePoolNames.Select(dpp =>
-                {
-                    return ObjectPool.GetPool(dpp);
-                }).Where(dpp => dpp != null).ToArray();
-
-            deathParticlePool =
-                deathParticlePoolNames.Select(dpp =>
-                {
-                    return ObjectPool.GetPool(dpp);
-                }).Where(dpp => dpp != null).ToArray();
-
-            deathParticlePoolWhenChild =
-                deathParticlePoolNamesWhenChild.Select(dpp =>
-                {
-                    return ObjectPool.GetPool(dpp);
-                }).Where(dpp => dpp != null).ToArray();
-
-            destructionParticlePool =
-                destructionParticlePoolNames.Select(dpp =>
-                {
-                    return ObjectPool.GetPool(dpp);
-                }).Where(dpp => dpp != null).ToArray();
-
-            destructionParticlePoolWhenChild =
-                destructionParticlePoolNamesWhenChild.Select(dpp =>
-                {
-                    return ObjectPool.GetPool(dpp);
-                }).Where(dpp => dpp != null).ToArray();
-
             _damageableChildren = new List<DamageableObject>();
 
             for (int i = 0; i < transform.childCount; i++)
@@ -178,6 +147,12 @@ namespace Utility
 
         private void HandleOnDamageEffect(Damage damage)
         {
+            onDamageTakenParticlePool ??=
+                onDamageTakenParticlePoolNames.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
             Transform effect;
 
             foreach(ObjectPool op in onDamageTakenParticlePool)
@@ -243,10 +218,22 @@ namespace Utility
 
             if (asChild)
             {
+                deathParticlePoolWhenChild ??=
+                deathParticlePoolNamesWhenChild.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
                 PullParticles(deathParticlePoolWhenChild, damage);
             }
             else
             {
+                deathParticlePool ??=
+                deathParticlePoolNames.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
                 PullParticles(deathParticlePool, damage);
             }
 
@@ -273,10 +260,22 @@ namespace Utility
 
             if (asChild)
             {
+                destructionParticlePoolWhenChild ??=
+                destructionParticlePoolNamesWhenChild.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
                 PullParticles(destructionParticlePoolWhenChild, damage);
             }
             else
             {
+                destructionParticlePool ??=
+                destructionParticlePoolNames.Select(dpp =>
+                {
+                    return ObjectPool.GetPool(dpp);
+                }).Where(dpp => dpp != null).ToArray();
+
                 PullParticles(destructionParticlePool, damage);
             }
 
@@ -308,8 +307,6 @@ namespace Utility
 
             foreach (ObjectPool op in particlesPool)
             {
-                Debug.Log("as" + op.name);
-
                 Transform dpg = op.Pull(false).transform;
                 dpg.position = transform.position;
                 dpg.Rotate(transform.rotation.eulerAngles);
