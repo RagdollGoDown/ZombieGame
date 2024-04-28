@@ -1,17 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Utility;
 using Objectives;
-using System;
 using Objectives.Button;
+using System.Collections.Generic;
 namespace Player
 {
     public class PlayerUI : MonoBehaviour
     {
         private readonly static float HEALTH100 = 100f;
+        private readonly static int TIME_BETWEEN_OBJECTIVE_ARROW_UPDATES_MS = 50;
 
         private PlayerController _playerController;
 
@@ -66,6 +67,9 @@ namespace Player
             public MovePointToPoint backgroundAndTextMover;
             public Slider completenessSlider;
             public TextMeshProUGUI objectiveText;
+            public RectTransform objectiveArrow;
+            public CancellationTokenSource arrowUpdateCancellationTokenSource;
+            public CancellationToken arrowUpdateCancellationToken;
         }
         private ObjectiveUI _objectiveUI;
 
@@ -74,6 +78,7 @@ namespace Player
         [SerializeField] private float shakingLength;
         [SerializeField] private float shakingStrength;
 
+        //----------------------------------------Unity events
         private void Awake()
         {
             _playerController = transform.parent.parent.parent.GetComponent<PlayerController>();
@@ -108,6 +113,11 @@ namespace Player
             _objectiveUI.completenessSlider = _objectiveUI.backgroundAndTextMover.transform.Find("Slider").GetComponent<Slider>();
             _objectiveUI.objectiveText = _objectiveUI.backgroundAndTextMover.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             _objectiveUI.objectiveText.text = string.Empty;
+            _objectiveUI.objectiveArrow = _objectiveUI.backgroundAndTextMover.transform.Find("Arrow").GetComponent<RectTransform>();
+            _objectiveUI.arrowUpdateCancellationTokenSource = new CancellationTokenSource();
+            _objectiveUI.arrowUpdateCancellationToken = _objectiveUI.arrowUpdateCancellationTokenSource.Token;
+
+            UpdateObjectiveArrow();
 
             _interactText = playScreen.transform.Find("InteractionText").GetComponent<TextMeshProUGUI>();
             _interactText.text = "";
@@ -120,6 +130,13 @@ namespace Player
                 shakable.SetLengthAndStrength(shakingLength, shakingStrength);
             }
         }
+
+        private void OnDisable()
+        {
+            _objectiveUI.arrowUpdateCancellationTokenSource.Cancel();
+        }
+
+        //----------------------------------------general methods
 
         public void TakeDamage()
         {
@@ -180,6 +197,57 @@ namespace Player
         private void UpdateObjectiveText(string text)
         {
             _objectiveUI.objectiveText.text = text;
+        }
+
+        private async void UpdateObjectiveArrow()
+        {
+            RectTransform objectiveArrow = _objectiveUI.objectiveArrow;
+
+            while (true)
+            {
+                await Task.Delay(TIME_BETWEEN_OBJECTIVE_ARROW_UPDATES_MS);
+
+                Objective objective = _objectiveUI.currentObjective;
+
+                if (_objectiveUI.arrowUpdateCancellationToken.IsCancellationRequested) return;
+
+                if (objective == null || objective.GetObjectiveObjects().Count == 0) {
+                    objectiveArrow.gameObject.SetActive(false);
+                    continue;
+                } else {
+                    objectiveArrow.gameObject.SetActive(true);
+                }
+
+                Vector3 playerDirection = _playerController.transform.forward;
+                Vector3 objectiveDirection;
+
+                List<ObjectiveObject> objectiveObjects = objective.GetObjectiveObjects();
+                
+                if (objective is ButtonObjective buttonObjective)
+                {
+                    ObjectiveObject closestButton = objectiveObjects[0];
+                    float closestDistance = Vector3.Distance(closestButton.transform.position, _playerController.transform.position);
+
+                    for(int i = 1; i < objectiveObjects.Count; i++)
+                    {
+                        float distance = Vector3.Distance(objectiveObjects[i].transform.position, _playerController.transform.position);
+
+                        if (distance < closestDistance)
+                        {
+                            closestButton = objectiveObjects[i];
+                            closestDistance = distance;
+                        }
+                    }
+
+                    objectiveDirection = closestButton.transform.position - _playerController.transform.position;
+                }
+                else
+                {
+                    objectiveDirection = objectiveObjects[0].transform.position - _playerController.transform.position;
+                }   
+
+                objectiveArrow.rotation = Quaternion.Euler(0, 0, Vector3.SignedAngle(objectiveDirection, playerDirection, Vector3.up));
+            }
         }
 
         public void UpdateUIScale()
